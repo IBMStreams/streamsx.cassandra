@@ -1,0 +1,5 @@
+//defaultInstance.ver1_file\:/opt/ibm/InfoSphere_Streams/4.1.0.0/=StreamsDomain/StreamsInstance
+defaultInstance.ver1=StreamsDomain/StreamsInstance
+domainConnInfoVersion=4
+domainConnInfosJson={"version"\:1,"domainConnInfos"\:[{"connectAtStartup"\:true,"jmxUrls"\:["service\:jmx\:jmxmp\:\\/\\/streamsqse.localdomain\:9975"],"domainId"\:"StreamsDomain"}]}
+eclipse.preferences.version=1

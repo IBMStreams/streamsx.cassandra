@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+org.eclipse.rse.systemtype.linux.systemType.enabled=false
+org.eclipse.rse.systemtype.local.systemType.defaultUserId=streamsadmin
+org.eclipse.rse.systemtype.ssh.systemType.enabled=false
+org.eclipse.rse.systemtype.unix.systemType.enabled=false
+org.eclipse.rse.systemtype.windows.systemType.enabled=false
