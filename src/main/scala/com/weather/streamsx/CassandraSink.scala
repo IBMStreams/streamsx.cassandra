@@ -1,4 +1,4 @@
-package com.weather.streamsx.TuplesToCassadra
+package com.weather.streamsx
 
 import org.apache.logging.log4j.Logger
 
