@@ -9,6 +9,7 @@ scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 
 target in assembly := file("impl/java/bin")
+assemblyJarName in assembly := "com.weather.streamsx.jar"
 
 val junitVersion           = "4.10"
 val log4jVersion           = "2.2"
