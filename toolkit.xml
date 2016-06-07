@@ -6,7 +6,7 @@
     <uriTable>
       <uri index="1" value="com.weather.streamsx.CassandraSink/com.weather.streamsx.CassandraSink/CassandraSink"/>
     </uriTable>
-    <namespace name="com.weather.streamsx.CassandraSink.com.weather.streamsx.CassandraSink">
+    <namespace name="com.weather.streamsx.CassandraSink">
       <primitiveOp language="Java" modelUriIndex="1" name="CassandraSink" public="true">
         <description>Java Operator CassandraSink</description>
         <parameter expressionMode="Constant" name="vmArg" optional="true" type="rstring">

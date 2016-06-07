@@ -6,7 +6,7 @@
       <description>Java Operator CassandraSink</description>
       <metrics/>
       <executionSettings>
-        <className>com.weather.streamsx.TuplesToCassandra.CassandraSink</className>
+        <className>com.weather.streamsx.CassandraSink</className>
       </executionSettings>
       <libraryDependencies>
         <library>

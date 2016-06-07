@@ -1,4 +1,4 @@
-name := "streamsx.TuplesToCassandra"
+name := "streamsx.CassandraSink"
 
 organization := "com.weather"
 
