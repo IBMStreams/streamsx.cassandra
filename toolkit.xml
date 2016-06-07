@@ -4,7 +4,7 @@
   <toolkit name="TupleToCassandra" requiredProductVersion="4.0" version="1.0.0">
     <description>Toolkit Description</description>
     <uriTable>
-      <uri index="1" value="com.weather.streamsx.CassandraSink/com.weather.streamsx.CassandraSink/CassandraSink"/>
+      <uri index="1" value="com.weather.streamsx.CassandraSink"/>
     </uriTable>
     <namespace name="com.weather.streamsx.CassandraSink">
       <primitiveOp language="Java" modelUriIndex="1" name="CassandraSink" public="true">
