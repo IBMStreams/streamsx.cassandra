@@ -26,7 +26,7 @@ Specifies command-line arguments that are passed to the Java virtual machine tha
     </namespace>
     <sabFiles>
       <ti:include path="toolkit.xml" root="toolkitDir"/>
-      <ti:include path="target/scala-2.11/**" root="toolkitDir"/>
+      <ti:include path="impl/java/bin/**" root="toolkitDir"/>
     </sabFiles>
   </toolkit>
 

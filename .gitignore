@@ -28,3 +28,5 @@ project/plugins/project/
 
 # Eclipse
 *.metadata
+
+impl/java/bin/*.jar
