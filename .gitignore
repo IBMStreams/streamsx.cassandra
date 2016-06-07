@@ -27,4 +27,5 @@ project/plugins/project/
 *.iml
 
 # Eclipse
+/lib
 *.metadata
