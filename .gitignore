@@ -25,3 +25,6 @@ project/plugins/project/
 /project/project
 /lib/com.ibm.streams.operator.jar
 *.iml
+
+# Eclipse
+*.metadata
