@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<toolkitModel xmlns="http://www.ibm.com/xmlns/prod/streams/spl/toolkit" productVersion="4.1.0.0" xmlns:common="http://www.ibm.com/xmlns/prod/streams/spl/common" xmlns:ti="http://www.ibm.com/xmlns/prod/streams/spl/toolkitInfo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <toolkit name="TupleToCassandra" requiredProductVersion="4.0" version="1.0.0">
+    <description>Toolkit Description</description>
+    <uriTable>
+      <uri index="1" value="com.weather.streamsx.CassandraSink"/>
+    </uriTable>
+    <namespace name="com.weather.streamsx">
+      <primitiveOp language="Java" modelUriIndex="1" name="CassandraSink" public="true">
+        <description>Java Operator CassandraSink</description>
+        <parameter expressionMode="Constant" name="vmArg" optional="true" type="rstring">
+          <description>
+Specifies command-line arguments that are passed to the Java virtual machine that the operator runs within.
+</description>
+        </parameter>
+        <inputPort maxNumPorts="1" minNumPorts="1" optional="false" windowPunctInputMode="Oblivious">
+          <description>Port that ingests tuples</description>
+          <windowPolicy>NonWindowed</windowPolicy>
+        </inputPort>
+        <inputPort minNumPorts="0" optional="true" windowPunctInputMode="Oblivious">
+          <description>Optional input ports</description>
+          <windowPolicy>NonWindowed</windowPolicy>
+        </inputPort>
+      </primitiveOp>
+    </namespace>
+    <sabFiles>
+      <ti:include path="toolkit.xml" root="toolkitDir"/>
+      <ti:include path="impl/java/bin/**" root="toolkitDir"/>
+    </sabFiles>
+  </toolkit>
+
+</toolkitModel>
