@@ -23,9 +23,8 @@ project/plugins/project/
 .idea
 /project/target
 /project/project
-/lib/com.ibm.streams.operator.jar
+#/lib/com.ibm.streams.operator.jar
 *.iml
 
 # Eclipse
-/lib
 *.metadata
