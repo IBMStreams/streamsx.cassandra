@@ -1,6 +1,6 @@
-name := "streamsx.CassandraSink"
+name := "CassandraSink"
 
-organization := "com.weather"
+organization := "com.weather.streamsx"
 
 version := "0.1-SNAPSHOT"
 
