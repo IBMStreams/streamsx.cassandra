@@ -40,23 +40,19 @@ object PutTuplesInCassandra {
     s"""INSERT INTO $tableSpec ($fieldStr) VALUES ($q) USING TTL $ttl"""
   }
 
-
-  def getBoundStatement(list: List[Attr], tuple: Tuple, session: Session): BoundStatement = {
+  private def getPreparedStatement(list: List[Attr], tuple: Tuple, session: Session): PreparedStatement = {
     val nonNullAttrs = list.filter(a => a.set)
 
-//    val fields = list.filter(a => a.set).map(a => a.name).toSeq
-//    val indices = list.filter(a => a.set).map(a => a.index)
+    //    val fields = list.filter(a => a.set).map(a => a.name).toSeq
+    //    val indices = list.filter(a => a.set).map(a => a.index)
 
     val fields  = nonNullAttrs.map(a => a.name).toSeq
-    val values: List[Object] = {
-      //Map each Attr through a method that will return the relevant value from the Tuple as the correct data type
-      nonNullAttrs.map(a => getValueFromTuple(tuple, a))
-    }
-
-
-
-
+    val values: List[Object] = { nonNullAttrs.map(a => getValueFromTuple(tuple, a)) }
     val ps = session.prepare(mkInsert(fields, keyspaceTEMP, tableTEMP, ttlTEMP))
+  }
+
+  def getBoundStatement(list: List[Attr], tuple: Tuple, session: Session): BoundStatement = {
+
 
     ps.bind(values.asInstanceOf[Seq[Object]]:_*)
   }
