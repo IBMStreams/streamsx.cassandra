@@ -16,49 +16,45 @@ object Attr{
 
 //TODO: get keyspace and table as parameters in the operator. Gonna define some temps here for the meantime.
 
-object PutTuplesInCassandra {
+object TupleToStatement {
 
   val keyspaceTEMP = "keyspace"
   val tableTEMP = "table"
   val ttlTEMP: Long = 5
 
-  def apply(t: Tuple, m: Map[String, Boolean], session: Session): Unit = {
+  def apply(t: Tuple, m: Map[String, Boolean], session: Session): BoundStatement = {
     val schema = t.getStreamSchema
-
     val buffer = scala.collection.mutable.ListBuffer.empty[Attribute]
+
     for(i <- 0 until schema.getAttributeCount) {buffer += schema.getAttribute(i)}
 
-    val attributes = buffer.toList
+    val attributes = buffer.sortBy(a => a.getIndex).toList
+    val fields: List[Attr] = attributes.map(a => Attr(a, m))
+    val nonNullAttrs = fields.filter(a => a.set)
+    val ps = getPreparedStatement(nonNullAttrs, t, session)
 
-    val fields: List[Attr] = attributes.map(a => Attr(a, m)).sortBy(_.index)
+    getBoundStatement(ps, nonNullAttrs, t)
   }
 
-  private[util] def mkInsert(fields: Seq[String], keyspace: String, table: String, ttl: Long) = {
+  def mkInsert(fields: Seq[String], keyspace: String, table: String, ttl: Long) = {
     val fieldStr = fields.sorted.mkString(",")
     val q = ("?" * fields.length).mkString(",")
     val tableSpec = if (keyspace.isEmpty) table else s"$keyspace.$table"
     s"""INSERT INTO $tableSpec ($fieldStr) VALUES ($q) USING TTL $ttl"""
   }
 
-  private def getPreparedStatement(list: List[Attr], tuple: Tuple, session: Session): PreparedStatement = {
-    val nonNullAttrs = list.filter(a => a.set)
-
-    //    val fields = list.filter(a => a.set).map(a => a.name).toSeq
-    //    val indices = list.filter(a => a.set).map(a => a.index)
-
+  def getPreparedStatement(nonNullAttrs: List[Attr], tuple: Tuple, session: Session): PreparedStatement = {
     val fields  = nonNullAttrs.map(a => a.name).toSeq
-    val values: List[Object] = { nonNullAttrs.map(a => getValueFromTuple(tuple, a)) }
-    val ps = session.prepare(mkInsert(fields, keyspaceTEMP, tableTEMP, ttlTEMP))
+    //There should be a caching layer here
+    session.prepare(mkInsert(fields, keyspaceTEMP, tableTEMP, ttlTEMP))
   }
 
-  def getBoundStatement(list: List[Attr], tuple: Tuple, session: Session): BoundStatement = {
-
-
+  def getBoundStatement(ps: PreparedStatement, nonNullAttrs: List[Attr], tuple: Tuple): BoundStatement = {
+    val values: List[Any] = { nonNullAttrs.map(a => getValueFromTuple(tuple, a)) }
     ps.bind(values.asInstanceOf[Seq[Object]]:_*)
   }
 
-
-  def getValueFromTuple(tuple: Tuple, attr: Attr): Object = attr.typex.getLanguageType match {
+  def getValueFromTuple(tuple: Tuple, attr: Attr): Any = attr.typex.getLanguageType match {
     case "boolean" => tuple.getBoolean(attr.index)
 //    case "enum" =>
     case "int8" => tuple.getByte(attr.index)
@@ -74,8 +70,8 @@ object PutTuplesInCassandra {
     case "decimal32" => tuple.getBigDecimal(attr.index)
     case "decimal64" => tuple.getBigDecimal(attr.index)
     case "decimal128" => tuple.getBigDecimal(attr.index)
-    case "complex32" =>
-    case "complex64" =>
+//    case "complex32" =>
+//    case "complex64" =>
     case "timestamp" => tuple.getTimestamp(attr.index)
     case "rstring" => tuple.getString(attr.index)
     case "ustring" => tuple.getString(attr.index)

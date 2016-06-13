@@ -13,10 +13,10 @@ import com.ibm.streams.operator.model.InputPortSet.WindowPunctuationInputMode
 import com.ibm.streams.operator.model.InputPorts
 import com.ibm.streams.operator.model.PrimitiveOperator
 
-object CassandraSink {
-  private val log = org.slf4j.LoggerFactory.getLogger(getClass)
-  private val lock = new Object
-}
+//object CassandraSink {
+//  private val log = org.slf4j.LoggerFactory.getLogger(getClass)
+//  private val lock = new Object
+//}
 
 
 @PrimitiveOperator ( name = "CassandraSink", namespace = "com.weather.streamsx.CassandraSink", description = "Java Operator CassandraSink")
@@ -38,7 +38,7 @@ object CassandraSink {
   ) 
 )
 class CassandraSink extends AbstractOperator {
-  import CassandraSink.{log, lock}
+//  import CassandraSink.{log, lock}
 
   override def process(stream: StreamingInput[Tuple], tuple: Tuple): Unit = {
     println("I sure gots a tuple" + tuple.getInt(0))
