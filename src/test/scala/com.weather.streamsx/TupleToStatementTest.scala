@@ -13,7 +13,9 @@ import scala.util.Random
 class TupleToStatementTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   "The thing" should "happen" in {
-    
+    val session = CasAnalyticsConnector.session
+    val (map, tuple) = TupleGenerator()
+    TupleToStatement(tuple, map, session)
   }
 
   "Prepared Statements" should "have the right number of values" in {
@@ -47,7 +49,7 @@ object TupleGenerator {
 //  val streamingOutput: StreamingOutput[OutputTuple] = graph.getInputTester(testPort)
 
 
-  def apply(): OutputTuple = {
+  def apply(): (Map[String, Boolean], OutputTuple) = {
     //boilerplate
     val tester: JavaOperatorTester = new JavaOperatorTester()
     val invocation = tester.singleOp(classOf[CassandraSink])
@@ -56,13 +58,24 @@ object TupleGenerator {
     val streamingOutput: StreamingOutput[OutputTuple] = graph.getInputTester(ports)
 
     val t = streamingOutput.newTuple()
-    val types = List("boolean", "int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "rstring", "ustring")
-    for (x <- Random.shuffle(types).take(3)) addTupleField(x, t)
-    t
+
+    val map: Map[String, Boolean] = Map("str" -> true, "nullStr" -> false, "int" -> true, "nullInt" -> false)
+
+    t.setString("str", "this should be written")
+    t.setString("nullStr", "this should NOT be writter")
+    t.setInt("int", 93)
+    t.setInt("nullInt", 44)
+
+//    val types = List("boolean", "int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "rstring", "ustring")
+//    for (x <- Random.shuffle(types).take(3)) addRandomTupleField(x, t)
+    (map, t)
   }
 
 
-  def addTupleField(splType: String, outputTuple: OutputTuple): OutputTuple = {
+
+
+
+  def addRandomTupleField(splType: String, outputTuple: OutputTuple): OutputTuple = {
     val fieldname = splType + Random.alphanumeric.take(5)
 
     splType match {

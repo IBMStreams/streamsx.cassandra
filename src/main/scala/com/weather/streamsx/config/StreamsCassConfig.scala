@@ -14,7 +14,7 @@ abstract class Cfg(path: String) extends ConfigurationContainer {
 }
 
 object StreamsCassConfig {
-  val cfg = C("wupws", fileExtension = "conf")
+  val cfg = C("streams", fileExtension = "conf")
 
   def apply() {}
 

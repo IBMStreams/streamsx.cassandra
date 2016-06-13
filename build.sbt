@@ -44,12 +44,7 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.datastax.cassandra"       % "cassandra-driver-core" % cassandraDriverVersion
-    classifier "shaded"
-    excludeAll(
-    ExclusionRule(organization = "io.netty"),
-    ExclusionRule(organization = "com.google.guava")
-    ),
+  "com.datastax.cassandra"       % "cassandra-driver-core" % cassandraDriverVersion,
   "com.weather"                 %% "cfg"                   % cfgVersion,
   "com.weather.ssg"             %% "ssglib"                % ssglibVersion,
   "org.apache.logging.log4j"     % "log4j-api"             % log4jVersion,
