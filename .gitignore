@@ -29,4 +29,5 @@ project/plugins/project/
 # Eclipse
 *.metadata
 
+/src/main/resources/etc/streams.conf
 impl/java/bin/*.jar
