@@ -66,11 +66,11 @@ object TupleGenerator {
   def apply(): (Map[String, Boolean], OutputTuple) = {
     //boilerplate
 
-    val clazz = classOf[CassandraSink]
-
-    val tester: JavaOperatorTester = new JavaOperatorTester()
+//    val clazz = classOf[CassandraSink]
+//
+//    val tester: JavaOperatorTester = new JavaOperatorTester()
 //    val invocation = tester.singleOp(clazz)
-    val invocation = tester.singleOp(null)
+//    val invocation = tester.singleOp(null)
 //    val invocation = tester.singleOp(classOf[RandomBeacon])
 
     //    val graph: JavaTestableGraph = tester.tester(invocation)
