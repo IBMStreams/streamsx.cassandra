@@ -26,7 +26,15 @@ Specifies command-line arguments that are passed to the Java virtual machine tha
     </namespace>
     <sabFiles>
       <ti:include path="toolkit.xml" root="toolkitDir"/>
+      <ti:include path="impl/java/lib/**" root="toolkitDir"/>
       <ti:include path="impl/java/bin/**" root="toolkitDir"/>
+      <ti:include path="impl/bin/**" root="toolkitDir"/>
+      <ti:include path="impl/lib/**" root="toolkitDir"/>
+      <ti:include path="impl/nl/*.dat" root="toolkitDir"/>
+      <ti:include path="etc/**" root="toolkitDir"/>
+      <ti:include path="lib/**" root="toolkitDir"/>
+      <ti:include path="nl/**" root="toolkitDir"/>
+      <ti:include path="opt/**" root="toolkitDir"/>
     </sabFiles>
   </toolkit>
 
