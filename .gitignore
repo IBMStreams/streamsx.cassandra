@@ -11,6 +11,7 @@
 dist/*
 target/
 lib_managed/
+/lib
 src_managed/
 project/boot/
 project/plugins/project/
