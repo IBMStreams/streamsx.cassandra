@@ -1,28 +1,31 @@
 package com.weather.streamsx.cassandra
 
+import com.datastax.driver.core.BoundStatement
 import org.apache.logging.log4j.Logger
-
-import com.ibm.streams.operator.AbstractOperator
-import com.ibm.streams.operator.OperatorContext
-import com.ibm.streams.operator.StreamingData.Punctuation
 import com.ibm.streams.operator.StreamingInput
 import com.ibm.streams.operator.Tuple
-import com.ibm.streams.operator.model.InputPortSet
-import com.ibm.streams.operator.model.InputPortSet.WindowMode
-import com.ibm.streams.operator.model.InputPortSet.WindowPunctuationInputMode
-import com.ibm.streams.operator.model.InputPorts
-import com.ibm.streams.operator.model.PrimitiveOperator
 
-//object CassandraSink {
-//  private val log = org.slf4j.LoggerFactory.getLogger(getClass)
-//  private val lock = new Object
-//}
 
 
 class CassandraSinkImpl {
-//  import CassandraSink.{log, lock}
 
-  def process(stream: StreamingInput[Tuple], tuple: Tuple): Unit = {
+  // WHERE DOES THE MAP COME FROM??? DOESN'T MAKE ANY SENSE AS A STATIC VARIABLE!!!
+  // IT HAS TO COME IN DYNAMICALLY AS PART OF THE TUPLE
+
+  /*
+      Two ideas on where the map should come from.
+      Either
+      1. it should be passed in as a map in the tuple and the name of it should be given as a variable
+      2. the tuples should get recomposed from Tuple<a, b, c> to Tuple<Tuple<a, boolean>, Tuple<b, boolean>, Tuple<c, boolean>>
+
+      I'm leaning towards #2 here
+
+   */
+
+  def insertTuple(stream: StreamingInput[Tuple], tuple: Tuple, keyspace: String, table: String, ttl: Long): Unit = {
+
+    val bs: BoundStatement = TupleToStatement(tuple, )
+
 
   }
 }

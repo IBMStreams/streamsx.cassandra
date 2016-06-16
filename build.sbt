@@ -32,14 +32,14 @@ val streamsUtilVersion     = "0.1.0-RELEASE"
 val streamsxUtilVersion    = "0.2.2-RELEASE"
 
 
-//val ssgDevHost          = "jenkinsutil.dev.sun.weather.com"
-//val ssgMvnPath          = "/pub/mvn/ssg"
-//val ssgMvnPathSnapshots = "/pub/mvn/ssg-snapshots"
+val ssgDevHost          = "jenkinsutil.dev.sun.weather.com"
+val ssgMvnPath          = "/pub/mvn/ssg"
+val ssgMvnPathSnapshots = "/pub/mvn/ssg-snapshots"
 
-//resolvers ++= Seq(
-//  "TWC SSG Repo" at s"https://$ssgDevHost$ssgMvnPath",
-//  "TWC Snapshot" at s"https://$ssgDevHost$ssgMvnPathSnapshots"
-//)
+resolvers ++= Seq(
+  "TWC SSG Repo" at s"https://$ssgDevHost$ssgMvnPath",
+  "TWC Snapshot" at s"https://$ssgDevHost$ssgMvnPathSnapshots"
+)
 
 libraryDependencies ++= Seq(
   // these are just to make IntelliJ happy
@@ -61,8 +61,8 @@ libraryDependencies ++= Seq(
   "junit"                        % "junit"                 % junitVersion            % "test",
   "org.slf4j"                    % "slf4j-simple"          % slf4jVersion            % "test",
   "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
-  "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test"
-  //  "com.weather"                 %% "cfg"                   % cfgVersion,
+  "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test",
+   "com.weather"                 %% "cfg"                   % cfgVersion
   //  "com.weather.ssg"             %% "ssglib"                % ssglibVersion,
   //  "org.scalaz"                  %% "scalaz-core"           % scalazVersion,
   //  "com.amazonaws"                % "aws-java-sdk-s3"       % awsJavaSdkVersion,

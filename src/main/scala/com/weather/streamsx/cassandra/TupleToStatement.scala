@@ -18,11 +18,11 @@ object Attr{
 
 object TupleToStatement {
 
-  val keyspaceTEMP = "keyspace"
-  val tableTEMP = "table"
-  val ttlTEMP: Long = 5
+//  val keyspaceTEMP = "keyspace"
+//  val tableTEMP = "table"
+//  val ttlTEMP: Long = 604800 //one week,
 
-  def apply(t: Tuple, m: Map[String, Boolean], session: Session): BoundStatement = {
+  def apply(t: Tuple, m: Map[String, Boolean], session: Session, keyspace: String, table: String, ttl: Long): BoundStatement = {
     val schema = t.getStreamSchema
     val buffer = scala.collection.mutable.ListBuffer.empty[Attribute]
 
@@ -31,7 +31,7 @@ object TupleToStatement {
     val attributes = buffer.sortBy(a => a.getIndex).toList
     val fields: List[Attr] = attributes.map(a => Attr(a, m))
     val nonNullAttrs = fields.filter(a => a.set)
-    val ps = getPreparedStatement(nonNullAttrs, t, session)
+    val ps = mkPreparedStatement(nonNullAttrs, t, session, keyspace, table, ttl)
 
     getBoundStatement(ps, nonNullAttrs, t)
   }
@@ -43,10 +43,10 @@ object TupleToStatement {
     s"""INSERT INTO $tableSpec ($fieldStr) VALUES ($q) USING TTL $ttl"""
   }
 
-  def getPreparedStatement(nonNullAttrs: List[Attr], tuple: Tuple, session: Session): PreparedStatement = {
+  def mkPreparedStatement(nonNullAttrs: List[Attr], tuple: Tuple, session: Session, keyspace: String, table: String, ttl: Long): PreparedStatement = {
     val fields  = nonNullAttrs.map(a => a.name).toSeq
     //There should be a caching layer here
-    session.prepare(mkInsert(fields, keyspaceTEMP, tableTEMP, ttlTEMP))
+    session.prepare(mkInsert(fields, keyspace, table, ttl, ))
   }
 
   def getBoundStatement(ps: PreparedStatement, nonNullAttrs: List[Attr], tuple: Tuple): BoundStatement = {

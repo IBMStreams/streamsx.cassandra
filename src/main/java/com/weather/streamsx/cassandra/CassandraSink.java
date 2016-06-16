@@ -38,6 +38,9 @@ import com.ibm.streams.operator.model.PrimitiveOperator;
 public class CassandraSink extends AbstractOperator {
 
     CassandraSinkImpl impl = null;
+    String keyspace = null;
+    String table = null;
+    Long ttl = null;
 
 
     /**
@@ -101,6 +104,12 @@ public class CassandraSink extends AbstractOperator {
     }
 
 
+    @Parameter(name="table", description = "Keyspace name in Cassandra", optional = false)
+    public void setKeyspace(String str) { keyspace = str; }
+
     @Parameter(name="table", description = "Table name in Cassandra", optional = false)
-    public void setTable(String str) {  }
+    public void setTable(String str) { table = str; }
+
+    @Parameter(name="ttl", description = "Time-to-live for each entry, in seconds", optional = false)
+    public void setTTL(Long l) { ttl = l; }
 }
