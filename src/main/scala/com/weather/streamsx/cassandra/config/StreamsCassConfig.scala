@@ -1,4 +1,4 @@
-package com.weather.streamsx.config
+package com.weather.streamsx.cassandra.config
 
 import com.typesafe.config.Config
 import com.weather.configuration.ConfigurationContainer

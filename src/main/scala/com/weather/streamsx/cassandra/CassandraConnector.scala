@@ -1,13 +1,13 @@
-package com.weather.streamsx
+package com.weather.streamsx.cassandra
 
 import com.datastax.driver.core._
 import com.datastax.driver.core.policies.{DCAwareRoundRobinPolicy, TokenAwarePolicy}
-import com.weather.streamsx.config.{CassandraConfig => CCfg}
+import com.weather.streamsx.cassandra.config.CassandraConfig
 
-object cassanalytics extends CCfg("cassandra-analytics")
+object cassanalytics extends CassandraConfig("cassandra-analytics")
 
 
-abstract class CassandraConnector(val ccfg: CCfg) {
+abstract class CassandraConnector(val ccfg: CassandraConfig) {
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)
 
   protected val cluster = {

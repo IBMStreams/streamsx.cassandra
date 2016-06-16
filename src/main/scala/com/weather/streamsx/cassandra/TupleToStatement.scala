@@ -1,4 +1,4 @@
-package com.weather.streamsx
+package com.weather.streamsx.cassandra
 
 import com.datastax.driver.core.{Session, PreparedStatement, BoundStatement}
 import com.ibm.streams.operator.Tuple

@@ -1,4 +1,4 @@
-package com.weather.streamsx
+package com.weather.streamsx.cassandra
 
 import java.io._
 

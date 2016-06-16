@@ -1,20 +1,23 @@
-name := "CassandraSink"
+import scala.language.postfixOps // <- making IntelliJ hush about the ! bash command postfix
 
-organization := "com.weather.streamsx"
+name := "streamsx.cassandra"
+
+organization := "com.weather"
 
 version := "0.1-SNAPSHOT"
 
-scalaVersion := "2.11.8"
+val scalaVers = "2.11.8"
+
+scalaVersion := scalaVers
 
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 
-val awsJavaSdkVersion      = "1.9.34"
+//val awsJavaSdkVersion      = "1.9.34"
 val cassandraDriverVersion = "2.1.9"
 val cfgVersion             = "1.4.0-RELEASE"
 val circeVersion           = "0.3.0"
 val commonsCodecVersion    = "1.10"
 //val geotoolsVersion        = "14.3"
-val guavaVersion           = "19.0"
 val jsrVersion             = "3.0.1"
 val jtsVersion             = "1.10"
 val junitVersion           = "4.10"
@@ -26,44 +29,68 @@ val slf4jVersion           = "1.7.12"
 val sprayJsonVersion       = "1.3.1"
 val ssglibVersion          = "3.1.0-RELEASE"
 val streamsUtilVersion     = "0.1.0-RELEASE"
+val streamsxUtilVersion    = "0.2.2-RELEASE"
 
-val ssgDevHost          = "jenkinsutil.dev.sun.weather.com"
-val ssgMvnPath          = "/pub/mvn/ssg"
-val ssgMvnPathSnapshots = "/pub/mvn/ssg-snapshots"
 
-resolvers ++= Seq(
-  "TWC SSG Repo" at s"https://$ssgDevHost$ssgMvnPath",
-  "TWC Snapshot" at s"https://$ssgDevHost$ssgMvnPathSnapshots"
-  //  ,
-  //  "Open Source Geospatial Foundation Repository" at "http://download.osgeo.org/webdav/geotools/"
-)
+//val ssgDevHost          = "jenkinsutil.dev.sun.weather.com"
+//val ssgMvnPath          = "/pub/mvn/ssg"
+//val ssgMvnPathSnapshots = "/pub/mvn/ssg-snapshots"
+
+//resolvers ++= Seq(
+//  "TWC SSG Repo" at s"https://$ssgDevHost$ssgMvnPath",
+//  "TWC Snapshot" at s"https://$ssgDevHost$ssgMvnPathSnapshots"
+//)
 
 libraryDependencies ++= Seq(
-  "com.amazonaws"                % "aws-java-sdk-s3"       % awsJavaSdkVersion,
-  "com.amazonaws"                % "aws-java-sdk-sqs"      % awsJavaSdkVersion,
+  // these are just to make IntelliJ happy
+  "org.scala-lang"               % "scala-reflect"         % scalaVers,
+  "org.scala-lang.modules"       % "scala-xml_2.11"        % "1.0.4",
+  "org.scala-lang.modules"       % "scala-parser-combinators_2.11" % "1.0.4",
+  "org.scala-lang"               % "scala-compiler"        % scalaVers,
+
+  // these are actual dependencies
   "com.datastax.cassandra"       % "cassandra-driver-core" % cassandraDriverVersion
     classifier "shaded"
     excludeAll(
     ExclusionRule(organization = "io.netty"),
     ExclusionRule(organization = "com.google.guava")
     ),
-  "com.google.guava"             % "guava"                 % guavaVersion,
-  "com.google.code.findbugs"     % "jsr305"                % jsrVersion              % "compile",
-  "com.weather"                 %% "cfg"                   % cfgVersion,
-  "com.weather.ssg"             %% "ssglib"                % ssglibVersion,
-  "io.circe"                    %% "circe-core"            % circeVersion,
-  "io.circe"                    %% "circe-generic"         % circeVersion,
-  "io.circe"                    %% "circe-jawn"            % circeVersion,
+  "com.weather"                 %% "streamsx-util"         % streamsxUtilVersion,
   "org.apache.logging.log4j"     % "log4j-api"             % log4jVersion,
-  //  "org.geotools"                 % "gt-shapefile"          % geotoolsVersion,
-  "org.scalaz"                  %% "scalaz-core"           % scalazVersion,
   "org.slf4j"                    % "slf4j-api"             % slf4jVersion,
   "junit"                        % "junit"                 % junitVersion            % "test",
   "org.slf4j"                    % "slf4j-simple"          % slf4jVersion            % "test",
   "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
   "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test"
+  //  "com.weather"                 %% "cfg"                   % cfgVersion,
+  //  "com.weather.ssg"             %% "ssglib"                % ssglibVersion,
+  //  "org.scalaz"                  %% "scalaz-core"           % scalazVersion,
+  //  "com.amazonaws"                % "aws-java-sdk-s3"       % awsJavaSdkVersion,
+  //  "com.amazonaws"                % "aws-java-sdk-sqs"      % awsJavaSdkVersion,
 )
 
 parallelExecution in Test := false
 
-net.virtualvoid.sbt.graph.Plugin.graphSettings
+val jarFn = "streamsx.cassandra.jar"
+val libDir = "impl/lib"
+val toolkit = TaskKey[Unit]("toolkit", "Makes the SPL toolkit")
+val ctk = TaskKey[Unit]("ctk", "Cleans the SPL toolkit")
+//val dist = TaskKey[Unit]("dist", "Makes a distribution for the toolkit")
+
+test in assembly := {}
+
+def mkToolkit(jar: sbt.File): Unit = "spl-make-toolkit -i ." ! match {
+  case 0 => s"cp -p ${jar.getPath} $libDir/$jarFn" !
+  case _ => sys.error(s"not copying $jarFn bc toolkit creation failed")
+}
+
+def rmToolkit(u: Unit): Unit = "spl-make-toolkit -c -i ." !
+
+cleanFiles <+= baseDirectory { base => base / "com.weather.streamsx.sqs" }
+
+toolkit <<= assembly map mkToolkit
+
+ctk <<= clean map rmToolkit
+
+
+//net.virtualvoid.sbt.graph.Plugin.graphSettings

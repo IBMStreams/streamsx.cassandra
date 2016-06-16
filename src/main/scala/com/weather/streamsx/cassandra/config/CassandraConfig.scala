@@ -1,4 +1,4 @@
-package com.weather.streamsx.config
+package com.weather.streamsx.cassandra.config
 
 import com.datastax.driver.core.SSLOptions._
 import com.datastax.driver.core.{AuthProvider, ConsistencyLevel, PlainTextAuthProvider, SSLOptions}
