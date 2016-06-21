@@ -1,9 +1,7 @@
-﻿package com.weather.streamsx.cassandra;
-
+package com.weather.streamsx.cassandra;
 
 import com.ibm.streams.operator.AbstractOperator;
 import com.ibm.streams.operator.OperatorContext;
-import com.ibm.streams.operator.StreamingData.Punctuation;
 import com.ibm.streams.operator.StreamingInput;
 import com.ibm.streams.operator.Tuple;
 import com.ibm.streams.operator.model.InputPortSet;
@@ -32,9 +30,12 @@ import com.ibm.streams.operator.model.PrimitiveOperator;
  * <p>With the exception of operator initialization, all the other events may occur concurrently with each other,
  * which lead to these methods being called concurrently by different threads.</p>
  */
-@PrimitiveOperator(name="CassandraSink", namespace="com.weather.stuff",
+@PrimitiveOperator(name="CassandraSink", namespace="com.weather.streamsx.cassandra",
         description="Java Operator CassandraSink")
-@InputPorts({@InputPortSet(description="Port that ingests tuples", cardinality=1, optional=false, windowingMode=WindowMode.NonWindowed, windowPunctuationInputMode=WindowPunctuationInputMode.Oblivious), @InputPortSet(description="Optional input ports", optional=true, windowingMode=WindowMode.NonWindowed, windowPunctuationInputMode=WindowPunctuationInputMode.Oblivious)})
+@InputPorts({
+        @InputPortSet(description="Port that ingests tuples", cardinality=1, optional=false, windowingMode=WindowMode.NonWindowed, windowPunctuationInputMode=WindowPunctuationInputMode.Oblivious),
+        @InputPortSet(description="Optional input ports", optional=true, windowingMode=WindowMode.NonWindowed, windowPunctuationInputMode=WindowPunctuationInputMode.Oblivious)
+})
 public class CassandraSink extends AbstractOperator {
 
     CassandraSinkImpl impl = null;

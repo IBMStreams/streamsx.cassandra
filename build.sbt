@@ -1,16 +1,12 @@
-import scala.language.postfixOps // <- making IntelliJ hush about the ! bash command postfix
+//import scala.language.postfixOps // <- making IntelliJ hush about the ! bash command postfix
 
 name := "streamsx.cassandra"
-
 organization := "com.weather"
-
 version := "0.1-SNAPSHOT"
-
-val scalaVers = "2.11.8"
-
-scalaVersion := scalaVers
-
+scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
+//compileOrder in Compile := CompileOrder.ScalaThenJava
+
 
 //val awsJavaSdkVersion      = "1.9.34"
 val cassandraDriverVersion = "2.1.9"
@@ -43,11 +39,9 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  // these are just to make IntelliJ happy
-  "org.scala-lang"               % "scala-reflect"         % scalaVers,
-  "org.scala-lang.modules"       % "scala-xml_2.11"        % "1.0.4",
-  "org.scala-lang.modules"       % "scala-parser-combinators_2.11" % "1.0.4",
-  "org.scala-lang"               % "scala-compiler"        % scalaVers,
+//  // these are just to make IntelliJ happy
+//  "org.scala-lang.modules"       % "scala-xml_2.11"        % "1.0.4",
+//  "org.scala-lang.modules"       % "scala-parser-combinators_2.11" % "1.0.4",
 
   // these are actual dependencies
   "com.datastax.cassandra"       % "cassandra-driver-core" % cassandraDriverVersion
