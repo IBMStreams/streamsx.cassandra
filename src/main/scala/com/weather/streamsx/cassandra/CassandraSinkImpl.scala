@@ -24,7 +24,7 @@ class CassandraSinkImpl {
 
   def insertTuple(stream: StreamingInput[Tuple], tuple: Tuple, keyspace: String, table: String, ttl: Long): Unit = {
 
-    val bs: BoundStatement = TupleToStatement(tuple, )
+//    val bs: BoundStatement = TupleToStatement(tuple, )
 
 
   }
