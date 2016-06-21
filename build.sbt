@@ -28,8 +28,7 @@ val scalazVersion          = "7.1.2"
 val slf4jVersion           = "1.7.12"
 val sprayJsonVersion       = "1.3.1"
 val ssglibVersion          = "3.1.0-RELEASE"
-val streamsUtilVersion     = "0.1.0-RELEASE"
-val streamsxUtilVersion    = "0.2.2-RELEASE"
+val streamsxUtilVersion    = "0.2.3-RELEASE"
 
 
 val ssgDevHost          = "jenkinsutil.dev.sun.weather.com"
@@ -37,8 +36,10 @@ val ssgMvnPath          = "/pub/mvn/ssg"
 val ssgMvnPathSnapshots = "/pub/mvn/ssg-snapshots"
 
 resolvers ++= Seq(
+  "Artifactory" at "https://repo.artifacts.weather.com/analytics-virtual",
   "TWC SSG Repo" at s"https://$ssgDevHost$ssgMvnPath",
-  "TWC Snapshot" at s"https://$ssgDevHost$ssgMvnPathSnapshots"
+  "TWC Snapshot" at s"https://$ssgDevHost$ssgMvnPathSnapshots",
+  Resolver.mavenLocal
 )
 
 libraryDependencies ++= Seq(
