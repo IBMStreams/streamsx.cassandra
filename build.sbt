@@ -51,6 +51,7 @@ libraryDependencies ++= Seq(
     ExclusionRule(organization = "com.google.guava")
     ),
   "com.weather"                 %% "streamsx-util"         % streamsxUtilVersion,
+  "com.ibm"                      % "streams.operator"      % "4.1.0.0"               % "provided",
   "org.apache.logging.log4j"     % "log4j-api"             % log4jVersion,
   "org.slf4j"                    % "slf4j-api"             % slf4jVersion,
   "junit"                        % "junit"                 % junitVersion            % "test",
