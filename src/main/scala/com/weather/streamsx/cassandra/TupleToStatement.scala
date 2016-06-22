@@ -27,6 +27,8 @@ object TupleToStatement {
 
   def apply(t: Tuple, session: Session, keyspace: String, table: String, ttl: Long, nullMapName: String): BoundStatement = {
     val schema = t.getStreamSchema
+
+
     val buffer = scala.collection.mutable.ListBuffer.empty[Attribute]
     for(i <- 0 until schema.getAttributeCount) {buffer += schema.getAttribute(i)}
 
@@ -43,6 +45,8 @@ object TupleToStatement {
 
     val map = t.getMap(nullMapName).asInstanceOf[java.util.Map[String, Boolean]]
     val m = map.toMap
+
+    println(s"keys: ${m.keys}")
 
     val attributes = buffer.sortBy(a => a.getIndex).toList
     val fields: List[Attr] = attributes.map(a => Attr(a, m))
