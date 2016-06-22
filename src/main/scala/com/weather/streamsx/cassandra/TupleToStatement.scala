@@ -1,10 +1,13 @@
 package com.weather.streamsx.cassandra
 
+import java.util
+
 import com.datastax.driver.core.{Session, PreparedStatement, BoundStatement}
 import com.ibm.streams.operator.Tuple
 import com.ibm.streams.operator.Attribute
 import com.ibm.streams.operator.Type
-
+import com.ibm.streams.operator.meta.MapType
+import collection.JavaConversions._
 
 case class Attr(index: Int, name: String, typex: Type, set: Boolean)
 
@@ -22,11 +25,23 @@ object TupleToStatement {
 //  val tableTEMP = "table"
 //  val ttlTEMP: Long = 604800 //one week,
 
-  def apply(t: Tuple, m: Map[String, Boolean], session: Session, keyspace: String, table: String, ttl: Long): BoundStatement = {
+  def apply(t: Tuple, session: Session, keyspace: String, table: String, ttl: Long, nullMapName: String): BoundStatement = {
     val schema = t.getStreamSchema
     val buffer = scala.collection.mutable.ListBuffer.empty[Attribute]
-
     for(i <- 0 until schema.getAttributeCount) {buffer += schema.getAttribute(i)}
+
+    // this is going to be useful for handling general collection maps, but if getting the nullMap as Map[String, Boolean] fails,
+    // then so much the better
+
+//    val maptype: MapType = schema.getAttribute(nullMapName).getType.asInstanceOf[MapType]
+//
+//    val keyT: Type = maptype.getKeyType
+//    val valT: Type = maptype.getValueType
+//
+//    keyT.getObjectType
+
+
+    val m: Map[String, Boolean] = t.getMap(nullMapName).toMap[String, Boolean]
 
     val attributes = buffer.sortBy(a => a.getIndex).toList
     val fields: List[Attr] = attributes.map(a => Attr(a, m))
@@ -81,7 +96,7 @@ object TupleToStatement {
     //I wonder if there will need to be more specific qualifications with list<boolean>, list<int>, etc
     case "map" => tuple.getMap(attr.index) //same dubiosity for maps as for lists
 //    case "tuple" => tuple.getTuple(attr.index)
-    case "" => "figure out better error logging than this"
+    case _ => "figure out better error logging than this"
   }
 
 

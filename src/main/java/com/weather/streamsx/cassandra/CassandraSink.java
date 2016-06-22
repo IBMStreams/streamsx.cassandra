@@ -42,6 +42,7 @@ public class CassandraSink extends AbstractOperator {
     String keyspace = null;
     String table = null;
     Long ttl = null;
+    String nullMap = null;
 
 
     /**
@@ -56,8 +57,14 @@ public class CassandraSink extends AbstractOperator {
         super.initialize(context);
 //        Logger.getLogger(this.getClass()).trace("Operator " + context.getName() + " initializing in PE: " + context.getPE().getPEId() + " in Job: " + context.getPE().getJobId() );
 
+        CasAnalyticsConnector.apply();
+        java.util.Map<String, String> cfg = new java.util.HashMap<String, String>();
+        cfg.put("keyspace", keyspace);
+        cfg.put("table", table);
+        cfg.put("consistencylevel", "local_quorum");
+
         if (impl == null) {
-            impl = new CassandraSinkImpl();
+            impl = CassandraSinkImpl.mkWriter(cfg);
         }
 
     }
@@ -87,6 +94,7 @@ public class CassandraSink extends AbstractOperator {
         // TODO Insert code here to process the incoming tuple,
         // typically sending tuple data to an external system or data store.
         // String value = tuple.getString("AttributeName");
+        impl.insertTuple(stream, tuple, keyspace, table, ttl, nullMap);
     }
 
     /**
@@ -113,4 +121,7 @@ public class CassandraSink extends AbstractOperator {
 
     @Parameter(name="ttl", description = "Time-to-live for each entry, in seconds", optional = false)
     public void setTTL(Long l) { ttl = l; }
+
+    @Parameter(name="nullMap", description = "Name of the tuple field that is a Map[String, Boolean] representing which fields are null", optional = false)
+    public void setNullMap(String str) { nullMap = str; }
 }
