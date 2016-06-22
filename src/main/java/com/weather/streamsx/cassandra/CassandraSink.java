@@ -105,7 +105,7 @@ public class CassandraSink extends AbstractOperator {
     }
 
 
-    @Parameter(name="table", description = "Keyspace name in Cassandra", optional = false)
+    @Parameter(name="keyspace", description = "Keyspace name in Cassandra", optional = false)
     public void setKeyspace(String str) { keyspace = str; }
 
     @Parameter(name="table", description = "Table name in Cassandra", optional = false)
