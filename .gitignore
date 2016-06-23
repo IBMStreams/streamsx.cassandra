@@ -1,3 +1,4 @@
+/com.weather.streamsx.tupletocassandra/.metadata
 # Created by .ignore support plugin (hsz.mobi)
 ### Scala template
 *.class
@@ -10,6 +11,7 @@
 dist/*
 target/
 lib_managed/
+/lib
 src_managed/
 project/boot/
 project/plugins/project/
@@ -24,5 +26,13 @@ project/plugins/project/
 /project/project
 
 
+
 /lib/com.ibm.streams.operator.jar
 *.iml
+
+# Eclipse
+*.metadata
+
+/src/main/resources/etc/streams.conf
+impl/java/bin/*.jar
+
