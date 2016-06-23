@@ -46,20 +46,12 @@ object TupleToStatement {
 
     val mizzap = t.getMap(nullMapName).asInstanceOf[java.util.Map[RString, Boolean]]
     val rstringMap = mizzap.toMap
-
     val m = rstringMap.map(kv => (kv._1.toString, kv._2))
 
-
-//    println(s"the map: $m")
-//    println(s"keys: ${m.keys}")
-////    println(s"greeting is so too in here: ${m("greeting")}")
-//    val (key, value) = m.head
-//
-//    println(s"trying to access greeting but this key is not greeting it's: $key")
-
-
     val attributes = buffer.sortBy(a => a.getIndex).toList
-    val fields: List[Attr] = attributes.map(a => Attr(a, m))
+
+    // remove the nullMap attribute from this list
+    val fields: List[Attr] = attributes.filter(a => a.getName == nullMapName).map(a => Attr(a, m))
     val nonNullAttrs = fields.filter(a => a.set)
     val ps = mkPreparedStatement(nonNullAttrs, t, session, keyspace, table, ttl)
 
