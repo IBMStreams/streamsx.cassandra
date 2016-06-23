@@ -80,6 +80,16 @@ object TupleToStatement {
   def getBoundStatement(ps: PreparedStatement, nonNullAttrs: List[Attr], tuple: Tuple): BoundStatement = {
     val values: List[Any] = { nonNullAttrs.map(a => getValueFromTuple(tuple, a)) }
     println(values)
+    val zero = values(0)
+    val one = values(1)
+
+    def f[T](v: T) = v match {
+      case _: Long    => "Long"
+      case _: String => "String"
+      case _         => "Unknown"
+    }
+    println(s"value of greeting is $zero which is type ${f(zero)}")
+    println(s"value of count    is $one which is type ${f(one)}")
     ps.bind(values.asInstanceOf[Seq[Object]]:_*)
   }
 
