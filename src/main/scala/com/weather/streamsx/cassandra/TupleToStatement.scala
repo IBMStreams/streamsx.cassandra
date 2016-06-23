@@ -79,6 +79,7 @@ object TupleToStatement {
 
   def getBoundStatement(ps: PreparedStatement, nonNullAttrs: List[Attr], tuple: Tuple): BoundStatement = {
     val values: List[Any] = { nonNullAttrs.map(a => getValueFromTuple(tuple, a)) }
+    println(values)
     ps.bind(values.asInstanceOf[Seq[Object]]:_*)
   }
 
