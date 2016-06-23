@@ -43,10 +43,11 @@ object TupleToStatement {
 //    keyT.getObjectType
 
 
-    val map = t.getMap(nullMapName).asInstanceOf[java.util.Map[String, Boolean]]
-    val m = map.toMap
+    val mizzap = t.getMap(nullMapName).asInstanceOf[java.util.Map[String, Boolean]]
+    val m = mizzap.toMap
 
     println(s"keys: ${m.keys}")
+    println(s"greeting is so too in here: ${m("greeting")}")
 
     val attributes = buffer.sortBy(a => a.getIndex).toList
     val fields: List[Attr] = attributes.map(a => Attr(a, m))
