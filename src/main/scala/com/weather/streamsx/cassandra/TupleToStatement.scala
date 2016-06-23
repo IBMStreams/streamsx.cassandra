@@ -62,7 +62,7 @@ object TupleToStatement {
   }
 
   def mkInsert(fields: Seq[String], keyspace: String, table: String, ttl: Long) = {
-    val fieldStr = fields.sorted.mkString(",")
+    val fieldStr = fields.mkString(",")
     val q = ("?" * fields.length).mkString(",")
     val tableSpec = if (keyspace.isEmpty) table else s"$keyspace.$table"
     s"""INSERT INTO $tableSpec ($fieldStr) VALUES ($q) USING TTL $ttl"""
