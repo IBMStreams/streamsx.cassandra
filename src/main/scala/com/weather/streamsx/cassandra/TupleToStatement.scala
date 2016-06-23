@@ -7,6 +7,7 @@ import com.ibm.streams.operator.Tuple
 import com.ibm.streams.operator.Attribute
 import com.ibm.streams.operator.Type
 import com.ibm.streams.operator.meta.MapType
+import com.ibm.streams.operator.types.RString
 import collection.JavaConversions._
 
 case class Attr(index: Int, name: String, typex: Type, set: Boolean)
@@ -43,7 +44,7 @@ object TupleToStatement {
 //    keyT.getObjectType
 
 
-    val mizzap = t.getMap(nullMapName).asInstanceOf[java.util.Map[String, Boolean]]
+    val mizzap = t.getMap(nullMapName).asInstanceOf[java.util.Map[RString, Boolean]]
     val m = mizzap.toMap
 
     println(s"the map: $m")
