@@ -51,7 +51,7 @@ object TupleToStatement {
     val attributes = buffer.sortBy(a => a.getIndex).toList
 
     // remove the nullMap attribute from this list
-    val fields: List[Attr] = attributes.filter(a => a.getName == nullMapName).map(a => Attr(a, m))
+    val fields: List[Attr] = attributes.filterNot(a => a.getName == nullMapName).map(a => Attr(a, m))
     val nonNullAttrs = fields.filter(a => a.set)
     val ps = mkPreparedStatement(nonNullAttrs, t, session, keyspace, table, ttl)
 
