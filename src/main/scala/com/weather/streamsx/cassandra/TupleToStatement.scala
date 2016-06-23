@@ -72,7 +72,8 @@ object TupleToStatement {
     val fields  = nonNullAttrs.map(a => a.name).toSeq
     //There should be a caching layer here
     val ps = session.prepare(mkInsert(fields, keyspace, table, ttl))
-    println(ps.toString)
+    println(ps.getQueryString)
+    println(fields)
     ps
   }
 
