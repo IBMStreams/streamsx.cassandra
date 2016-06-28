@@ -40,3 +40,4 @@ com.weather.streams.cassandra/
 impl/
 toolkit.xml
 src/main/resources/etc/streams.conf
+/src/main/scala/com/weather/streamsx/cassandra/worksheets
