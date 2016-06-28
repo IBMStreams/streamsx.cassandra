@@ -116,19 +116,7 @@ object TupleToStatement {
     case "ustring" => tuple.getString(attr.index)
     case "blob" => tuple.getBlob(attr.index)
     case "xml" => tuple.getXML(attr.index).toString //Cassandra doesn't have XML as data type, thank goodness
-    case "list" => {
-      val listType: CollectionType = tuple.getList(attr.index).asInstanceOf[CollectionType]
-      val elementT: Class[_] = listType.getElementType.getObjectType
-      val rawList = tuple.getList(attr.index)
-      val list = listType.getLanguageType match {
-        case "Int" => List[Int]
-      }
-
-
-
-      val newList = rawList.asInstanceOf[java.util.List[elementT]]
-
-    }
+    case "list" => getListWithProperType(tuple, attr)
     //I wonder if there will need to be more specific qualifications with list<boolean>, list<int>, etc
     case "map" => tuple.getMap(attr.index) //same dubiosity for maps as for lists
 //    case "tuple" => tuple.getTuple(attr.index)
