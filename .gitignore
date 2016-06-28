@@ -36,3 +36,7 @@ project/plugins/project/
 /src/main/resources/etc/streams.conf
 impl/java/bin/*.jar
 
+com.weather.streams.cassandra/
+impl/
+toolkit.xml
+src/main/resources/etc/streams.conf
