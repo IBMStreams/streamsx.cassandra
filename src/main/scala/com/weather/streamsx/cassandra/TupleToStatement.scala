@@ -6,7 +6,7 @@ import com.datastax.driver.core.{Session, PreparedStatement, BoundStatement}
 import com.ibm.streams.operator.Tuple
 import com.ibm.streams.operator.Attribute
 import com.ibm.streams.operator.Type
-import com.ibm.streams.operator.meta.MapType
+import com.ibm.streams.operator.meta.{CollectionType, MapType}
 import com.ibm.streams.operator.types.RString
 import collection.JavaConversions._
 
@@ -109,20 +109,41 @@ object TupleToStatement {
     case "decimal32" => tuple.getBigDecimal(attr.index)
     case "decimal64" => tuple.getBigDecimal(attr.index)
     case "decimal128" => tuple.getBigDecimal(attr.index)
-//    case "complex32" =>
-//    case "complex64" =>
+//    case "complex32" => There's no Java equivalent type for either complex32 or complex64.
+//    case "complex64" => See the table in the Streams documentation showing SPL to Java equivalent types for more info.
     case "timestamp" => tuple.getTimestamp(attr.index)
     case "rstring" => tuple.getString(attr.index)
     case "ustring" => tuple.getString(attr.index)
     case "blob" => tuple.getBlob(attr.index)
     case "xml" => tuple.getXML(attr.index).toString //Cassandra doesn't have XML as data type, thank goodness
-    case "list" => tuple.getList(attr.index) //I'm dubious, I don't think collection types are going to be this easy
+    case "list" => {
+      val listType: CollectionType = tuple.getList(attr.index).asInstanceOf[CollectionType]
+      val elementT: Class[_] = listType.getElementType.getObjectType
+      val rawList = tuple.getList(attr.index)
+      val list = listType.getLanguageType match {
+        case "Int" => List[Int]
+      }
+
+
+
+      val newList = rawList.asInstanceOf[java.util.List[elementT]]
+
+    }
     //I wonder if there will need to be more specific qualifications with list<boolean>, list<int>, etc
     case "map" => tuple.getMap(attr.index) //same dubiosity for maps as for lists
 //    case "tuple" => tuple.getTuple(attr.index)
     case _ => "figure out better error logging than this"
   }
 
+  def getListWithProperType(tuple: Tuple, attr: Attr): List[Any] = {
+    val listType: CollectionType = tuple.getList(attr.index).asInstanceOf[CollectionType]
+    val elementT: Class[_] = listType.getElementType.getObjectType
+    val rawList = tuple.getList(attr.index)
+    println(s"the languageType is ${listType.getLanguageType}")
+    listType.getLanguageType match {
+      case "Int" => rawList.asInstanceOf[java.util.List[Int]].toList
+    }
+  }
 
 //  def getBoundStatement(list: List[Attr], ps: PreparedStatement): BoundStatement = {
 //    values =
