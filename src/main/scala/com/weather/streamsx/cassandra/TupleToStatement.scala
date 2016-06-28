@@ -124,7 +124,7 @@ object TupleToStatement {
   }
 
   def getListWithProperType(tuple: Tuple, attr: Attr): List[Any] = {
-    val listType: CollectionType = tuple.getList(attr.index).asInstanceOf[CollectionType]
+    val listType: CollectionType = attr.typex.asInstanceOf[CollectionType]
     val elementT: Class[_] = listType.getElementType.getObjectType
     val rawList = tuple.getList(attr.index)
     println(s"the languageType is ${listType.getLanguageType}")
