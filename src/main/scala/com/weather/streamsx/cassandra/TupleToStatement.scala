@@ -120,7 +120,7 @@ object TupleToStatement {
     //I wonder if there will need to be more specific qualifications with list<boolean>, list<int>, etc
     case "map" => tuple.getMap(attr.index) //same dubiosity for maps as for lists
 //    case "tuple" => tuple.getTuple(attr.index)
-    case _ => "figure out better error logging than this"
+    case _ => s"APPARENTLY I DUNNO WTF THIS TYPE IS: ${attr.typex.getLanguageType}"
   }
 
   def getListWithProperType(tuple: Tuple, attr: Attr): List[Any] = {

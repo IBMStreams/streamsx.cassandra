@@ -5,5 +5,6 @@ drop table IF EXISTS testkeyspace.testtable;
 create table IF NOT EXISTS testkeyspace.testtable (
   greeting varchar,
   count bigint,
+  testList list<int>,
   PRIMARY KEY (greeting)
 ) with caching = 'none';
