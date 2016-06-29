@@ -1,6 +1,5 @@
 package com.weather.streamsx.cassandra
 
-import java.util
 
 import com.datastax.driver.core.{Session, PreparedStatement, BoundStatement}
 import com.ibm.streams.operator.Tuple
@@ -8,12 +7,8 @@ import com.ibm.streams.operator.Attribute
 import com.ibm.streams.operator.Type
 import com.ibm.streams.operator.meta.{CollectionType, MapType}
 import com.ibm.streams.operator.types.RString
-import shapeless.T
 import collection.JavaConversions._
-import scala.reflect.{ClassTag, api}
-import scala.reflect.api.{TypeCreator, Universe}
 import scala.reflect.runtime.{universe => ru}
-import scala.reflect.runtime.universe._
 
 case class Attr(index: Int, name: String, typex: Type, set: Boolean)
 
