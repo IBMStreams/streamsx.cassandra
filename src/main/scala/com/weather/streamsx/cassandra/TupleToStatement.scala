@@ -1,14 +1,14 @@
 package com.weather.streamsx.cassandra
 
-import java.util
 
 import com.datastax.driver.core.{Session, PreparedStatement, BoundStatement}
 import com.ibm.streams.operator.Tuple
 import com.ibm.streams.operator.Attribute
 import com.ibm.streams.operator.Type
-import com.ibm.streams.operator.meta.MapType
+import com.ibm.streams.operator.meta.{CollectionType, MapType}
 import com.ibm.streams.operator.types.RString
 import collection.JavaConversions._
+import scala.reflect.runtime.{universe => ru}
 
 case class Attr(index: Int, name: String, typex: Type, set: Boolean)
 
@@ -109,44 +109,53 @@ object TupleToStatement {
     case "decimal32" => tuple.getBigDecimal(attr.index)
     case "decimal64" => tuple.getBigDecimal(attr.index)
     case "decimal128" => tuple.getBigDecimal(attr.index)
-//    case "complex32" =>
-//    case "complex64" =>
+//    case "complex32" => There's no Java equivalent type for either complex32 or complex64.
+//    case "complex64" => See the table in the Streams documentation showing SPL to Java equivalent types for more info.
     case "timestamp" => tuple.getTimestamp(attr.index)
     case "rstring" => tuple.getString(attr.index)
     case "ustring" => tuple.getString(attr.index)
     case "blob" => tuple.getBlob(attr.index)
     case "xml" => tuple.getXML(attr.index).toString //Cassandra doesn't have XML as data type, thank goodness
-    case "list" => tuple.getList(attr.index) //I'm dubious, I don't think collection types are going to be this easy
-    //I wonder if there will need to be more specific qualifications with list<boolean>, list<int>, etc
-    case "map" => tuple.getMap(attr.index) //same dubiosity for maps as for lists
-//    case "tuple" => tuple.getTuple(attr.index)
-    case _ => "figure out better error logging than this"
+    case l if l.startsWith("list") => {
+      val listType: CollectionType = attr.typex.asInstanceOf[CollectionType]
+      val elementT: Class[_] = listType.getElementType.getObjectType // This is the class of the individual elements: Int, String, etc.
+      //    println(s"the languageType is ${listType.getLanguageType}") // This is the SPL type, such as list<int32>
+      //    val compositeType = listType.getAsCompositeElementType // This is the collection type, java.util.List in this case
+      //    println(s"THE ELEMENT TYPE IS: ${elementT.getName} AND THE COMPOSITE CLASS TYPE IS ${compositeType.getName}")
+      val rawList = tuple.getList(attr.index)
+
+      castListToType[elementT.type](rawList)
+    }
+    case s if s.startsWith("set") => {
+      val setType: CollectionType = attr.typex.asInstanceOf[CollectionType]
+      val elementT: Class[_] = setType.getElementType.getObjectType
+      val rawSet = tuple.getSet(attr.index)
+
+      castSetToType[elementT.type](rawSet)
+    }
+    case m if m.startsWith("map") => {
+          val mapType: MapType = attr.typex.asInstanceOf[MapType]
+          val keyT: Class[_] = mapType.getKeyType.getObjectType
+          val valT: Class[_] = mapType.getValueType.getObjectType
+
+          val rawMap = tuple.getMap(attr.index)
+
+          castMapToType[keyT.type, valT.type](rawMap)
+    }
+    case _ => s"APPARENTLY I DUNNO WTF THIS TYPE IS: ${attr.typex.getLanguageType}"
   }
 
+  def castListToType[A <: Any](rawList: java.util.List[_]): java.util.List[A] = {
+    rawList.asInstanceOf[java.util.List[A]]
+  }
 
-//  def getBoundStatement(list: List[Attr], ps: PreparedStatement): BoundStatement = {
-//    values =
-//
-//    return null
-//  }
+  def castSetToType[A <: Any](rawSet: java.util.Set[_]): java.util.Set[A] = {
+    rawSet.asInstanceOf[java.util.Set[A]]
+  }
 
-/*
-
-tuples come in from streams along with some indication of whether each value is null
-
-  I can massage this format into a list of case class Attr()s
-
-  From these Attr()s I need to create a prepared statement using only the fields that are not null
-    There's going to be a lot of repitition in these prepared statements, there should be some caching
-    The cache can be a LRU style where the presence of nulls in the statement maps to a bit string, and the bit string is what's compared.
-    I'm distracted thinking about some debugging here for when fields change and/or the number of fields changes
-      The first time a tuple comes in, hash the field names into some UUID.
-      Check each tuple's field names against this hash.
-      If the two hashes are ever not equal, replace the hash and invalidate the bitmask cache because there's new/different fields.
-  When I have the prepared statement, I can turn that into a bound statement by binding it to the values that are not null from the tuple
-  I can have a session that asynchronously inserts the bound statement into Cassandra
-
-*/
+  def castMapToType[K <: Any, V <: Any](rawMap: java.util.Map[_,_]): java.util.Map[K,V] = {
+    rawMap.asInstanceOf[java.util.Map[K,V]]
+  }
 
 
 }
