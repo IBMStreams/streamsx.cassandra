@@ -149,12 +149,12 @@ object TupleToStatement {
     rawList.asInstanceOf[java.util.List[A]]
   }
 
-  def castSetToType[A <: Any](rawSet: java.util.Set[_]): Set[A] = {
-    rawSet.asInstanceOf[java.util.Set[A]].toSet
+  def castSetToType[A <: Any](rawSet: java.util.Set[_]): java.util.Set[A] = {
+    rawSet.asInstanceOf[java.util.Set[A]]
   }
 
-  def castMapToType[K <: Any, V <: Any](rawMap: java.util.Map[_,_]): Map[K,V] = {
-    rawMap.asInstanceOf[java.util.Map[K,V]].toMap
+  def castMapToType[K <: Any, V <: Any](rawMap: java.util.Map[_,_]): java.util.Map[K,V] = {
+    rawMap.asInstanceOf[java.util.Map[K,V]]
   }
 
 
