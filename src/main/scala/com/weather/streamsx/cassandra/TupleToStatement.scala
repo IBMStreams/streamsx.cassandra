@@ -148,6 +148,11 @@ object TupleToStatement {
     val rawList = tuple.getList(attr.index)
 
     println(s"the languageType is ${listType.getLanguageType}")
+    val ob = listType.getAsCompositeElementType
+
+    val objectClass = attr.typex.getObjectType
+    println(s"THE OBJECT CLASS IS: ${objectClass.getName} AND THE COMPOSITE CLASS TYPE IS ${ob.getName}")
+
     listType.getLanguageType match {
       case "Int" => rawList.asInstanceOf[java.util.List[Int]].toList
       case _ => rawList.toList
