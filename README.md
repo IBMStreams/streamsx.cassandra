@@ -2,7 +2,7 @@
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+#Table of Contents
 
 - [Version 0.2: Still Really Alpha But Now With Collections!!](#version-02-still-really-alpha-but-now-with-collections)
   - [Coming in Future Versions](#coming-in-future-versions)
@@ -12,7 +12,7 @@
 - [Usage](#usage)
   - [Sample SPL Gists](#sample-spl-gists)
   - [The Null Map Parameter](#the-null-map-parameter)
-    - [Things That May Come Up In Testing](#things-that-may-come-up-in-testing)
+- [Things That May Come Up In Testing](#things-that-may-come-up-in-testing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -110,7 +110,7 @@ And now in my CassandraSink operator:
 
 I have NOT tested out trying to write nulls to Cassandra through this. The gist I shared up there is the full extent of my testing.
 
-### Things That May Come Up In Testing
+# Things That May Come Up In Testing
 - RString vs. String: I had some issues with this writing the base code. 
 I think rstrings are getting writing to Cassandra correctly, but it wouldn't surprise me if there's issues.
 - Numeric types not mapping properly. It wouldn't surprise me if this is an issue.
