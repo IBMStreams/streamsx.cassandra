@@ -8,7 +8,12 @@ import com.ibm.streams.operator.Attribute
 import com.ibm.streams.operator.Type
 import com.ibm.streams.operator.meta.{CollectionType, MapType}
 import com.ibm.streams.operator.types.RString
+import shapeless.T
 import collection.JavaConversions._
+import scala.reflect.{ClassTag, api}
+import scala.reflect.api.{TypeCreator, Universe}
+import scala.reflect.runtime.{universe => ru}
+import scala.reflect.runtime.universe._
 
 case class Attr(index: Int, name: String, typex: Type, set: Boolean)
 
@@ -116,20 +121,66 @@ object TupleToStatement {
     case "ustring" => tuple.getString(attr.index)
     case "blob" => tuple.getBlob(attr.index)
     case "xml" => tuple.getXML(attr.index).toString //Cassandra doesn't have XML as data type, thank goodness
-    case s if s.startsWith("list") => getListWithProperType(tuple, attr)
+    case s if s.startsWith("list") => {
+
+
+
+      getListWithProperType(tuple, attr)
+    }
     //I wonder if there will need to be more specific qualifications with list<boolean>, list<int>, etc
     case "map" => tuple.getMap(attr.index) //same dubiosity for maps as for lists
 //    case "tuple" => tuple.getTuple(attr.index)
     case _ => s"APPARENTLY I DUNNO WTF THIS TYPE IS: ${attr.typex.getLanguageType}"
   }
 
+
+  // extract the sub type whether by java class or string or whatever
+  // write a method def getList(T): List[T]
+  // use that method to get List[Int] or List[String] or whatever
+
+
+
+
+
+
+
+
+
   def getListWithProperType(tuple: Tuple, attr: Attr): List[Any] = {
     val listType: CollectionType = attr.typex.asInstanceOf[CollectionType]
+    val blah = attr.typex.getObjectType
     val elementT: Class[_] = listType.getElementType.getObjectType
     val rawList = tuple.getList(attr.index)
+
     println(s"the languageType is ${listType.getLanguageType}")
     listType.getLanguageType match {
       case "Int" => rawList.asInstanceOf[java.util.List[Int]].toList
+      case _ => rawList.toList
     }
   }
+
+//  def getListWithProperTypeXXXXXX[T](tuple: Tuple, attr: Attr): List[T] = {
+//    val listType: CollectionType = attr.typex.asInstanceOf[CollectionType]
+//
+//    val ob = listType.getAsCompositeElementType
+//
+//    val objectClass = attr.typex.getObjectType
+//    println(s"THE OBJECT CLASS IS: ${objectClass.getName} AND THE COMPOSITE CLASS TYPE IS ${ob.getName}")
+//    val mirror = runtimeMirror(objectClass.getClassLoader)  // obtain runtime mirror
+//    val sym = mirror.staticClass(objectClass.getName)  // obtain class symbol for `c`
+//    val tpe = sym.selfType  // obtain type object for `c`
+//    val typeTag = TypeTag(mirror, new TypeCreator {
+//      def apply[U <: Universe with Singleton](m: api.Mirror[U]) =
+//        if (m eq mirror) tpe.asInstanceOf[U # Type]
+//        else throw new IllegalArgumentException(s"Type tag defined in $mirror cannot be migrated to other mirrors.")
+//    })
+//
+//  }
+
+
+  def getTypeTag[T: ru.TypeTag](obj: (T) => Any) = {
+    ru.typeTag[T]
+  }
+
+
 }
