@@ -116,9 +116,7 @@ object TupleToStatement {
     case "ustring" => tuple.getString(attr.index)
     case "blob" => tuple.getBlob(attr.index)
     case "xml" => tuple.getXML(attr.index).toString //Cassandra doesn't have XML as data type, thank goodness
-    case s if s.startsWith("list") => {
-//      getListWithProperType(tuple, attr)
-
+    case l if l.startsWith("list") => {
       val listType: CollectionType = attr.typex.asInstanceOf[CollectionType]
       val elementT: Class[_] = listType.getElementType.getObjectType // This is the class of the individual elements: Int, String, etc.
       //    println(s"the languageType is ${listType.getLanguageType}") // This is the SPL type, such as list<int32>
@@ -127,44 +125,25 @@ object TupleToStatement {
       val rawList = tuple.getList(attr.index)
 
       castListToType[elementT.type](rawList)
-
     }
-//    case s if s.startsWith("set") => getSetWithProperType(tuple, attr)
-//    case s if s.startsWith("map") => getMapWithProperType(tuple, attr)
+    case s if s.startsWith("set") => {
+      val setType: CollectionType = attr.typex.asInstanceOf[CollectionType]
+      val elementT: Class[_] = setType.getElementType.getObjectType
+      val rawSet = tuple.getSet(attr.index)
+
+      castSetToType[elementT.type](rawSet)
+    }
+    case m if m.startsWith("map") => {
+          val mapType: MapType = attr.typex.asInstanceOf[MapType]
+          val keyT: Class[_] = mapType.getKeyType.getObjectType
+          val valT: Class[_] = mapType.getValueType.getObjectType
+
+          val rawMap = tuple.getMap(attr.index)
+
+          castMapToType[keyT.type, valT.type](rawMap)
+    }
     case _ => s"APPARENTLY I DUNNO WTF THIS TYPE IS: ${attr.typex.getLanguageType}"
   }
-
-
-
-//  def getListWithProperType(tuple: Tuple, attr: Attr): java.util.List[Any] = {
-//    val listType: CollectionType = attr.typex.asInstanceOf[CollectionType]
-//    val elementT: Class[_] = listType.getElementType.getObjectType // This is the class of the individual elements: Int, String, etc.
-////    println(s"the languageType is ${listType.getLanguageType}") // This is the SPL type, such as list<int32>
-////    val compositeType = listType.getAsCompositeElementType // This is the collection type, java.util.List in this case
-////    println(s"THE ELEMENT TYPE IS: ${elementT.getName} AND THE COMPOSITE CLASS TYPE IS ${compositeType.getName}")
-//    val rawList = tuple.getList(attr.index)
-//
-//    castListToType[elementT.type](rawList)
-//  }
-//
-//  def getSetWithProperType(tuple: Tuple, attr: Attr): Set[Any] = {
-//    val setType: CollectionType = attr.typex.asInstanceOf[CollectionType]
-//    val elementT: Class[_] = setType.getElementType.getObjectType
-//    val rawSet = tuple.getSet(attr.index)
-//
-//    castSetToType[elementT.type](rawSet)
-//  }
-//
-//  def getMapWithProperType(tuple: Tuple, attr: Attr): Map[Any, Any] = {
-//    val mapType: MapType = attr.typex.asInstanceOf[MapType]
-//    val keyT: Class[_] = mapType.getKeyType.getObjectType
-//    val valT: Class[_] = mapType.getValueType.getObjectType
-//
-//    val rawMap = tuple.getMap(attr.index)
-//
-//    castMapToType[keyT.type, valT.type](rawMap)
-//  }
-  
 
   def castListToType[A <: Any](rawList: java.util.List[_]): java.util.List[A] = {
     rawList.asInstanceOf[java.util.List[A]]
