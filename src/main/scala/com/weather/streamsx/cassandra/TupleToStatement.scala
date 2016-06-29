@@ -151,7 +151,9 @@ object TupleToStatement {
     val ob = listType.getAsCompositeElementType
 
     val objectClass = attr.typex.getObjectType
-    println(s"THE OBJECT CLASS IS: ${objectClass.getName} AND THE COMPOSITE CLASS TYPE IS ${ob.getName}")
+    println(s"THE ELEMENT TYPE IS: ${elementT.getName} AND THE COMPOSITE CLASS TYPE IS ${ob.getName}")
+
+    val obb = listType.
 
     listType.getLanguageType match {
       case "Int" => rawList.asInstanceOf[java.util.List[Int]].toList
