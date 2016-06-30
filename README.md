@@ -27,8 +27,14 @@ NOTE: tuple field names need to match the field names in your Cassandra table EX
 
 ## Coming in Future Versions
 
+### Future Functionality
 - A caching layer for the prepared statements to greatly improve performance
 - A better way of doing configuration
+
+### Documentation To-Dos
+- create a table showing SPL types and their corresponding Cassandra types
+- include a section about Artifactory
+
 
 # Setup
 
