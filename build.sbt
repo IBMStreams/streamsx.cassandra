@@ -69,24 +69,42 @@ parallelExecution in Test := false
 
 val jarFn = "streamsx.cassandra.jar"
 val libDir = "impl/lib"
-val toolkit = TaskKey[Unit]("toolkit", "Makes the SPL toolkit")
-val ctk = TaskKey[Unit]("ctk", "Cleans the SPL toolkit")
-//val dist = TaskKey[Unit]("dist", "Makes a distribution for the toolkit")
 
-test in assembly := {}
+cleanFiles <+= baseDirectory { base => base / "com.weather.streamsx.sqs" }
+
+def rmToolkit(u: Unit): Unit = "spl-make-toolkit -c -i ." !
+
+val ctk = TaskKey[Unit]("ctk", "Cleans the SPL toolkit")
+ctk <<= clean map rmToolkit
 
 def mkToolkit(jar: sbt.File): Unit = "spl-make-toolkit -i ." ! match {
   case 0 => s"cp -p ${jar.getPath} $libDir/$jarFn" !
   case _ => sys.error(s"not copying $jarFn bc toolkit creation failed")
 }
 
-def rmToolkit(u: Unit): Unit = "spl-make-toolkit -c -i ." !
+val dist = TaskKey[Unit]("dist", "Makes a distribution for the toolkit")
+dist := {
+  val dir = baseDirectory.value.getName
+  val parent = baseDirectory.value.getParent
+  val excludes = Seq(
+    "build.sbt",
+    "data",
+    "lib/com.ibm.streams.operator.jar",
+    "output",
+    "project",
+    "src",
+    "target",
+    ".apt_generated",
+    ".classpath",
+    ".git",
+    ".gitignore",
+    ".project",
+    ".settings",
+    ".toolkitList"
+  ).map(d => s"--exclude=$d").mkString(" ")
+  s"tar -zcf $parent/${name.value}_${version.value}.tgz -C $parent $dir $excludes" !
+}
 
-cleanFiles <+= baseDirectory { base => base / "com.weather.streamsx.sqs" }
-
+val toolkit = TaskKey[Unit]("toolkit", "Makes the SPL toolkit")
 toolkit <<= assembly map mkToolkit
-
-ctk <<= clean map rmToolkit
-
-
-//net.virtualvoid.sbt.graph.Plugin.graphSettings
+dist <<= dist.dependsOn(toolkit)
