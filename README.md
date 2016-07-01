@@ -38,7 +38,16 @@ NOTE: tuple field names need to match the field names in your Cassandra table EX
 
 # Setup
 
-## Updating To New Version
+## Using the Distribution
+1. Download the tar to your VM
+2. Untar the tar
+3. Add the extracted tar as a toolkit location in Streams Studio
+
+That's it!
+
+## Building From Source
+
+### Updating To New Version
 
 If you have already gone through the install from scratch instructions below and just need the new version,
 `cd` to the toolkit folder on your vm and run the following commands:
@@ -51,7 +60,7 @@ sbt toolkit
 
 Refresh the toolkit location in Streams Studio, and you should be good to go!
 
-## Installing Toolkit From Scratch
+### Installing Toolkit From Scratch
 
 1. Install SBT on your virtual machine. See instructions for RedHat here: <http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Linux.html>
 2. Clone this repo somewhere convenient on the filesystem of your virtual machine. It doesn't need to be in your Eclipse workspace
