@@ -7,8 +7,6 @@ import com.ibm.streams.operator.Tuple
 import com.weather.streamsx.cassandra.CasAnalyticsConnector.session
 import com.weather.streamsx.util.{StringifyStackTrace => SST}
 
-
-
 object CassandraSinkImpl {
   def mkWriter(cfg: java.util.Map[String, String]): CassandraSinkImpl = {
     import scala.collection.JavaConverters._
