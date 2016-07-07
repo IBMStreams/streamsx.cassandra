@@ -11,7 +11,7 @@ object Attr{
   def apply(a: Attribute, m: Map[String, Boolean]): Attr = apply(a, m(a.getName))
 
 
-  val getValueFromTuple = (tuple: Tuple, attr: Attr) => { attr.typex.getLanguageType match {
+  val getValueFromTuple: (Tuple, Attr) => Any = (tuple, attr) => { attr.typex.getLanguageType match {
     /*
        There's no Java equivalent type for either complex32 or complex64.
        See the table in the Streams documentation showing SPL to Java equivalent types for more info.
