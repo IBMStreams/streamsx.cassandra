@@ -10,7 +10,7 @@ class StatementCache(table: String, keyspace: String, ttl: Long, session: Sessio
   }
 
   private val loaderFn = (m: Map[String, Boolean]) => {
-    val keys = m.filterNot(kv => kv._2 == false).keys.toList
+    val keys = m.filterNot(kv => kv._2 == false).keys.toList.sorted
     val fieldStr = keys.mkString(",")
     val q = ("?" * keys.length).mkString(",")
     val tableSpec = if (keyspace.isEmpty) table else s"$keyspace.$table"
