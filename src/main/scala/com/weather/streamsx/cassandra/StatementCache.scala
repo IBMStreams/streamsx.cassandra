@@ -14,7 +14,9 @@ class StatementCache(table: String, keyspace: String, ttl: Long, session: Sessio
     val fieldStr = keys.mkString(",")
     val q = ("?" * keys.length).mkString(",")
     val tableSpec = if (keyspace.isEmpty) table else s"$keyspace.$table"
-    session.prepare(s"""INSERT INTO $tableSpec ($fieldStr) VALUES ($q) USING TTL $ttl""")
+    val insertStr = s"""INSERT INTO $tableSpec ($fieldStr) VALUES ($q) USING TTL $ttl"""
+    println(insertStr)
+    session.prepare(insertStr)
   }
 
   private val cache: LoadingCache[Map[String, Boolean], PreparedStatement] = CacheBuilder.newBuilder()
