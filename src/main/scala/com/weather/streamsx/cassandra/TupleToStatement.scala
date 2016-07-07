@@ -28,7 +28,7 @@ object TupleToStatement {
     val buffer = scala.collection.mutable.ListBuffer.empty[Attribute]
     for(i <- 0 until schema.getAttributeCount) {buffer += schema.getAttribute(i)}
     val attributes = buffer.sortBy(a => a.getIndex).toList
-    attributes.filterNot(a => a.getName == nullMapName).map(a => Attr(a, m)).filter(a => a.set)
+    attributes.filterNot(a => a.getName == nullMapName).map(a => Attr(a, m)).filter(a => a.set).sortBy(a => a.name)
   }
 
   private def mkBoundStatement(ps: PreparedStatement, nonNullAttrs: List[Attr], tuple: Tuple): BoundStatement = {
