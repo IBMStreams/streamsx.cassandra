@@ -33,7 +33,7 @@ object TupleToStatement {
 
   private def mkBoundStatement(ps: PreparedStatement, nonNullAttrs: List[Attr], tuple: Tuple): BoundStatement = {
     val values: List[Any] = { nonNullAttrs.map(a => getValueFromTuple(tuple, a)) }
-    println(s"Values: $values")
+//    println(s"Values: $values")
     ps.bind(values.asInstanceOf[Seq[Object]]:_*)
   }
 
