@@ -10,9 +10,9 @@ class StatementCache(table: String, keyspace: String, ttl: Long, session: Sessio
   }
 
   private val loaderFn = (m: Map[String, Boolean]) => {
-    val keys = m.filterNot(kv => kv._2 == false).keys.toList.sorted
+    val keys = m.filter(_._2).keys.toList.sorted
     val fieldStr = keys.mkString(",")
-    val q = ("?" * keys.length).mkString(",")
+    val q = ("?" * keys.length).mkString(",") //todo look into Stream.continually.take(keys.length)
     val tableSpec = if (keyspace.isEmpty) table else s"$keyspace.$table"
     val insertStr = s"""INSERT INTO $tableSpec ($fieldStr) VALUES ($q) USING TTL $ttl"""
 //    println(insertStr)
@@ -20,7 +20,7 @@ class StatementCache(table: String, keyspace: String, ttl: Long, session: Sessio
   }
 
   private val cache: LoadingCache[Map[String, Boolean], PreparedStatement] = CacheBuilder.newBuilder()
-    .maximumSize(1000) //??
+    .maximumSize(1000) //TODO: make this a parameter
     .build(loader)
 
   def get(m: Map[String, Boolean]): PreparedStatement = cache.get(m)
