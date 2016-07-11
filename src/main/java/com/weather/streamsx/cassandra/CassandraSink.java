@@ -43,6 +43,7 @@ public class CassandraSink extends AbstractOperator {
     String table = null;
     Long ttl = null;
     String nullMap = null;
+    Integer cacheSize = null;
 
 
     /**
@@ -94,7 +95,7 @@ public class CassandraSink extends AbstractOperator {
         // TODO Insert code here to process the incoming tuple,
         // typically sending tuple data to an external system or data store.
         // String value = tuple.getString("AttributeName");
-        impl.insertTuple(stream, tuple, keyspace, table, ttl, nullMap);
+        impl.insertTuple(tuple, keyspace, table, ttl, nullMap, cacheSize);
     }
 
     /**
@@ -124,4 +125,7 @@ public class CassandraSink extends AbstractOperator {
 
     @Parameter(name="nullMap", description = "Name of the tuple field that is a Map[String, Boolean] representing which fields are null", optional = false)
     public void setNullMap(String str) { nullMap = str; }
+
+    @Parameter(name="cacheSize", description = "Maximum number of entries to hang onto in the PreparedStatement cache")
+    public void setCacheSize(Integer i) { cacheSize = i; }
 }

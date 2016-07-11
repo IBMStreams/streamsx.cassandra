@@ -11,11 +11,11 @@ import scalaz.Failure
 
 object TupleToStatement {
 
-  def apply(t: Tuple, session: Session, keyspace: String, table: String, ttl: Long, nullMapName: String): BoundStatement = {
-    val cache = new StatementCache(table, keyspace, ttl, session)
-    val m = mkNullValueMap(t, nullMapName)
-    val nonNullAttrs = mkAttrList(t, m, nullMapName)
-    mkBoundStatement(cache.get(m), nonNullAttrs, t)
+  def apply(args: SinkArgs, session: Session): BoundStatement = {
+    val cache = new StatementCache(args, session)
+    val m = mkNullValueMap(args.tuple, args.nullMapName)
+    val nonNullAttrs = mkAttrList(args.tuple, m, args.nullMapName)
+    mkBoundStatement(cache.get(m), nonNullAttrs, args.tuple)
   }
 
   private def mkNullValueMap(t: Tuple, nullMapName: String): Map[String, Boolean] = {
