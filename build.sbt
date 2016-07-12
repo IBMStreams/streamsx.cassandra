@@ -24,7 +24,7 @@ val scalazVersion          = "7.1.2"
 val slf4jVersion           = "1.7.12"
 val sprayJsonVersion       = "1.3.1"
 val ssglibVersion          = "3.1.0-RELEASE"
-val streamsxUtilVersion    = "0.2.3-RELEASE"
+val streamsxUtilVersion    = "0.2.5-RELEASE"
 
 
 val ssgDevHost          = "jenkinsutil.dev.sun.weather.com"
@@ -58,11 +58,11 @@ libraryDependencies ++= Seq(
   "org.slf4j"                    % "slf4j-simple"          % slf4jVersion            % "test",
   "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
   "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test",
-   "com.weather"                 %% "cfg"                   % cfgVersion
-  //  "com.weather.ssg"             %% "ssglib"                % ssglibVersion,
-  //  "org.scalaz"                  %% "scalaz-core"           % scalazVersion,
-  //  "com.amazonaws"                % "aws-java-sdk-s3"       % awsJavaSdkVersion,
-  //  "com.amazonaws"                % "aws-java-sdk-sqs"      % awsJavaSdkVersion,
+    "org.scalaz"                  %% "scalaz-core"           % scalazVersion % "provided",
+  "io.circe"                    %% "circe-core"            % circeVersion,
+  "io.circe"                    %% "circe-generic"         % circeVersion,
+  "io.circe"                    %% "circe-jawn"            % circeVersion
+
 )
 
 parallelExecution in Test := false

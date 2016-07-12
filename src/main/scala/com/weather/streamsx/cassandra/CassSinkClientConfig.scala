@@ -6,11 +6,12 @@ import javax.net.ssl.{SSLContext, KeyManagerFactory}
 
 import com.datastax.driver.core.SSLOptions._
 import com.datastax.driver.core.{SSLOptions, PlainTextAuthProvider, AuthProvider, ConsistencyLevel}
-import io.circe._, generic.semiauto._
 import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
 
-import scalaz.Validation
 import scalaz._, Scalaz._
+
+
+
 
 case class CassSinkClientConfig(
                                  port: Int,
@@ -32,7 +33,7 @@ case class CassSinkClientConfig(
                                )
 
 object CassSinkClientConfig {
-
+  import io.circe._, generic.semiauto._
   private[cassandra] implicit val rdrDecoder: Decoder[CassSinkClientConfig] = deriveDecoder[CassSinkClientConfig]
   private[cassandra] implicit val rdrEncoder: Encoder[CassSinkClientConfig] = deriveEncoder[CassSinkClientConfig]
 

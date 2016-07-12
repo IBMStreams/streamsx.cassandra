@@ -29,7 +29,6 @@ object CassandraSinkImpl {
 }
 
 class CassandraSinkImpl(connector: CassandraConnector) extends CassandraAwaiter{
-
   override protected val log = org.slf4j.LoggerFactory.getLogger(getClass)
   override protected val writeOperationTimeout = connector.writeOperationTimeout
 
