@@ -8,5 +8,6 @@ create table IF NOT EXISTS testkeyspace.testtable (
   testList list<int>,
   testSet set<int>,
   testMap map<int, boolean>,
-  PRIMARY KEY (greeting)
+  nInt int,
+  PRIMARY KEY (count)
 ) with caching = 'none';

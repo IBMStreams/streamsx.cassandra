@@ -44,6 +44,7 @@ public class CassandraSink extends AbstractOperator {
     Long ttl = null;
     String nullMap = null;
     Integer cacheSize = null;
+    String cfgZnode = null;
 
 
     /**
@@ -59,13 +60,13 @@ public class CassandraSink extends AbstractOperator {
 //        Logger.getLogger(this.getClass()).trace("Operator " + context.getName() + " initializing in PE: " + context.getPE().getPEId() + " in Job: " + context.getPE().getJobId() );
 
         CasAnalyticsConnector.apply();
-        java.util.Map<String, String> cfg = new java.util.HashMap<String, String>();
-        cfg.put("keyspace", keyspace);
-        cfg.put("table", table);
-        cfg.put("consistencylevel", "local_quorum");
+//        java.util.Map<String, String> cfg = new java.util.HashMap<String, String>();
+//        cfg.put("keyspace", keyspace);
+//        cfg.put("table", table);
+//        cfg.put("consistencylevel", "local_quorum");
 
         if (impl == null) {
-            impl = CassandraSinkImpl.mkWriter(cfg);
+            impl = CassandraSinkImpl.mkWriter();
         }
 
     }
@@ -95,7 +96,7 @@ public class CassandraSink extends AbstractOperator {
         // TODO Insert code here to process the incoming tuple,
         // typically sending tuple data to an external system or data store.
         // String value = tuple.getString("AttributeName");
-        impl.insertTuple(tuple, keyspace, table, ttl, nullMap, cacheSize);
+        impl.insertTuple(tuple, keyspace, table, ttl, nullMap, cacheSize, cfgZnode);
     }
 
     /**
@@ -127,5 +128,8 @@ public class CassandraSink extends AbstractOperator {
     public void setNullMap(String str) { nullMap = str; }
 
     @Parameter(name="cacheSize", description = "Maximum number of entries to hang onto in the PreparedStatement cache")
-    public void setCacheSize(Integer i) { cacheSize = i; }
+    public void setCacheSize(int i) { cacheSize = i; }
+
+    @Parameter(name="cfgZnode", description = "Name of the Znode where configuration is stored")
+    public void setCfgZnode(String s) {cfgZnode = s;}
 }

@@ -2,13 +2,11 @@ package com.weather.streamsx.cassandra
 
 import com.datastax.driver.core._
 import com.datastax.driver.core.policies.{DCAwareRoundRobinPolicy, TokenAwarePolicy}
-import com.weather.streamsx.cassandra.config.CassandraConfig
 
-object cassanalytics extends CassandraConfig("cassandra-analytics")
-
-
-abstract class CassandraConnector(val ccfg: CassandraConfig) {
+class CassandraConnector(ccfg: CassSinkClientConfig) {
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)
+  val writeOperationTimeout = ccfg.writeOperationTimeout
+
 
   protected val cluster = {
     val c = Cluster.builder()
@@ -16,8 +14,8 @@ abstract class CassandraConnector(val ccfg: CassandraConfig) {
       .withPort(ccfg.port)
       .withAuthProvider(ccfg.authProvider)
       .withSSL(ccfg.sslOptions.orNull)
-    if (ccfg.localdc.isEmpty) c
-    else c.withLoadBalancingPolicy(new TokenAwarePolicy(DCAwareRoundRobinPolicy.builder().withLocalDc(ccfg.localdc).build()))
+    if (ccfg.localDC.isEmpty) c
+    else c.withLoadBalancingPolicy(new TokenAwarePolicy(DCAwareRoundRobinPolicy.builder().withLocalDc(ccfg.localDC).build()))
   }.build()
 
   val session = cluster.connect
@@ -30,6 +28,6 @@ abstract class CassandraConnector(val ccfg: CassandraConfig) {
   }
 }
 
-object CasAnalyticsConnector extends CassandraConnector(cassanalytics) {
-  def apply(): Unit = {}
-}
+//object CasAnalyticsConnector extends CassandraConnector(cassanalytics) {
+//  def apply(): Unit = {}
+//}
