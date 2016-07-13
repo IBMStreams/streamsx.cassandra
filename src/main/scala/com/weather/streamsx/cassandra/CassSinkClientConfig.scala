@@ -1,5 +1,7 @@
 package com.weather.streamsx.cassandra
 
+import io.circe._, generic.semiauto._
+
 import java.net.InetAddress
 import java.security.KeyStore
 import javax.net.ssl.{SSLContext, KeyManagerFactory}
@@ -8,10 +10,29 @@ import com.datastax.driver.core.SSLOptions._
 import com.datastax.driver.core.{SSLOptions, PlainTextAuthProvider, AuthProvider, ConsistencyLevel}
 import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
 
-import scalaz._, Scalaz._
+//import scalaz._, Scalaz._
 
 
 
+//
+//case class DifferentCaseClass(
+//                               port: Int,
+//                               remapclusterminutes: Int,
+//                               seeds: List[InetAddress],
+//                               consistencylevel: ConsistencyLevel,
+//                               authEnabled: Boolean,
+//                               authUsername: String,
+//                               authPassword: String,
+//                               sslEnabled: Boolean,
+//                               sslKeystore: String,
+//                               sslPassword: String,
+//                               writeOperationTimeout: Long,
+//                               dateFormat: DateTimeFormatter,
+//                               authProvider: AuthProvider,
+//                               localDC: String,
+//                               sslOptions: Option[SSLOptions],
+//                               consistencyLevel: ConsistencyLevel
+//                             )
 
 case class CassSinkClientConfig(
                                  port: Int,
@@ -33,19 +54,13 @@ case class CassSinkClientConfig(
                                )
 
 object CassSinkClientConfig {
-  import io.circe._, generic.semiauto._
-  private[cassandra] implicit val rdrDecoder: Decoder[CassSinkClientConfig] = deriveDecoder[CassSinkClientConfig]
-  private[cassandra] implicit val rdrEncoder: Encoder[CassSinkClientConfig] = deriveEncoder[CassSinkClientConfig]
 
-  def read(znode: String): Option[CassSinkClientConfig] = ZkClient.zkCli.read[CassSinkClientConfig](znode)
-  def write(znode: String, cc: CassSinkClientConfig): Unit = ZkClient.zkCli.write(znode, cc)
-
-  def getConsistencyLevel(key: String, cfg: Map[String, String]): Validation[String, ConsistencyLevel] = cfg.get(key) match {
-    case Some(l) =>
-      try ConsistencyLevel.valueOf(l.toUpperCase).success
-      catch { case e: Throwable => s"Error setting consistency level to $l".failure }
-    case _ => s"Key not found in config map -- $key".failure
-  }
+//  def getConsistencyLevel(key: String, cfg: Map[String, String]): Validation[String, ConsistencyLevel] = cfg.get(key) match {
+//    case Some(l) =>
+//      try ConsistencyLevel.valueOf(l.toUpperCase).success
+//      catch { case e: Throwable => s"Error setting consistency level to $l".failure }
+//    case _ => s"Key not found in config map -- $key".failure
+//  }
 
   val DEFAULT_PORT                   = "9042"
   val DEFAULT_REMAPCLUSTERMINUTES    = "15"
@@ -91,7 +106,10 @@ object CassSinkClientConfig {
       case true => new PlainTextAuthProvider(authUsername, authPassword)
       case _ => AuthProvider.NONE
     }
-    val consistencyLevel: ConsistencyLevel  = getConsistencyLevel("consistencylevel", config).toOption.get
+    val consistencyLevel: ConsistencyLevel  = ConsistencyLevel.ALL
+
+//    val consistencyLevel: ConsistencyLevel  = getConsistencyLevel("consistencylevel", config).toOption.get
+
 
     CassSinkClientConfig(
       port = port,
@@ -112,4 +130,13 @@ object CassSinkClientConfig {
       consistencyLevel = consistencyLevel
     )
   }
+
+
+  private[cassandra] implicit val rdrDecoder: Decoder[CassSinkClientConfig] = deriveDecoder[CassSinkClientConfig]
+  private[cassandra] implicit val rdrEncoder: Encoder[CassSinkClientConfig] = deriveEncoder[CassSinkClientConfig]
+
+  def read(znode: String): Option[CassSinkClientConfig] = ZkClient.zkCli.read[CassSinkClientConfig](znode)
+  def write(znode: String, cc: CassSinkClientConfig): Unit = ZkClient.zkCli.write(znode, cc)
+
+
 }

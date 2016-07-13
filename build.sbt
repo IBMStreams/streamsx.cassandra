@@ -24,7 +24,7 @@ val scalazVersion          = "7.1.2"
 val slf4jVersion           = "1.7.12"
 val sprayJsonVersion       = "1.3.1"
 val ssglibVersion          = "3.1.0-RELEASE"
-val streamsxUtilVersion    = "0.2.5-RELEASE"
+val streamsxUtilVersion    = "0.2-SNAPSHOT"
 
 
 val ssgDevHost          = "jenkinsutil.dev.sun.weather.com"
@@ -50,18 +50,19 @@ libraryDependencies ++= Seq(
     ExclusionRule(organization = "io.netty"),
     ExclusionRule(organization = "com.google.guava")
     ),
-  "com.weather"                 %% "streamsx-util"         % streamsxUtilVersion,
   "com.ibm"                      % "streams.operator"      % "4.1.0.0"               % "provided",
+  "com.weather"                 %% "streamsx-util"         % streamsxUtilVersion,
+  "io.circe"                    %% "circe-core"            % circeVersion,
+  "io.circe"                    %% "circe-generic"         % circeVersion,
+  "io.circe"                    %% "circe-jawn"            % circeVersion,
   "org.apache.logging.log4j"     % "log4j-api"             % log4jVersion,
   "org.slf4j"                    % "slf4j-api"             % slf4jVersion,
   "junit"                        % "junit"                 % junitVersion            % "test",
   "org.slf4j"                    % "slf4j-simple"          % slf4jVersion            % "test",
   "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
   "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test",
-    "org.scalaz"                  %% "scalaz-core"           % scalazVersion % "provided",
-  "io.circe"                    %% "circe-core"            % circeVersion,
-  "io.circe"                    %% "circe-generic"         % circeVersion,
-  "io.circe"                    %% "circe-jawn"            % circeVersion
+  "org.scalaz"                  %% "scalaz-core"           % scalazVersion
+
 
 )
 
