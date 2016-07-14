@@ -2,4 +2,4 @@
 
 cfg=$(<cfg)
 
-zookeepercli --servers localhost:21810 -c creater /streamsx.sqs/pws_sqs_info "$cfg"
+zookeepercli --servers localhost:21810 -c creater /streamsx.cassandra/hello_world_info "$cfg"
