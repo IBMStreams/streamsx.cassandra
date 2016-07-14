@@ -59,14 +59,13 @@ public class CassandraSink extends AbstractOperator {
         super.initialize(context);
 //        Logger.getLogger(this.getClass()).trace("Operator " + context.getName() + " initializing in PE: " + context.getPE().getPEId() + " in Job: " + context.getPE().getJobId() );
 
-        CasAnalyticsConnector.apply();
 //        java.util.Map<String, String> cfg = new java.util.HashMap<String, String>();
 //        cfg.put("keyspace", keyspace);
 //        cfg.put("table", table);
 //        cfg.put("consistencylevel", "local_quorum");
 
         if (impl == null) {
-            impl = CassandraSinkImpl.mkWriter();
+            impl = CassandraSinkImpl.mkWriter(cfgZnode);
         }
 
     }

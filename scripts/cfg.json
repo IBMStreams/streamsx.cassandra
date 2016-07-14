@@ -1,14 +1,15 @@
 {
+  "consistencyLevel" : "local_quorum",
+  "dateFormat" : "yy-MM-dd HH:mm:ss",
   "localdc" : "",
   "port" : 9042,
-  "remapclusterminutes" : 15,
+  "remapClusterMinutes" : 15,
   "seeds" : "10.0.2.2",
-  "consistencylevel" : "local_quorum",
+  "writeOperationTimeout" : 10000,
   "authEnabled" : false,
   "authUsername" : "cinple",
   "authPassword" : "omgwtfbBq",
   "sslEnabled" : false,
   "sslKeystore" : "/etc/certs/dev_analytics.p12",
-  "sslPassword" : "omgwtfbbq",
-  "writeoperationtimeout" : 10000
+  "sslPassword" : "omgwtfbbq"
 }

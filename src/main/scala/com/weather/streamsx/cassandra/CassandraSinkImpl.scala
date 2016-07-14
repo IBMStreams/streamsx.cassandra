@@ -20,8 +20,8 @@ object CassandraSinkImpl {
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)
 
   def mkWriter(znodeName: String): CassandraSinkImpl = {
-    try CassSinkClientConfig.read(znodeName) match {
-      case Some(cc) => new CassandraSinkImpl(new CassandraConnector(cc))
+    try PrimitiveTypeConfig.read(znodeName) match {
+      case Some(cc) => new CassandraSinkImpl(new CassandraConnector(CassSinkClientConfig(cc)))
       case _ => log.error(s"Failed to getData from $znodeName"); null
     } catch { case e: Exception => log.error("Failed to create SQS client", e); null }
   }

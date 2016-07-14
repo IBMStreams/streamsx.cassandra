@@ -14,8 +14,8 @@ class CassandraConnector(ccfg: CassSinkClientConfig) {
       .withPort(ccfg.port)
       .withAuthProvider(ccfg.authProvider)
       .withSSL(ccfg.sslOptions.orNull)
-    if (ccfg.localDC.isEmpty) c
-    else c.withLoadBalancingPolicy(new TokenAwarePolicy(DCAwareRoundRobinPolicy.builder().withLocalDc(ccfg.localDC).build()))
+    if (ccfg.localdc.isEmpty) c
+    else c.withLoadBalancingPolicy(new TokenAwarePolicy(DCAwareRoundRobinPolicy.builder().withLocalDc(ccfg.localdc).build()))
   }.build()
 
   val session = cluster.connect
