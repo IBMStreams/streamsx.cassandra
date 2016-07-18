@@ -25,7 +25,6 @@ object CassandraSinkImpl {
       case _ => log.error(s"Failed to getData from $znodeName"); null
     } catch { case e: Exception => log.error("Failed to create SQS client", e); null }
   }
-
 }
 
 class CassandraSinkImpl(connector: CassandraConnector) extends CassandraAwaiter{

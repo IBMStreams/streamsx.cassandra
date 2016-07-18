@@ -68,7 +68,7 @@ object PrimitiveTypeConfig {
   private[cassandra] implicit val rdrDecoder: Decoder[PrimitiveTypeConfig] = deriveDecoder[PrimitiveTypeConfig]
   private[cassandra] implicit val rdrEncoder: Encoder[PrimitiveTypeConfig] = deriveEncoder[PrimitiveTypeConfig]
 
-  def read(znode: String): Option[PrimitiveTypeConfig] = ZkClient.zkCli.read[PrimitiveTypeConfig](znode)
-  def write(znode: String, cc: PrimitiveTypeConfig): Unit = ZkClient.zkCli.write(znode, cc)
+  def read(znode: String): Option[PrimitiveTypeConfig] = ZKClient.zkCli.read[PrimitiveTypeConfig](znode)
+  def write(znode: String, cc: PrimitiveTypeConfig): Unit = ZKClient.zkCli.write(znode, cc)
 }
 

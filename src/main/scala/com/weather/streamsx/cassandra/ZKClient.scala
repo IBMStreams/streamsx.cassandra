@@ -1,9 +1,9 @@
 package com.weather.streamsx.cassandra
 
-import com.weather.streamsx.util.zookeeper.{ZkCfg, ZkCli}
+import com.weather.analytics.zooklient.{ZooKlient, ZooKlientCfg}
 
-object ZkClient {
-  private val cfg = ZkCfg("streamsx.cassandra", sys.env.getOrElse("STREAMS_ZKCONNECT", "localhost:21810"))
-  val zkCli = ZkCli(cfg)
+object ZKClient {
+  private val cfg = ZooKlientCfg("streamsx.cassandra", sys.env.getOrElse("STREAMS_ZKCONNECT", "localhost:21810"))
+  val zkCli = ZooKlient(cfg)
   val zk = zkCli.client
 }
