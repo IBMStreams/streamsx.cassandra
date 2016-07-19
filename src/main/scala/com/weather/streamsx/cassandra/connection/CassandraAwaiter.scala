@@ -1,9 +1,10 @@
-package com.weather.streamsx.cassandra
+package com.weather.streamsx.cassandra.connection
 
 import java.util.concurrent.{TimeUnit, TimeoutException}
 
 import com.datastax.driver.core.exceptions.{NoHostAvailableException, UnavailableException}
 import com.datastax.driver.core.{ResultSet, ResultSetFuture}
+import com.weather.streamsx.cassandra.exception.CassandraWriterException
 
 import scalaz._
 

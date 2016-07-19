@@ -1,4 +1,4 @@
-package com.weather.streamsx.cassandra
+package com.weather.streamsx.cassandra.connection
 
 import com.weather.analytics.zooklient.{ZooKlient, ZooKlientCfg}
 

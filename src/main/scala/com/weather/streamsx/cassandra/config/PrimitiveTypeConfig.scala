@@ -1,6 +1,8 @@
-package com.weather.streamsx.cassandra
+package com.weather.streamsx.cassandra.config
 
-import io.circe._, generic.semiauto._
+import com.weather.streamsx.cassandra.connection.ZKClient
+import io.circe._
+import io.circe.generic.semiauto._
 
 case class PrimitiveTypeConfig(
                                 consistencyLevel: String,

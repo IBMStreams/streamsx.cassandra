@@ -2,6 +2,8 @@ package com.weather.streamsx.cassandra
 
 import com.datastax.driver.core.BoundStatement
 import com.ibm.streams.operator.Tuple
+import com.weather.streamsx.cassandra.config.{CassSinkClientConfig, PrimitiveTypeConfig}
+import com.weather.streamsx.cassandra.connection.{CassandraConnector, CassandraAwaiter}
 import com.weather.streamsx.util.{StringifyStackTrace => SST}
 
 

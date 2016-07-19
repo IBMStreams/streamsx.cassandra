@@ -4,6 +4,7 @@ import com.datastax.driver.core.{Session, PreparedStatement, BoundStatement}
 import com.ibm.streams.operator.Tuple
 import com.ibm.streams.operator.Attribute
 import com.ibm.streams.operator.types.RString
+import com.weather.streamsx.cassandra.exception.CassandraWriterException
 import collection.JavaConversions._
 import com.ibm.streams.operator.meta.{MapType, CollectionType}
 import scalaz.Failure

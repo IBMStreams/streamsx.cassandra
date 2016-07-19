@@ -1,15 +1,23 @@
 {
-  "consistencyLevel" : "local_quorum",
-  "dateFormat" : "yy-MM-dd HH:mm:ss",
-  "localdc" : "",
-  "port" : 9042,
-  "remapClusterMinutes" : 15,
-  "seeds" : "10.0.2.2",
-  "writeOperationTimeout" : 10000,
-  "authEnabled" : false,
-  "authUsername" : "cinple",
-  "authPassword" : "omgwtfbBq",
-  "sslEnabled" : false,
-  "sslKeystore" : "/etc/certs/dev_analytics.p12",
-  "sslPassword" : "omgwtfbbq"
+  "consistencyLevel": "local_quorum",
+  "dateFormat": "yy-MM-dd HH:mm:ss",
+  "localdc": "",
+  "port": 9042,
+  "remapClusterMinutes": 15,
+  "seeds": "10.0.2.2",
+  "writeOperationTimeout": 10000,
+  "authEnabled": false,
+  "authUsername": "cinple",
+  "authPassword": "omgwtfbBq",
+  "sslEnabled": false,
+  "sslKeystore": "/etc/certs/dev_analytics.p12",
+  "sslPassword": "omgwtfbbq",
+  "keyspace" : "testkeyspace",
+  "table" : "testtable",
+  "ttl" : "2592000",
+  "nullValues" : {
+    "greeting" : "",
+    "count" : -1,
+    "nInt" : 12
+  }
 }

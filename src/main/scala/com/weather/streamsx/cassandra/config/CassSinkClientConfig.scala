@@ -1,15 +1,15 @@
-package com.weather.streamsx.cassandra
-
+package com.weather.streamsx.cassandra.config
 
 import java.net.InetAddress
 import java.security.KeyStore
-import javax.net.ssl.{SSLContext, KeyManagerFactory}
+import javax.net.ssl.{KeyManagerFactory, SSLContext}
 
 import com.datastax.driver.core.SSLOptions._
-import com.datastax.driver.core.{SSLOptions, PlainTextAuthProvider, AuthProvider, ConsistencyLevel}
-import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
+import com.datastax.driver.core.{AuthProvider, ConsistencyLevel, PlainTextAuthProvider, SSLOptions}
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 
-import scalaz._, Scalaz._
+import scalaz.Scalaz._
+import scalaz._
 
 
 case class CassSinkClientConfig(

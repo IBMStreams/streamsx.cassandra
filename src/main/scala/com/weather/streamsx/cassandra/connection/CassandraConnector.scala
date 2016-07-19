@@ -1,7 +1,8 @@
-package com.weather.streamsx.cassandra
+package com.weather.streamsx.cassandra.connection
 
 import com.datastax.driver.core._
 import com.datastax.driver.core.policies.{DCAwareRoundRobinPolicy, TokenAwarePolicy}
+import com.weather.streamsx.cassandra.config.CassSinkClientConfig
 
 class CassandraConnector(ccfg: CassSinkClientConfig) {
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)
