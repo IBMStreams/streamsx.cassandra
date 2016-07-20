@@ -14,10 +14,11 @@
   "sslPassword": "omgwtfbbq",
   "keyspace" : "testkeyspace",
   "table" : "testtable",
-  "ttl" : "2592000",
-  "nullValues" : {
-    "greeting" : "",
-    "count" : -1,
-    "nInt" : 12
-  }
+  "ttl" : "2592000"
 }
+
+//"nullValues" : {
+//"greeting" : "",
+//"count" : -1,
+//"nInt" : 12
+//}
