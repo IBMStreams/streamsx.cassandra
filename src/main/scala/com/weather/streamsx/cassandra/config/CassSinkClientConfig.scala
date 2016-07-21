@@ -39,7 +39,6 @@ object CassSinkClientConfig {
         case e: Throwable => s"Error setting consistency level to $key".failure
       }
 
-
   def apply(ptc: PrimitiveTypeConfig): CassSinkClientConfig = {
     val sslOptions =  ptc.sslEnabled match {
       case true if ptc.sslKeystore.isEmpty => Some(new SSLOptions)

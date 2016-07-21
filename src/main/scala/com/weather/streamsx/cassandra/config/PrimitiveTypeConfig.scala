@@ -36,6 +36,9 @@ object PrimitiveTypeConfig {
   val DEFAULT_LOCALDC                = ""
 
   def apply(config: Map[String, String]): PrimitiveTypeConfig = {
+
+    println(config)
+
     val consistencyLevel = config.getOrElse("consistencyLevel", DEFAULT_CONSISTENCYLEVEL)
     val dateFormat = config.getOrElse("dateFormat", DEFAULT_DATEFORMAT)
     val localDC = config.getOrElse("localdc", DEFAULT_LOCALDC)
@@ -49,6 +52,7 @@ object PrimitiveTypeConfig {
     val sslEnabled = config.getOrElse("sslEnabled", DEFAULT_SSLENABLED).toBoolean
     val sslKeystore = config.getOrElse("sslKeystore", DEFAULT_SSLKEYSTORE)
     val sslPassword = config.getOrElse("sslPassword", DEFAULT_SSLPASSWORD)
+//    val nullMap = config.getOrElse("nullValueMap", null)
 
     PrimitiveTypeConfig(
       consistencyLevel,
@@ -73,4 +77,3 @@ object PrimitiveTypeConfig {
   def read(znode: String): Option[PrimitiveTypeConfig] = ZKClient.zkCli.read[PrimitiveTypeConfig](znode)
   def write(znode: String, cc: PrimitiveTypeConfig): Unit = ZKClient.zkCli.write(znode, cc)
 }
-
