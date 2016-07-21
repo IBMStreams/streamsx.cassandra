@@ -21,6 +21,11 @@ case class PrimitiveTypeConfig(
                               )
 
 object PrimitiveTypeConfig {
+
+  private val log = org.slf4j.LoggerFactory.getLogger(getClass)
+
+
+
   val DEFAULT_CONSISTENCYLEVEL       = "local_quorum"
   val DEFAULT_DATEFORMAT             = "yy-MM-dd HH:mm:ss"
   val DEFAULT_PORT                   = "9042"
@@ -37,7 +42,7 @@ object PrimitiveTypeConfig {
 
   def apply(config: Map[String, String]): PrimitiveTypeConfig = {
 
-    println(config)
+    log.error(s"$config")
 
     val consistencyLevel = config.getOrElse("consistencyLevel", DEFAULT_CONSISTENCYLEVEL)
     val dateFormat = config.getOrElse("dateFormat", DEFAULT_DATEFORMAT)
