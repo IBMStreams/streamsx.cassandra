@@ -1,5 +1,6 @@
 package com.weather.streamsx.cassandra.config
 
+import com.weather.analytics.zooklient.ZooKlient
 import com.weather.streamsx.cassandra.connection.ZKClient
 import io.circe._
 import io.circe.generic.semiauto._
@@ -17,7 +18,8 @@ case class PrimitiveTypeConfig(
                                 authPassword: String,
                                 sslEnabled: Boolean,
                                 sslKeystore: String,
-                                sslPassword: String
+                                sslPassword: String,
+                                nullValueMapJSON: io.circe.Json
                               )
 
 object PrimitiveTypeConfig {
@@ -57,7 +59,7 @@ object PrimitiveTypeConfig {
     val sslEnabled = config.getOrElse("sslEnabled", DEFAULT_SSLENABLED).toBoolean
     val sslKeystore = config.getOrElse("sslKeystore", DEFAULT_SSLKEYSTORE)
     val sslPassword = config.getOrElse("sslPassword", DEFAULT_SSLPASSWORD)
-//    val nullMap = config.getOrElse("nullValueMap", null)
+//    val nullMap = config.getOrElse("nullValueMap", "")
 
     PrimitiveTypeConfig(
       consistencyLevel,
@@ -72,13 +74,18 @@ object PrimitiveTypeConfig {
       authPassword,
       sslEnabled,
       sslKeystore,
-      sslPassword
+      sslPassword,
+      nullMap
     )
   }
 
   private[cassandra] implicit val rdrDecoder: Decoder[PrimitiveTypeConfig] = deriveDecoder[PrimitiveTypeConfig]
   private[cassandra] implicit val rdrEncoder: Encoder[PrimitiveTypeConfig] = deriveEncoder[PrimitiveTypeConfig]
 
-  def read(znode: String): Option[PrimitiveTypeConfig] = ZKClient.zkCli.read[PrimitiveTypeConfig](znode)
-  def write(znode: String, cc: PrimitiveTypeConfig): Unit = ZKClient.zkCli.write(znode, cc)
+//  val zkCli = ZKClient()
+
+  def read(znode: String): Option[PrimitiveTypeConfig] = ZKClient().read[PrimitiveTypeConfig](znode)
+  def read(znode: String, zkCli: ZooKlient): Option[PrimitiveTypeConfig] = zkCli.read[PrimitiveTypeConfig](znode)
+
+  //  def write(znode: String, cc: PrimitiveTypeConfig): Unit = zkCli.write(znode, cc)
 }

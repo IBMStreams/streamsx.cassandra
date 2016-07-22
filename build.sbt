@@ -44,7 +44,8 @@ libraryDependencies ++= Seq(
   "junit"                        % "junit"                 % junitVersion            % "test",
   "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
   "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test",
-  "org.slf4j"                    % "slf4j-simple"          % slf4jVersion            % "test"
+  "org.slf4j"                    % "slf4j-simple"          % slf4jVersion            % "test",
+  "org.apache.curator" % "curator-test" % "2.11.0"
 )
 
 val jarFn = "streamsx.cassandra.jar"
