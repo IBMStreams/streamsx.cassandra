@@ -9,6 +9,8 @@ import com.weather.streamsx.util.{StringifyStackTrace => SST}
 
 object CassandraSinkImpl {
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)
+
+  //TODO So I got a MEGA cryptic error message about a null pointer exception when Cassandra wasn't started. That's bad, it needs to be WAAAAAAY clearer
   def mkWriter(connectionConfigZNode: String, nullMapZnode: String): CassandraSinkImpl = {
     try {
       val zkCli: ZooKlient = ZKClient()
