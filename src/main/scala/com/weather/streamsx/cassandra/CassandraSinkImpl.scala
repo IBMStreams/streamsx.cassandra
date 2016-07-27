@@ -24,7 +24,7 @@ object CassandraSinkImpl {
       }
       val cassConnector = new CassandraConnector(clientConfig)
       new CassandraSinkImpl(clientConfig, cassConnector, nullMapValues)
-    } catch { case e: Exception => log.error("Failed to create SQS client", e); null }
+    } catch { case e: Exception => log.error("Failed to create Cassandra client", e); null }
   }
 }
 
