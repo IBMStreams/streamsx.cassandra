@@ -44,7 +44,7 @@ public class CassandraSink extends AbstractOperator {
 //    Long ttl = null;
 //    String nullMap = null;
 //    Integer cacheSize = null;
-    String cfgZnode = null;
+    String connectionConfigZNode = null;
     String nullMapZnode = null;
 
 
@@ -127,8 +127,8 @@ public class CassandraSink extends AbstractOperator {
 //    public void setCacheSize(int i) { cacheSize = i; }
 
     @Parameter(name="connectionConfigZNode", description = "Name of the Znode where Cassandra connection configuration is stored")
-    public void setCfgZnode(String s) {cfgZnode = s;}
+    public void setCfgZnode(String s) {connectionConfigZNode = s;}
 
-    @Parameter(name="nullMapZNode", description = "Name of the Znode where the map of fieldnames to the value representing null is stored")
+    @Parameter(name="nullMapZnode", description = "Name of the Znode where the map of fieldnames to the value representing null is stored")
     public void setNullValueZnode(String s) {nullMapZnode = s;}
 }
