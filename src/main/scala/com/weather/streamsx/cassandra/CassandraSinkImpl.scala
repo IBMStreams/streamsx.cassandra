@@ -11,14 +11,15 @@ object CassandraSinkImpl {
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)
   def mkWriter(connectionConfigZNode: String, nullMapZnode: String): CassandraSinkImpl = {
     try {
-
       val zkCli: ZooKlient = ZKClient()
       val clientConfig = PrimitiveTypeConfig.read(zkCli, connectionConfigZNode) match {
         case Some(cc) => CassSinkClientConfig(cc)
         case _ => log.error(s"Failed to getData from $connectionConfigZNode"); null
       }
-      val nullMapValues = NullValueConfig(zkCli, nullMapZnode)
-
+      val nullMapValues = NullValueConfig(zkCli, nullMapZnode) match {
+        case Some(map) => map
+        case _ => log.error(s"Failed to getData from $nullMapZnode"); null
+      }
       val cassConnector = new CassandraConnector(clientConfig)
       new CassandraSinkImpl(clientConfig, cassConnector, nullMapValues)
     } catch { case e: Exception => log.error("Failed to create SQS client", e); null }

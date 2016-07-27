@@ -1,18 +1,21 @@
 package com.weather.streamsx.cassandra.config
 
 import com.weather.analytics.zooklient.ZooKlient
-import com.weather.streamsx.cassandra.exception.CassandraWriterException
-
 import scala.util.parsing.json.JSON
-
 
 //TODO account for empty collections here or somewhere else
 
 object NullValueConfig {
-  def apply(zkCli: ZooKlient, znodeName: String): Map[String, Any] = try {
-    val rawString = zkCli.readRawString(znodeName).get
-    JSON.parseFull(rawString).get.asInstanceOf[Map[String, Any]]
-  } catch {
-    case e: Exception => throw new CassandraWriterException("Could not read null value configuration from node", e)
+//  private val log = org.slf4j.LoggerFactory.getLogger(getClass)
+
+  def apply(zkCli: ZooKlient, znodeName: String): Option[Map[String, Any]] = {
+    val json = zkCli.readRawString(znodeName) match {
+      case Some(str) => JSON.parseFull(str)
+      case _ => None
+    }
+    json match {
+      case Some(j) => Some(j.asInstanceOf[Map[String, Any]])
+      case _ => None
+    }
   }
 }
