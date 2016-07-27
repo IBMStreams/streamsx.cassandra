@@ -9,7 +9,7 @@ import com.weather.streamsx.util.{StringifyStackTrace => SST}
 
 object CassandraSinkImpl {
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)
-  def mkWriter(connectionConfigZNode: String, nullMapZNode: String): CassandraSinkImpl = {
+  def mkWriter(connectionConfigZNode: String, nullMapZnode: String): CassandraSinkImpl = {
     try {
 
       val zkCli: ZooKlient = ZKClient()
@@ -17,7 +17,7 @@ object CassandraSinkImpl {
         case Some(cc) => CassSinkClientConfig(cc)
         case _ => log.error(s"Failed to getData from $connectionConfigZNode"); null
       }
-      val nullMapValues = NullValueConfig(zkCli, nullMapZNode)
+      val nullMapValues = NullValueConfig(zkCli, nullMapZnode)
 
       val cassConnector = new CassandraConnector(clientConfig)
       new CassandraSinkImpl(clientConfig, cassConnector, nullMapValues)

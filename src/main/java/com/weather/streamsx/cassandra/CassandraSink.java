@@ -130,5 +130,5 @@ public class CassandraSink extends AbstractOperator {
     public void setCfgZnode(String s) {connectionConfigZNode = s;}
 
     @Parameter(name="nullMapZnode", description = "Name of the Znode where the map of fieldnames to the value representing null is stored")
-    public void setNullValueZnode(String s) {nullMapZnode = s;}
+    public void setNullValueZnode(String str) {nullMapZnode = str;}
 }
