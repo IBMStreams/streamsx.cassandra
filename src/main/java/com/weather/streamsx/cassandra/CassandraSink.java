@@ -39,12 +39,14 @@ import com.ibm.streams.operator.model.PrimitiveOperator;
 public class CassandraSink extends AbstractOperator {
 
     CassandraSinkImpl impl = null;
-    String keyspace = null;
-    String table = null;
-    Long ttl = null;
-    String nullMap = null;
-    Integer cacheSize = null;
+//    String keyspace = null;
+//    String table = null;
+//    Long ttl = null;
+//    String nullMap = null;
+//    Integer cacheSize = null;
     String cfgZnode = null;
+    String nullMapZnode = null;
+
 
 
     /**
@@ -59,13 +61,8 @@ public class CassandraSink extends AbstractOperator {
         super.initialize(context);
 //        Logger.getLogger(this.getClass()).trace("Operator " + context.getName() + " initializing in PE: " + context.getPE().getPEId() + " in Job: " + context.getPE().getJobId() );
 
-//        java.util.Map<String, String> cfg = new java.util.HashMap<String, String>();
-//        cfg.put("keyspace", keyspace);
-//        cfg.put("table", table);
-//        cfg.put("consistencylevel", "local_quorum");
-
         if (impl == null) {
-            impl = CassandraSinkImpl.mkWriter(cfgZnode);
+            impl = CassandraSinkImpl.mkWriter(cfgZnode, nullMapZnode);
         }
 
     }
@@ -95,7 +92,7 @@ public class CassandraSink extends AbstractOperator {
         // TODO Insert code here to process the incoming tuple,
         // typically sending tuple data to an external system or data store.
         // String value = tuple.getString("AttributeName");
-        impl.insertTuple(tuple, keyspace, table, ttl, nullMap, cacheSize, cfgZnode);
+        impl.insertTuple(tuple);
     }
 
     /**
@@ -114,21 +111,24 @@ public class CassandraSink extends AbstractOperator {
     }
 
 
-    @Parameter(name="keyspace", description = "Keyspace name in Cassandra", optional = false)
-    public void setKeyspace(String str) { keyspace = str; }
+//    @Parameter(name="keyspace", description = "Keyspace name in Cassandra", optional = false)
+//    public void setKeyspace(String str) { keyspace = str; }
+//
+//    @Parameter(name="table", description = "Table name in Cassandra", optional = false)
+//    public void setTable(String str) { table = str; }
+//
+//    @Parameter(name="ttl", description = "Time-to-live for each entry, in seconds", optional = false)
+//    public void setTTL(Long l) { ttl = l; }
+//
+//    @Parameter(name="nullMap", description = "Name of the tuple field that is a Map[String, Boolean] representing which fields are null", optional = false)
+//    public void setNullMap(String str) { nullMap = str; }
+//
+//    @Parameter(name="cacheSize", description = "Maximum number of entries to hang onto in the PreparedStatement cache")
+//    public void setCacheSize(int i) { cacheSize = i; }
 
-    @Parameter(name="table", description = "Table name in Cassandra", optional = false)
-    public void setTable(String str) { table = str; }
-
-    @Parameter(name="ttl", description = "Time-to-live for each entry, in seconds", optional = false)
-    public void setTTL(Long l) { ttl = l; }
-
-    @Parameter(name="nullMap", description = "Name of the tuple field that is a Map[String, Boolean] representing which fields are null", optional = false)
-    public void setNullMap(String str) { nullMap = str; }
-
-    @Parameter(name="cacheSize", description = "Maximum number of entries to hang onto in the PreparedStatement cache")
-    public void setCacheSize(int i) { cacheSize = i; }
-
-    @Parameter(name="cfgZnode", description = "Name of the Znode where configuration is stored")
+    @Parameter(name="connectionConfigZNode", description = "Name of the Znode where Cassandra connection configuration is stored")
     public void setCfgZnode(String s) {cfgZnode = s;}
+
+    @Parameter(name="nullMapZNode", description = "Name of the Znode where the map of fieldnames to the value representing null is stored")
+    public void setNullValueZnode(String s) {nullMapZnode = s;}
 }

@@ -14,5 +14,6 @@
   "sslPassword": "omgwtfbbq",
   "keyspace" : "testkeyspace",
   "table" : "testtable",
-  "ttl" : "2592000"
+  "ttl" : 2592000,
+  "cacheSize" : 1000
 }

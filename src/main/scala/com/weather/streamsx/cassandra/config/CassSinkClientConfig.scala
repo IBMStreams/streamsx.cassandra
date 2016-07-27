@@ -28,7 +28,11 @@ case class CassSinkClientConfig(
                                  authProvider: AuthProvider,
                                  sslOptions: Option[SSLOptions],
                                  consistencylevel: ConsistencyLevel,
-                                 seeds: List[InetAddress]
+                                 seeds: List[InetAddress],
+                                 keyspace: String,
+                                 table: String,
+                                 ttl: Long,
+                                 cacheSize: Int
                                )
 
 object CassSinkClientConfig {
@@ -75,7 +79,11 @@ object CassSinkClientConfig {
       authProvider = authProvider,
       sslOptions = sslOptions,
       consistencylevel = getConsistencyLevel(ptc.consistencyLevel).toOption.get,
-      seeds = seeds
+      seeds = seeds,
+      keyspace = ptc.keyspace,
+      table = ptc.table,
+      ttl = ptc.ttl,
+      cacheSize = ptc.cacheSize
     )
   }
 

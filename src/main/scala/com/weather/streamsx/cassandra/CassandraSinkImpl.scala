@@ -2,41 +2,38 @@ package com.weather.streamsx.cassandra
 
 import com.datastax.driver.core.BoundStatement
 import com.ibm.streams.operator.Tuple
-import com.weather.streamsx.cassandra.config.{CassSinkClientConfig, PrimitiveTypeConfig}
-import com.weather.streamsx.cassandra.connection.{CassandraConnector, CassandraAwaiter}
+import com.weather.analytics.zooklient.ZooKlient
+import com.weather.streamsx.cassandra.config.{NullValueConfig, CassSinkClientConfig, PrimitiveTypeConfig}
+import com.weather.streamsx.cassandra.connection.{ZKClient, CassandraConnector, CassandraAwaiter}
 import com.weather.streamsx.util.{StringifyStackTrace => SST}
 
-
-case class SinkArgs(
-                     tuple: Tuple,
-                     keyspace: String,
-                     table: String,
-                     ttl: Long,
-                     nullMapName: String,
-                     cacheSize: Int,
-                     cfgZnode: String
-                   )
-
 object CassandraSinkImpl {
-
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)
+  def mkWriter(connectionConfigZNode: String, nullMapZNode: String): CassandraSinkImpl = {
+    try {
 
-  def mkWriter(znodeName: String): CassandraSinkImpl = {
-    try PrimitiveTypeConfig.read(znodeName) match {
-      case Some(cc) => new CassandraSinkImpl(new CassandraConnector(CassSinkClientConfig(cc)))
-      case _ => log.error(s"Failed to getData from $znodeName"); null
+      val zkCli: ZooKlient = ZKClient()
+      val clientConfig = PrimitiveTypeConfig.read(zkCli, connectionConfigZNode) match {
+        case Some(cc) => CassSinkClientConfig(cc)
+        case _ => log.error(s"Failed to getData from $connectionConfigZNode"); null
+      }
+      val nullMapValues = NullValueConfig(zkCli, nullMapZNode)
+
+      val cassConnector = new CassandraConnector(clientConfig)
+      new CassandraSinkImpl(clientConfig, cassConnector, nullMapValues)
     } catch { case e: Exception => log.error("Failed to create SQS client", e); null }
   }
 }
 
-class CassandraSinkImpl(connector: CassandraConnector) extends CassandraAwaiter{
+
+
+class CassandraSinkImpl(cfg: CassSinkClientConfig, connector: CassandraConnector, nullMapValues: Map[String, Any]) extends CassandraAwaiter{
   override protected val log = org.slf4j.LoggerFactory.getLogger(getClass)
   override protected val writeOperationTimeout = connector.writeOperationTimeout
 
-  def insertTuple(tuple: Tuple, keyspace: String, table: String, ttl: Long, nullMapName: String, cacheSize: Int, cfgZnode: String): Unit = {
-    val sinkArgs = SinkArgs(tuple, keyspace, table, ttl, nullMapName, cacheSize, cfgZnode)
+  def insertTuple(tuple: Tuple): Unit = {
     try{
-      val bs: BoundStatement = TupleToStatement(sinkArgs, connector.session)
+      val bs: BoundStatement = TupleToStatement(tuple, connector.session, cfg, nullMapValues)
         logFailure(awaitOne()(connector.session.executeAsync(bs)))
     } catch { case e: Throwable => log.error(s"Failed to write agg to Cassandra.\n${SST(e)}", e) }
   }

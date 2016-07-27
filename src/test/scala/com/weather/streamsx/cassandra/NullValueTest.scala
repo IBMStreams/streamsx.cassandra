@@ -31,9 +31,6 @@ class NullValueTest  extends FlatSpec with Matchers with BeforeAndAfterAll{
       |  "keyspace" : "testkeyspace",
       |  "table" : "testtable",
       |  "ttl" : "2592000",
-      |  "nullValueMap" : {
-      |     "a" : 1
-      |  }
       |}
     """.stripMargin
 
@@ -60,6 +57,8 @@ class NullValueTest  extends FlatSpec with Matchers with BeforeAndAfterAll{
       case e: Exception => fail(e)
     }
   }
+
+  cli.close()
 
 
 }

@@ -17,7 +17,7 @@ val scalatestVersion       = "2.2.4"
 val scalazVersion          = "7.1.2"
 val slf4jVersion           = "1.7.12"
 val streamsOperatorVersion = "4.1.0.0"
-val streamsxZKVersion      = "0.2-SNAPSHOT"
+val streamsxZKVersion      = "0.3-SNAPSHOT"
 val streamsxUtilVersion    = "0.2.5-RELEASE"
 
 

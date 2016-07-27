@@ -1,9 +1,9 @@
 package com.weather.streamsx.cassandra.config
 
 import com.weather.analytics.zooklient.ZooKlient
-import com.weather.streamsx.cassandra.connection.ZKClient
 import io.circe._
 import io.circe.generic.semiauto._
+
 
 case class PrimitiveTypeConfig(
                                 consistencyLevel: String,
@@ -19,7 +19,10 @@ case class PrimitiveTypeConfig(
                                 sslEnabled: Boolean,
                                 sslKeystore: String,
                                 sslPassword: String,
-                                nullValueMapJSON: io.circe.Json
+                                keyspace: String,
+                                table: String,
+                                ttl: Long,
+                                cacheSize: Int
                               )
 
 object PrimitiveTypeConfig {
@@ -41,6 +44,10 @@ object PrimitiveTypeConfig {
   val DEFAULT_SSLPASSWORD            = ""
   val DEFAULT_WRITEOPERATIONTIMEOUT  = "10000"
   val DEFAULT_LOCALDC                = ""
+  val DEFAULT_KEYSPACE               = ""
+  val DEFAULT_TABLE                  = ""
+  val DEFAULT_TTL                    = "2592000"
+  val DEFAULT_CACHESIZE              = "1000"
 
   def apply(config: Map[String, String]): PrimitiveTypeConfig = {
 
@@ -59,7 +66,10 @@ object PrimitiveTypeConfig {
     val sslEnabled = config.getOrElse("sslEnabled", DEFAULT_SSLENABLED).toBoolean
     val sslKeystore = config.getOrElse("sslKeystore", DEFAULT_SSLKEYSTORE)
     val sslPassword = config.getOrElse("sslPassword", DEFAULT_SSLPASSWORD)
-//    val nullMap = config.getOrElse("nullValueMap", "")
+    val keyspace = config.getOrElse("keyspace", DEFAULT_KEYSPACE)
+    val table = config.getOrElse("table", DEFAULT_TABLE)
+    val ttl = config.getOrElse("ttl", DEFAULT_TTL).toLong
+    val cacheSize = config.getOrElse("cacheSize", DEFAULT_CACHESIZE).toInt
 
     PrimitiveTypeConfig(
       consistencyLevel,
@@ -75,17 +85,16 @@ object PrimitiveTypeConfig {
       sslEnabled,
       sslKeystore,
       sslPassword,
-      nullMap
+      keyspace,
+      table,
+      ttl,
+      cacheSize
     )
   }
 
   private[cassandra] implicit val rdrDecoder: Decoder[PrimitiveTypeConfig] = deriveDecoder[PrimitiveTypeConfig]
   private[cassandra] implicit val rdrEncoder: Encoder[PrimitiveTypeConfig] = deriveEncoder[PrimitiveTypeConfig]
 
-//  val zkCli = ZKClient()
+  def read(zkCli: ZooKlient, znode: String): Option[PrimitiveTypeConfig] = zkCli.read[PrimitiveTypeConfig](znode)
 
-  def read(znode: String): Option[PrimitiveTypeConfig] = ZKClient().read[PrimitiveTypeConfig](znode)
-  def read(znode: String, zkCli: ZooKlient): Option[PrimitiveTypeConfig] = zkCli.read[PrimitiveTypeConfig](znode)
-
-  //  def write(znode: String, cc: PrimitiveTypeConfig): Unit = zkCli.write(znode, cc)
 }

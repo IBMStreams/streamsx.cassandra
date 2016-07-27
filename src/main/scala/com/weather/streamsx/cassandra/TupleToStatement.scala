@@ -4,75 +4,83 @@ import com.datastax.driver.core.{Session, PreparedStatement, BoundStatement}
 import com.ibm.streams.operator.Tuple
 import com.ibm.streams.operator.Attribute
 import com.ibm.streams.operator.types.RString
+import com.weather.streamsx.cassandra.config.CassSinkClientConfig
 import com.weather.streamsx.cassandra.exception.CassandraWriterException
 import collection.JavaConversions._
 import com.ibm.streams.operator.meta.{MapType, CollectionType}
+import scala.collection.immutable.BitSet
 import scalaz.Failure
-
 
 object TupleToStatement {
 
-  def apply(args: SinkArgs, session: Session): BoundStatement = {
-    val cache = new StatementCache(args, session)
-    val m = mkNullValueMap(args.tuple, args.nullMapName)
-    val nonNullAttrs = mkAttrList(args.tuple, m, args.nullMapName)
-    mkBoundStatement(cache.get(m), nonNullAttrs, args.tuple)
+  /*
+    Yes, yes, yes, this var is not kosher, this creates a race condition, etc.
+    However, this var is only going to mutated at the very front of the program,
+    and it will always get initialized to the same thing, even if its by multiple threads.
+    So yes, this is not kosher, but it's fine.
+   */
+  var indexMap: DualHash = null
+
+  def apply(tuple: Tuple, session: Session, cfg: CassSinkClientConfig, nullValueMap: Map[String, Any]): BoundStatement = {
+    val attributeList = mkAttrList(tuple)
+    if(indexMap == null) indexMap = new DualHash(attributeList)
+    val cache = new StatementCache(cfg, session, indexMap)
+    val valuesMap: Map[String, Any] = attributeList.map(getValueFromTuple(tuple, _)).toMap
+    val (bitSet, nonNulls) = mkBitSet(valuesMap, nullValueMap, indexMap)
+    val ps = cache(bitSet)
+    ps.bind(nonNulls.values.asInstanceOf[Seq[Object]]:_*)
   }
 
-  private def mkNullValueMap(t: Tuple, nullMapName: String): Map[String, Boolean] = {
-    // get the map of field names to booleans indicating whether or not they are null
-    val rstringMap = t.getMap(nullMapName).asInstanceOf[java.util.Map[RString, Boolean]].toMap
-    rstringMap.map(kv => (kv._1.toString, kv._2)) //convert from rstring to String
-  }
-
-  private def mkAttrList(t: Tuple, m: Map[String, Boolean], nullMapName: String) = {
-    val schema = t.getStreamSchema
-    val attributes = (0 until schema.getAttributeCount).map(i => schema.getAttribute(i)).filterNot(_.getName == nullMapName).sortBy(_.getName()).toList
-
-    def ifSetMkAttr(m: Map[String, Boolean], a: Attribute): Option[Attr] = {
-      if(m(a.getName)) Some(Attr(a, true))
-      else None
+  private def mkBitSet(values: Map[String, Any], nullValues: Map[String, Any], indexMap: DualHash): (BitSet, Map[String, Any]) = {
+    //TODO account for empty collections here or somewhere else
+    def filterNulls(kv: (String, Any)): Option[(String, Any)] = values(kv._1) match {
+      case v if v == nullValues(kv._1) => None
+      case _ => Some(kv)
     }
-
-    attributes.flatMap(ifSetMkAttr(m, _))
+    val nonNulls = values.flatMap(filterNulls)
+    val bitList = nonNulls.map(kv => indexMap(kv._1)).toList
+    (BitSet(bitList:_*), nonNulls)
   }
 
-  private def mkBoundStatement(ps: PreparedStatement, nonNullAttrs: List[Attr], tuple: Tuple): BoundStatement = {
-    val values: List[Any] = { nonNullAttrs.map(getValueFromTuple(tuple, _)) }
-//    println(s"Values: $values")
-    ps.bind(values.asInstanceOf[Seq[Object]]:_*)
+  private def mkAttrList(t: Tuple): List[Attribute] = {
+    val schema = t.getStreamSchema
+    val attributes = (0 until schema.getAttributeCount).map(i => schema.getAttribute(i)).sortBy(_.getName()).toList
+    attributes
   }
 
-  def getValueFromTuple(tuple: Tuple, attr: Attr): Any = attr.typex.getLanguageType match {
-    case "boolean" => tuple.getBoolean(attr.index)
-    case "int8"  | "uint8" => tuple.getByte(attr.index)
-    case "int16" | "uint16" => tuple.getShort(attr.index)
-    case "int32" | "uint32" => tuple.getInt(attr.index)
-    case "int64" | "uint64" => tuple.getLong(attr.index)
-    case "float32" => tuple.getFloat(attr.index)
-    case "float64" => tuple.getDouble(attr.index)
-    case "decimal32" | "decimal64" | "decimal128" => tuple.getBigDecimal(attr.index)
-    case "timestamp" => tuple.getTimestamp(attr.index)
-    case "rstring" | "ustring" => tuple.getString(attr.index)
-    case "blob" => tuple.getBlob(attr.index)
-    case "xml" => tuple.getXML(attr.index).toString //Cassandra doesn't have XML as data type, thank goodness
-    case l if l.startsWith("list") =>
-      val listType: CollectionType = attr.typex.asInstanceOf[CollectionType]
-      val elementT: Class[_] = listType.getElementType.getObjectType // This is the class of the individual elements: Int, String, etc.
-      val rawList = tuple.getList(attr.index)
-      castListToType[elementT.type](rawList)
-    case s if s.startsWith("set") =>
-      val setType: CollectionType = attr.typex.asInstanceOf[CollectionType]
-      val elementT: Class[_] = setType.getElementType.getObjectType
-      val rawSet = tuple.getSet(attr.index)
-      castSetToType[elementT.type](rawSet)
-    case m if m.startsWith("map") =>
-      val mapType: MapType = attr.typex.asInstanceOf[MapType]
-      val keyT: Class[_] = mapType.getKeyType.getObjectType
-      val valT: Class[_] = mapType.getValueType.getObjectType
-      val rawMap = tuple.getMap(attr.index)
-      castMapToType[keyT.type, valT.type](rawMap)
-    case _ => Failure(CassandraWriterException( s"Unrecognized type: ${attr.typex.getLanguageType}", new Exception))
+  def getValueFromTuple(tuple: Tuple, attr: Attribute): (String, Any) = {
+    val value: Any = attr.getType.getLanguageType match {
+      case "boolean" => tuple.getBoolean(attr.getIndex)
+      case "int8"  | "uint8" => tuple.getByte(attr.getIndex)
+      case "int16" | "uint16" => tuple.getShort(attr.getIndex)
+      case "int32" | "uint32" => tuple.getInt(attr.getIndex)
+      case "int64" | "uint64" => tuple.getLong(attr.getIndex)
+      case "float32" => tuple.getFloat(attr.getIndex)
+      case "float64" => tuple.getDouble(attr.getIndex)
+      case "decimal32" | "decimal64" | "decimal128" => tuple.getBigDecimal(attr.getIndex)
+      case "timestamp" => tuple.getTimestamp(attr.getIndex)
+      case "rstring" | "ustring" => tuple.getString(attr.getIndex)
+      case "blob" => tuple.getBlob(attr.getIndex)
+      case "xml" => tuple.getXML(attr.getIndex).toString //Cassandra doesn't have XML as data type, thank goodness
+      case l if l.startsWith("list") =>
+        val listType: CollectionType = attr.getType.asInstanceOf[CollectionType]
+        val elementT: Class[_] = listType.getElementType.getObjectType // This is the class of the individual elements: Int, String, etc.
+      val rawList = tuple.getList(attr.getIndex)
+        castListToType[elementT.type](rawList)
+      case s if s.startsWith("set") =>
+        val setType: CollectionType = attr.getType.asInstanceOf[CollectionType]
+        val elementT: Class[_] = setType.getElementType.getObjectType
+        val rawSet = tuple.getSet(attr.getIndex)
+        castSetToType[elementT.type](rawSet)
+      case m if m.startsWith("map") =>
+        val mapType: MapType = attr.getType.asInstanceOf[MapType]
+        val keyT: Class[_] = mapType.getKeyType.getObjectType
+        val valT: Class[_] = mapType.getValueType.getObjectType
+        val rawMap = tuple.getMap(attr.getIndex)
+        castMapToType[keyT.type, valT.type](rawMap)
+      case _ => Failure(CassandraWriterException( s"Unrecognized type: ${attr.getType.getLanguageType}", new Exception))
+    }
+    attr.getName -> value
   }
 
   def castListToType[A <: Any](rawList: java.util.List[_]): java.util.List[A] = {
