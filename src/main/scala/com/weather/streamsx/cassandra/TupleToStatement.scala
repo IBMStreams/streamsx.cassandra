@@ -36,7 +36,7 @@ object TupleToStatement {
       case _ => Some(kv)
     }
     val nonNulls = values.flatMap(filterNulls)
-    val bitList = nonNulls.map(kv => indexMap(kv._1)).toList
+    val bitList = nonNulls.flatMap(kv => indexMap(kv._1)).toList
     (BitSet(bitList:_*), nonNulls)
   }
 
