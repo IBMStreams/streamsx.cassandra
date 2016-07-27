@@ -62,7 +62,7 @@ public class CassandraSink extends AbstractOperator {
 //        Logger.getLogger(this.getClass()).trace("Operator " + context.getName() + " initializing in PE: " + context.getPE().getPEId() + " in Job: " + context.getPE().getJobId() );
 
         if (impl == null) {
-            impl = CassandraSinkImpl.mkWriter(cfgZnode, nullMapZnode);
+            impl = CassandraSinkImpl.mkWriter(connectionConfigZNode, nullMapZnode);
         }
 
     }
