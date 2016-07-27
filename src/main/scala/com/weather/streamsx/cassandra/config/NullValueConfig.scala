@@ -5,6 +5,9 @@ import com.weather.streamsx.cassandra.exception.CassandraWriterException
 
 import scala.util.parsing.json.JSON
 
+
+//TODO account for empty collections here or somewhere else
+
 object NullValueConfig {
   def apply(zkCli: ZooKlient, znodeName: String): Map[String, Any] = try {
     val rawString = zkCli.readRawString(znodeName).get

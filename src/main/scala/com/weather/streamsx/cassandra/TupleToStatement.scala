@@ -1,12 +1,10 @@
 package com.weather.streamsx.cassandra
 
-import com.datastax.driver.core.{Session, PreparedStatement, BoundStatement}
+import com.datastax.driver.core.{Session, BoundStatement}
 import com.ibm.streams.operator.Tuple
 import com.ibm.streams.operator.Attribute
-import com.ibm.streams.operator.types.RString
 import com.weather.streamsx.cassandra.config.CassSinkClientConfig
 import com.weather.streamsx.cassandra.exception.CassandraWriterException
-import collection.JavaConversions._
 import com.ibm.streams.operator.meta.{MapType, CollectionType}
 import scala.collection.immutable.BitSet
 import scalaz.Failure
