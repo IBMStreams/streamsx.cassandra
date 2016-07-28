@@ -26,7 +26,7 @@ object TupleToStatement {
     val valuesMap: Map[String, Any] = attributeList.map(getValueFromTuple(tuple, _)).toMap
     val (bitSet, nonNulls) = mkBitSet(valuesMap, nullValueMap, indexMap)
     val ps = cache(bitSet)
-    ps.bind(nonNulls.values.toSeq:_*)
+    ps.bind(nonNulls.values.toSeq.asInstanceOf[Seq[Object]]:_*)
   }
 
   private def mkBitSet(values: Map[String, Any], nullValues: Map[String, Any], indexMap: DualHash): (BitSet, Map[String, Any]) = {
