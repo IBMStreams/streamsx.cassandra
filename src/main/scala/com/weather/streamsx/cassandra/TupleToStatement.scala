@@ -32,10 +32,14 @@ object TupleToStatement {
   private def mkBitSet(values: Map[String, Any], nullValues: Map[String, Any], indexMap: DualHash): (BitSet, Map[String, Any]) = {
     //TODO account for empty collections here or somewhere else
 
-    //TODO values that aren't in the null value config are causing errors on nullValue(kv._1), they should skate through
-    def filterNulls(kv: (String, Any)): Option[(String, Any)] = values(kv._1) match {
-      case v if v == nullValues(kv._1) => None
-      case _ => Some(kv)
+    def filterNulls(kv: (String, Any)): Option[(String, Any)] = {
+      if(nullValues.contains(kv._1)) {
+        values(kv._1) match {
+          case v if v == nullValues(kv._1) => None
+          case _ => Some(kv)
+        }
+      }
+      else Some(kv)
     }
     val nonNulls = values.flatMap(filterNulls)
     val bitList = nonNulls.flatMap(kv => indexMap(kv._1)).toList
