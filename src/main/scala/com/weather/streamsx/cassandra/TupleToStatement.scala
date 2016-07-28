@@ -17,19 +17,27 @@ object TupleToStatement {
     and it will always get initialized to the same thing, even if its by multiple threads.
     So yes, this is not kosher, but it's fine.
    */
-  var indexMap: DualHash = null
+  var indexMap: DualHashy = null
 
   def apply(tuple: Tuple, session: Session, cfg: CassSinkClientConfig, nullValueMap: Map[String, Any]): BoundStatement = {
     val attributeList = mkAttrList(tuple)
     if(indexMap == null) indexMap = new DualHash(attributeList)
     val cache = new StatementCache(cfg, session, indexMap)
     val valuesMap: Map[String, Any] = attributeList.map(getValueFromTuple(tuple, _)).toMap
+    mkBoundStatement(valuesMap, nullValueMap, cache)
+  }
+
+  private[cassandra] def mkBoundStatement(
+                                           valuesMap: Map[String, Any],
+                                           nullValueMap: Map[String, Any],
+                                           cache: StatementCache
+                                         ): BoundStatement = {
     val (bitSet, nonNulls) = mkBitSet(valuesMap, nullValueMap, indexMap)
     val ps = cache(bitSet)
     ps.bind(nonNulls.values.toSeq.asInstanceOf[Seq[Object]]:_*)
   }
 
-  private def mkBitSet(values: Map[String, Any], nullValues: Map[String, Any], indexMap: DualHash): (BitSet, Map[String, Any]) = {
+  private def mkBitSet(values: Map[String, Any], nullValues: Map[String, Any], indexMap: DualHashy): (BitSet, Map[String, Any]) = {
     //TODO account for empty collections here or somewhere else
 
     def filterNulls(kv: (String, Any)): Option[(String, Any)] = {
