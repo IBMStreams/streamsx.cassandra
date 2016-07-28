@@ -11,7 +11,7 @@ class StatementCache(args: CassSinkClientConfig, session: Session, masterList: D
   }
 
   private[cassandra] val loaderFn = (b: BitSet) => {
-    val keys = b.map(masterList(_)).toList
+    val keys = b.flatMap(masterList(_)).toList
     val fieldStr = keys.mkString(",")
     println(s"fieldStr $fieldStr")
     val q = ("?" * keys.length).mkString(",")
