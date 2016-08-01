@@ -4,9 +4,20 @@ import java.net.InetAddress
 
 import com.datastax.driver.core.{ConsistencyLevel, SSLOptions, AuthProvider}
 import com.weather.streamsx.cassandra.config.CassSinkClientConfig
+import org.cassandraunit.CassandraCQLUnit
+import org.cassandraunit.dataset.cql.ClassPathCQLDataSet
+import org.cassandraunit.utils.EmbeddedCassandraServerHelper
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 
 object MockCassandra {
+
+//  EmbeddedCassandraServerHelper.startEmbeddedCassandra(EmbeddedCassandraServerHelper.CASSANDRA_RNDPORT_YML_FILE);
+
+  val cassandra: CassandraCQLUnit = new CassandraCQLUnit(new ClassPathCQLDataSet("abc.cql", "test"),
+    EmbeddedCassandraServerHelper.CASSANDRA_RNDPORT_YML_FILE);
+
+  val session = cassandra.session
+
 
   val clientConfig = CassSinkClientConfig(
     localdc = "",
@@ -29,4 +40,8 @@ object MockCassandra {
     ttl = 10000,
     cacheSize = 1000
   )
+
+
+
+
 }

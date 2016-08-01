@@ -62,6 +62,7 @@ class StatementCacheTest extends FlatSpec with Matchers with BeforeAndAfterAll{
     TupleToStatement.indexMap = fdh
     val boundStatement = TupleToStatement.mkBoundStatement(mm, nullValueMap, cache)
     val handBuiltStatement = "hahaha"
+    println(s"bound statement is ${boundStatement.preparedStatement().toString}")
     boundStatement should equal(handBuiltStatement)
   }
 

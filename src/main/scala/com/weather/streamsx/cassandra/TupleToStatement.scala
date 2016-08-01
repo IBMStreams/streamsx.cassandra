@@ -34,22 +34,23 @@ object TupleToStatement {
                                          ): BoundStatement = {
     val (bitSet, nonNulls) = mkBitSet(valuesMap, nullValueMap, indexMap)
     val ps = cache(bitSet)
-    ps.bind(nonNulls.values.toSeq.asInstanceOf[Seq[Object]]:_*)
+    val bindingValues = nonNulls.map(kv => kv._2)
+    ps.bind(bindingValues.asInstanceOf[Seq[Object]]:_*)
   }
 
-  private def mkBitSet(values: Map[String, Any], nullValues: Map[String, Any], indexMap: DualHashy): (BitSet, Map[String, Any]) = {
+  private def mkBitSet(m: Map[String, Any], nullValues: Map[String, Any], indexMap: DualHashy): (BitSet, List[(String, Any)]) = {
     //TODO account for empty collections here or somewhere else
-
+    
     def filterNulls(kv: (String, Any)): Option[(String, Any)] = {
       if(nullValues.contains(kv._1)) {
-        values(kv._1) match {
+        m(kv._1) match {
           case v if v == nullValues(kv._1) => None
           case _ => Some(kv)
         }
       }
       else Some(kv)
     }
-    val nonNulls = values.flatMap(filterNulls)
+    val nonNulls = m.flatMap(filterNulls).toList.sortBy(kv => indexMap(kv._1))
     val bitList = nonNulls.flatMap(kv => indexMap(kv._1)).toList
     (BitSet(bitList:_*), nonNulls)
   }
