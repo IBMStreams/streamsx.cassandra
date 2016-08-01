@@ -8,6 +8,7 @@
 //import org.junit.runner.RunWith
 //import org.scalatest.{BeforeAndAfterAll, Matchers, FlatSpec}
 //import org.scalatest.junit.JUnitRunner
+//import java.math.BigDecimal
 //
 //import scala.collection.immutable.BitSet
 //
@@ -24,10 +25,10 @@
 //
 //  val mm = Map(
 //    "a" -> "A",
-//    "b" -> "B",
-//    "c" -> "C",
-//    "d" -> "D",
-//    "e" -> "E"
+//    "b" -> 3000000000L,
+//    "c" -> false,
+//    "d" -> new java.math.BigDecimal(3.14159),
+//    "e" -> 12
 //  )
 //
 //  val nullValueMap = Map("a" -> "null", "b" -> "")
@@ -38,33 +39,36 @@
 //  val bitSet02 = BitSet(2, 4)
 //
 //  val cfg = MockCassandra.clientConfig
+//  val session = new CassandraConnector(cfg).session
 //
 //  val cache = new StatementCache(
 //    cfg,
-//    new CassandraConnector(cfg).session,
+//    session,
 //    fdh)
-////
-////  "The cache loading function" should "make a correct prepared statement" in {
-////    val statement = cache.mkInsertStatement(bitSet01)
-////    val handBuildStatement =
-////      s"INSERT INTO ${cfg.keyspace}.${cfg.table} (a,b,c,d,e) VALUES (?,?,?,?,?) USING TTL ${cfg.ttl}"
-////    statement should equal(handBuildStatement)
-////  }
-////
-////  it should "properly handle omitted fields" in {
-////    val statement = cache.mkInsertStatement(bitSet02)
-////    val handBuildStatement =
-////      s"INSERT INTO ${cfg.keyspace}.${cfg.table} (b,d) VALUES (?,?) USING TTL ${cfg.ttl}"
-////    statement should equal(handBuildStatement)
-////  }
-////
-////  "StatementToTuple" should "bind the right values to the right fields" in {
-////    TupleToStatement.indexMap = fdh
-////    val boundStatement = TupleToStatement.mkBoundStatement(mm, nullValueMap, cache)
-////    val handBuiltStatement = "hahaha"
-////    println(s"bound statement is ${boundStatement.preparedStatement().toString}")
+//
+//  "The cache loading function" should "make a correct prepared statement" in {
+//    val statement = cache.mkInsertStatement(bitSet01)
+//    val handBuildStatement =
+//      s"INSERT INTO ${cfg.keyspace}.${cfg.table} (a,b,c,d,e) VALUES (?,?,?,?,?) USING TTL ${cfg.ttl}"
+//    statement should equal(handBuildStatement)
+//  }
+//
+//  it should "properly handle omitted fields" in {
+//    val statement = cache.mkInsertStatement(bitSet02)
+//    val handBuildStatement =
+//      s"INSERT INTO ${cfg.keyspace}.${cfg.table} (b,d) VALUES (?,?) USING TTL ${cfg.ttl}"
+//    statement should equal(handBuildStatement)
+//  }
+//
+//  "StatementToTuple" should "bind the right values to the right fields" in {
+//    TupleToStatement.indexMap = fdh
+//    val boundStatement = TupleToStatement.mkBoundStatement(mm, nullValueMap, cache)
+//    val handBuiltStatement = "hahaha"
+//    println(s"bound statement is ${boundStatement.preparedStatement().toString}")
 ////    boundStatement should equal(handBuiltStatement)
-////  }
+//    session.execute(boundStatement)
+//    println(boundStatement)
+//  }
 //
 //}
 //
