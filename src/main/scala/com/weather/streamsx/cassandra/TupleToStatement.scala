@@ -40,7 +40,7 @@ object TupleToStatement {
 
   private def mkBitSet(m: Map[String, Any], nullValues: Map[String, Any], indexMap: DualHashy): (BitSet, List[(String, Any)]) = {
     //TODO account for empty collections here or somewhere else
-    
+
     def filterNulls(kv: (String, Any)): Option[(String, Any)] = {
       if(nullValues.contains(kv._1)) {
         m(kv._1) match {
