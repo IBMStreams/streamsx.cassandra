@@ -51,7 +51,7 @@ object TupleToStatement {
       else Some(kv)
     }
     val nonNulls = m.flatMap(filterNulls).toList.sortBy(kv => indexMap(kv._1))
-    println(s"nonNull $nonNulls")
+    println(s"nonNull sorted $nonNulls")
     val bitList = nonNulls.flatMap(kv => indexMap(kv._1)).toList
     (BitSet(bitList:_*), nonNulls)
   }
