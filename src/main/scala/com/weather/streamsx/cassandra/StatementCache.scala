@@ -19,12 +19,12 @@ class StatementCache(args: CassSinkClientConfig, session: Session, masterList: D
   private[cassandra] val mkInsertStatement = (b: BitSet) => {
     val keys = b.flatMap(masterList(_)).toList.sortBy(str => masterList(str))
     val fieldStr = keys.mkString(",")
-    println(s"fieldStr $fieldStr")
+//    println(s"fieldStr $fieldStr")
     val q = ("?" * keys.length).mkString(",")
-    println(s"q: $q")
+//    println(s"q: $q")
     val tableSpec = if (args.keyspace.isEmpty) args.table else s"${args.keyspace}.${args.table}"
     val insertStr = s"""INSERT INTO $tableSpec ($fieldStr) VALUES ($q) USING TTL ${args.ttl}"""
-    println(s"insertStr: $insertStr")
+//    println(s"insertStr: $insertStr")
     insertStr
   }
 
