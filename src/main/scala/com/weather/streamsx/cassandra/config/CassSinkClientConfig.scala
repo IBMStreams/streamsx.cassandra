@@ -44,6 +44,7 @@ object CassSinkClientConfig {
       }
 
   def apply(ptc: PrimitiveTypeConfig): CassSinkClientConfig = {
+    //note that this will change when we go to C*3.0
     val sslOptions =  ptc.sslEnabled match {
       case true if ptc.sslKeystore.isEmpty => Some(new SSLOptions)
       case true =>

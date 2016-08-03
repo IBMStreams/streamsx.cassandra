@@ -19,15 +19,15 @@ object CassandraSinkImpl {
       }
       val nullMapValues = NullValueConfig(zkCli, nullMapZnode) match {
         case Some(map) => map
-        case _ => log.error(s"Failed to getData from $nullMapZnode"); null
+        case _ => log.error(s"Failed to getData from $nullMapZnode."); null
       }
       val cassConnector = new CassandraConnector(clientConfig)
       new CassandraSinkImpl(clientConfig, cassConnector, nullMapValues)
-    } catch { case e: Exception => log.error("Failed to create Cassandra client", e); null }
+    } catch { case e: Exception => log.error(s"Failed to create Cassandra client\n${SST(e)})", e); null }
   }
 }
 
-
+//TODO CHECK AND SEE IF EMPTY COLLECTIONS ARE TRUE NULLS OR TOMBSTONES
 
 class CassandraSinkImpl(cfg: CassSinkClientConfig, connector: CassandraConnector, nullMapValues: Map[String, Any]) extends CassandraAwaiter{
   override protected val log = org.slf4j.LoggerFactory.getLogger(getClass)
@@ -36,7 +36,11 @@ class CassandraSinkImpl(cfg: CassSinkClientConfig, connector: CassandraConnector
   def insertTuple(tuple: Tuple): Unit = {
     try{
       val bs: BoundStatement = TupleToStatement(tuple, connector.session, cfg, nullMapValues)
-        logFailure(awaitOne()(connector.session.executeAsync(bs)))
+      logFailure(awaitOne()(connector.session.executeAsync(bs)))
     } catch { case e: Throwable => log.error(s"Failed to write agg to Cassandra.\n${SST(e)}", e) }
+  }
+
+  def shutdown(): Unit = {
+    connector.shutdown()
   }
 }

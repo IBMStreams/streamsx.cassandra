@@ -14,15 +14,23 @@ object TupleToStatement {
   /*
     Yes, yes, yes, this var is not kosher, this creates a race condition, etc.
     However, this var is only going to mutated at the very front of the program,
-    and it will always get initialized to the same thing, even if its by multiple threads.
+    and it will always get initialized to the same thing, even if it's by multiple threads.
     So yes, this is not kosher, but it's fine.
    */
-  var indexMap: DualHashy = null
+  //TODO: think about different ways to do this (the var for indexMap)
+  //TODO: The StatementCache is getting created over and over, that's mega bad
+  //TODO: Reach out to Senthil about unit testing for Streams Java operators
+
+
+
+  //TODO move everything that relies on the first tuple for startup into a class (or case class) and use a var for THAT
+
+  private var indexMap: Option[DualHashy] = None
 
   def apply(tuple: Tuple, session: Session, cfg: CassSinkClientConfig, nullValueMap: Map[String, Any]): BoundStatement = {
     val attributeList = mkAttrList(tuple)
-    if(indexMap == null) indexMap = new DualHash(attributeList)
-    val cache = new StatementCache(cfg, session, indexMap)
+    indexMap = indexMap.orElse(Some(new DualHash(attributeList)))
+    val cache = new StatementCache(cfg, session, indexMap.get)
     val valuesMap: Map[String, Any] = attributeList.map(getValueFromTuple(tuple, _)).toMap
     mkBoundStatement(valuesMap, nullValueMap, cache)
   }
@@ -32,36 +40,29 @@ object TupleToStatement {
                                            nullValueMap: Map[String, Any],
                                            cache: StatementCache
                                          ): BoundStatement = {
-    val (bitSet, nonNulls) = mkBitSet(valuesMap, nullValueMap, indexMap)
+    val (bitSet, nonNulls) = mkBitSet(valuesMap, nullValueMap, indexMap.get)
     val ps = cache(bitSet)
     val bindingValues = nonNulls.map(kv => kv._2)
     ps.bind(bindingValues.asInstanceOf[Seq[Object]]:_*)
   }
 
-  private def mkBitSet(m: Map[String, Any], nullValues: Map[String, Any], indexMap: DualHashy): (BitSet, List[(String, Any)]) = {
-    //TODO account for empty collections here or somewhere else
-
-    def filterNulls(kv: (String, Any)): Option[(String, Any)] = {
-      if(nullValues.contains(kv._1)) {
-        m(kv._1) match {
-          case v if v == nullValues(kv._1) => None
-          case _ => Some(kv)
-        }
-      }
-      else Some(kv)
+  private def mkBitSet(rawValues: Map[String, Any], nullValues: Map[String, Any], indexMap: DualHashy): (BitSet, List[(String, Any)]) = {
+    def filterNulls(kv: (String, Any)): Option[(String, Any)] = (nullValues.get(kv._1), rawValues(kv._1)) match {
+      case (Some(kk), v) if v == kk => None
+      case _ => Some(kv)
     }
-    val nonNulls = m.flatMap(filterNulls).toList.sortBy(kv => indexMap(kv._1))
-//    println(s"nonNull sorted $nonNulls")
-    val bitList = nonNulls.flatMap(kv => indexMap(kv._1)).toList
+    val nonNulls = rawValues.flatMap(filterNulls).toList.sortBy(kv => indexMap(kv._1))
+    val bitList = nonNulls.flatMap(kv => indexMap(kv._1))
     (BitSet(bitList:_*), nonNulls)
   }
 
+  // TODO: see if this can be converted to use the iterator
   private def mkAttrList(t: Tuple): List[Attribute] = {
     val schema = t.getStreamSchema
-    val attributes = (0 until schema.getAttributeCount).map(i => schema.getAttribute(i)).sortBy(_.getName()).toList
-    attributes
+    (0 until schema.getAttributeCount).map(schema.getAttribute).sortBy(_.getName).toList
   }
 
+  // TODO: extract other collection logic to methods like mkList and name mkList something meaningful
   def getValueFromTuple(tuple: Tuple, attr: Attribute): (String, Any) = {
     val value: Any = attr.getType.getLanguageType match {
       case "boolean" => tuple.getBoolean(attr.getIndex)
@@ -76,11 +77,7 @@ object TupleToStatement {
       case "rstring" | "ustring" => tuple.getString(attr.getIndex)
       case "blob" => tuple.getBlob(attr.getIndex)
       case "xml" => tuple.getXML(attr.getIndex).toString //Cassandra doesn't have XML as data type, thank goodness
-      case l if l.startsWith("list") =>
-        val listType: CollectionType = attr.getType.asInstanceOf[CollectionType]
-        val elementT: Class[_] = listType.getElementType.getObjectType // This is the class of the individual elements: Int, String, etc.
-      val rawList = tuple.getList(attr.getIndex)
-        castListToType[elementT.type](rawList)
+      case l if l.startsWith("list") => mkList(tuple, attr)
       case s if s.startsWith("set") =>
         val setType: CollectionType = attr.getType.asInstanceOf[CollectionType]
         val elementT: Class[_] = setType.getElementType.getObjectType
@@ -95,6 +92,13 @@ object TupleToStatement {
       case _ => Failure(CassandraWriterException( s"Unrecognized type: ${attr.getType.getLanguageType}", new Exception))
     }
     attr.getName -> value
+  }
+
+  private def mkList(tuple: Tuple, attr: Attribute): Any = {
+    val listType: CollectionType = attr.getType.asInstanceOf[CollectionType]
+    val elementT: Class[_] = listType.getElementType.getObjectType // This is the class of the individual elements: Int, String, etc.
+    val rawList = tuple.getList(attr.getIndex)
+    castListToType[elementT.type](rawList)
   }
 
   def castListToType[A <: Any](rawList: java.util.List[_]): java.util.List[A] = {
