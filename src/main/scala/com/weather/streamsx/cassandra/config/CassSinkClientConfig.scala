@@ -28,7 +28,7 @@ case class CassSinkClientConfig(
                                  authProvider: AuthProvider,
                                  sslOptions: Option[SSLOptions],
                                  consistencylevel: ConsistencyLevel,
-                                 seeds: List[InetAddress],
+                                 seeds: String,
                                  keyspace: String,
                                  table: String,
                                  ttl: Long,
@@ -62,7 +62,7 @@ object CassSinkClientConfig {
       case true => new PlainTextAuthProvider(ptc.authUsername, ptc.authPassword)
       case _ => AuthProvider.NONE
     }
-    val seeds = InetAddress.getAllByName(ptc.seeds).toList
+//    val seeds = InetAddress.getAllByName(ptc.seeds).toList
 
     CassSinkClientConfig(
       localdc = ptc.localdc,
@@ -79,7 +79,7 @@ object CassSinkClientConfig {
       authProvider = authProvider,
       sslOptions = sslOptions,
       consistencylevel = getConsistencyLevel(ptc.consistencyLevel).toOption.get,
-      seeds = seeds,
+      seeds = ptc.seeds,
       keyspace = ptc.keyspace,
       table = ptc.table,
       ttl = ptc.ttl,

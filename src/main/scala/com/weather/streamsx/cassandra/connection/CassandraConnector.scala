@@ -11,7 +11,7 @@ class CassandraConnector(ccfg: CassSinkClientConfig) {
 
   protected val cluster = {
     val c = Cluster.builder()
-      .addContactPoints(ccfg.seeds: _*)
+      .addContactPoints(ccfg.seeds.split(","): _*)
       .withPort(ccfg.port)
       .withAuthProvider(ccfg.authProvider)
       .withSSL(ccfg.sslOptions.orNull)

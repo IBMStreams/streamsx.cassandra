@@ -52,6 +52,7 @@ object PrimitiveTypeConfig {
   def apply(config: Map[String, String]): PrimitiveTypeConfig = {
 
     log.error(s"$config")
+    println(s"THIS IS WHAT I PULLED AS THE CONFIG FROM ZOOKEEPER: $config")
 
     val consistencyLevel = config.getOrElse("consistencyLevel", DEFAULT_CONSISTENCYLEVEL)
     val dateFormat = config.getOrElse("dateFormat", DEFAULT_DATEFORMAT)
