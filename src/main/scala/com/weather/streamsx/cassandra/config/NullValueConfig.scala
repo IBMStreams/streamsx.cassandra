@@ -3,10 +3,9 @@ package com.weather.streamsx.cassandra.config
 import com.weather.analytics.zooklient.ZooKlient
 import scala.util.parsing.json.JSON
 
-//TODO account for empty collections here or somewhere else
+//TODO check and see if this breaks if the nullValue config has more than 22 items
 
 object NullValueConfig {
-//  private val log = org.slf4j.LoggerFactory.getLogger(getClass)
 
   def apply(zkCli: ZooKlient, znodeName: String): Option[Map[String, Any]] = {
     val json = zkCli.readRawString(znodeName) match {

@@ -16,7 +16,7 @@ class DualHash(list: List[Attribute]) extends DualHashy{
   }
 }
 
-/**
+/*
   * This trait is pointless except I wanted to remove the dependency on ibm.operator.Attribute
   * for unit testing
   */

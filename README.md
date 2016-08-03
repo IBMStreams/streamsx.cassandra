@@ -8,16 +8,17 @@
   - [Coming in Future Versions](#coming-in-future-versions)
     - [Future Functionality](#future-functionality)
     - [Documentation To-Dos](#documentation-to-dos)
-- [Setup](#setup)
+- [Installation](#installation)
   - [Using the Distribution](#using-the-distribution)
   - [Building From Source](#building-from-source)
     - [Updating To New Version](#updating-to-new-version)
     - [Installing Toolkit From Scratch](#installing-toolkit-from-scratch)
-- [Usage](#usage)
+- [Configuration and Setup](#configuration-and-setup)
   - [Setting Up Cassandra on OSX](#setting-up-cassandra-on-osx)
   - [Setting Up ZooKeeper on Your Virtual Machine](#setting-up-zookeeper-on-your-virtual-machine)
+- [Usage](#usage)
   - [Sample SPL Gists](#sample-spl-gists)
-  - [The Null Map Parameter](#the-null-map-parameter)
+  - [Null Value Configuration](#null-value-configuration)
 - [Things That May Come Up In Testing](#things-that-may-come-up-in-testing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -40,7 +41,7 @@ NOTE: tuple field names need to match the field names in your Cassandra table EX
 - include a section about Artifactory
 
 
-# Setup
+# Installation
 
 ## Using the Distribution
 1. Download the tar to your VM
@@ -98,7 +99,7 @@ The cql there matches what I did for my test project.
         ... etc etc
     ```
     
-# Usage
+# Configuration and Setup
 
 ## Setting Up Cassandra on OSX
 
@@ -167,6 +168,8 @@ $ zookeepercli --servers localhost:21810 -c get /streamsx.cassandra/null_values
 
 ```
 
+# Usage
+
 ## Sample SPL Gists
 
 This gist shows a sample SPL file using the new ZooKeeper based configuration as well as samples of the configuration: <https://gist.github.com/ecurtin/2f0baf2d238dddbc461d3594ec3988e1> 
@@ -180,6 +183,8 @@ One of them describes the connection info for Cassandra, the other describes the
 meaning that the value will not be present in the prepared statement for Cassandra.
 
 If fields do not have a null value configured, they are assumed to always be valid.
+
+Empty collections (maps, lists, sets) will automatically be written as nulls, no need to configure that.
 
 See [the gist](https://gist.github.com/ecurtin/2f0baf2d238dddbc461d3594ec3988e1) for examples of null value configuration for the sample application.
     

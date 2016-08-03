@@ -39,15 +39,8 @@ import com.ibm.streams.operator.model.PrimitiveOperator;
 public class CassandraSink extends AbstractOperator {
 
     CassandraSinkImpl impl = null;
-//    String keyspace = null;
-//    String table = null;
-//    Long ttl = null;
-//    String nullMap = null;
-//    Integer cacheSize = null;
     String connectionConfigZNode = null;
     String nullMapZnode = null;
-
-
 
     /**
      * Initialize this operator. Called once before any tuples are processed.
@@ -68,19 +61,6 @@ public class CassandraSink extends AbstractOperator {
     }
 
     /**
-     * Notification that initialization is complete and all input and output ports
-     * are connected and ready to receive and submit tuples.
-     * @throws Exception Operator failure, will cause the enclosing PE to terminate.
-     */
-    @Override
-    public synchronized void allPortsReady() throws Exception {
-        // This method is commonly used by source operators.
-        // Operators that process incoming tuples generally do not need this notification.
-        OperatorContext context = getOperatorContext();
-//        Logger.getLogger(this.getClass()).trace("Operator " + context.getName() + " all ports are ready in PE: " + context.getPE().getPEId() + " in Job: " + context.getPE().getJobId() );
-    }
-
-    /**
      * Process an incoming tuple that arrived on the specified port.
      * @param stream Port the tuple is arriving on.
      * @param tuple Object representing the incoming tuple.
@@ -89,10 +69,7 @@ public class CassandraSink extends AbstractOperator {
     @Override
     public void process(StreamingInput<Tuple> stream, Tuple tuple)
             throws Exception {
-        // TODO Insert code here to process the incoming tuple,
-        // typically sending tuple data to an external system or data store.
-        // String value = tuple.getString("AttributeName");
-        impl.insertTuple(tuple);
+        if(impl != null) impl.insertTuple(tuple);
     }
 
     /**
@@ -101,30 +78,14 @@ public class CassandraSink extends AbstractOperator {
      */
     @Override
     public synchronized void shutdown() throws Exception {
-        OperatorContext context = getOperatorContext();
-//        Logger.getLogger(this.getClass()).trace("Operator " + context.getName() + " shutting down in PE: " + context.getPE().getPEId() + " in Job: " + context.getPE().getJobId() );
-
-        // TODO: If needed, close connections or release resources related to any external system or data store.
-
+//        OperatorContext context = getOperatorContext();
+        if(impl != null) {
+            impl.shutdown();
+            impl = null;
+        }
         // Must call super.shutdown()
         super.shutdown();
     }
-
-
-//    @Parameter(name="keyspace", description = "Keyspace name in Cassandra", optional = false)
-//    public void setKeyspace(String str) { keyspace = str; }
-//
-//    @Parameter(name="table", description = "Table name in Cassandra", optional = false)
-//    public void setTable(String str) { table = str; }
-//
-//    @Parameter(name="ttl", description = "Time-to-live for each entry, in seconds", optional = false)
-//    public void setTTL(Long l) { ttl = l; }
-//
-//    @Parameter(name="nullMap", description = "Name of the tuple field that is a Map[String, Boolean] representing which fields are null", optional = false)
-//    public void setNullMap(String str) { nullMap = str; }
-//
-//    @Parameter(name="cacheSize", description = "Maximum number of entries to hang onto in the PreparedStatement cache")
-//    public void setCacheSize(int i) { cacheSize = i; }
 
     @Parameter(name="connectionConfigZNode", description = "Name of the Znode where Cassandra connection configuration is stored")
     public void setCfgZnode(String s) {connectionConfigZNode = s;}
