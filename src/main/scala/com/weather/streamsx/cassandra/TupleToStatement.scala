@@ -51,7 +51,7 @@ object TupleToStatement {
       case (Some(kk), v) if v == kk => None
       case _ => Some(kv)
     }
-    val nonNulls = rawValues.flatMap(filterNulls).toList.sortBy(kv => indexMap(kv._1))
+    val nonNulls: List[(String, Any)] = rawValues.flatMap(filterNulls).toList.sortBy(kv => indexMap(kv._1))
     val bitList = nonNulls.flatMap(kv => indexMap(kv._1))
     (BitSet(bitList:_*), nonNulls)
   }
@@ -62,7 +62,6 @@ object TupleToStatement {
     (0 until schema.getAttributeCount).map(schema.getAttribute).sortBy(_.getName).toList
   }
 
-  // TODO: extract other collection logic to methods like mkList and name mkList something meaningful
   def getValueFromTuple(tuple: Tuple, attr: Attribute): (String, Any) = {
     val value: Any = attr.getType.getLanguageType match {
       case "boolean" => tuple.getBoolean(attr.getIndex)
@@ -78,38 +77,41 @@ object TupleToStatement {
       case "blob" => tuple.getBlob(attr.getIndex)
       case "xml" => tuple.getXML(attr.getIndex).toString //Cassandra doesn't have XML as data type, thank goodness
       case l if l.startsWith("list") => mkList(tuple, attr)
-      case s if s.startsWith("set") =>
-        val setType: CollectionType = attr.getType.asInstanceOf[CollectionType]
-        val elementT: Class[_] = setType.getElementType.getObjectType
-        val rawSet = tuple.getSet(attr.getIndex)
-        castSetToType[elementT.type](rawSet)
-      case m if m.startsWith("map") =>
-        val mapType: MapType = attr.getType.asInstanceOf[MapType]
-        val keyT: Class[_] = mapType.getKeyType.getObjectType
-        val valT: Class[_] = mapType.getValueType.getObjectType
-        val rawMap = tuple.getMap(attr.getIndex)
-        castMapToType[keyT.type, valT.type](rawMap)
+      case s if s.startsWith("set") => mkSet(tuple, attr)
+      case m if m.startsWith("map") => mkMap(tuple, attr)
       case _ => Failure(CassandraWriterException( s"Unrecognized type: ${attr.getType.getLanguageType}", new Exception))
     }
     attr.getName -> value
   }
 
   private def mkList(tuple: Tuple, attr: Attribute): Any = {
+    def castListToType[A <: Any](rawList: java.util.List[_]): java.util.List[A] = {
+      rawList.asInstanceOf[java.util.List[A]]
+    }
     val listType: CollectionType = attr.getType.asInstanceOf[CollectionType]
     val elementT: Class[_] = listType.getElementType.getObjectType // This is the class of the individual elements: Int, String, etc.
     val rawList = tuple.getList(attr.getIndex)
     castListToType[elementT.type](rawList)
   }
 
-  def castListToType[A <: Any](rawList: java.util.List[_]): java.util.List[A] = {
-    rawList.asInstanceOf[java.util.List[A]]
+  private def mkSet(tuple: Tuple, attr: Attribute): Any = {
+    def castSetToType[A <: Any](rawSet: java.util.Set[_]): java.util.Set[A] = {
+      rawSet.asInstanceOf[java.util.Set[A]]
+    }
+    val setType: CollectionType = attr.getType.asInstanceOf[CollectionType]
+    val elementT: Class[_] = setType.getElementType.getObjectType
+    val rawSet = tuple.getSet(attr.getIndex)
+    castSetToType[elementT.type](rawSet)
   }
 
-  def castSetToType[A <: Any](rawSet: java.util.Set[_]): java.util.Set[A] = {
-    rawSet.asInstanceOf[java.util.Set[A]]
-  }
-
-  def castMapToType[K <: Any, V <: Any](rawMap: java.util.Map[_,_]): java.util.Map[K,V] = {
-    rawMap.asInstanceOf[java.util.Map[K,V]]
+  private def mkMap(tuple: Tuple, attr: Attribute): Any = {
+    def castMapToType[K <: Any, V <: Any](rawMap: java.util.Map[_,_]): java.util.Map[K,V] = {
+      rawMap.asInstanceOf[java.util.Map[K,V]]
+    }
+    val mapType: MapType = attr.getType.asInstanceOf[MapType]
+    val keyT: Class[_] = mapType.getKeyType.getObjectType
+    val valT: Class[_] = mapType.getValueType.getObjectType
+    val rawMap = tuple.getMap(attr.getIndex)
+    castMapToType[keyT.type, valT.type](rawMap)
   }
 }
