@@ -4,7 +4,6 @@ import com.weather.analytics.zooklient.ZooKlient
 import io.circe._
 import io.circe.generic.semiauto._
 
-
 case class PrimitiveTypeConfig(
                                 consistencyLevel: String,
                                 dateFormat: String,
@@ -29,8 +28,6 @@ object PrimitiveTypeConfig {
 
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)
 
-
-
   val DEFAULT_CONSISTENCYLEVEL       = "local_quorum"
   val DEFAULT_DATEFORMAT             = "yy-MM-dd HH:mm:ss"
   val DEFAULT_PORT                   = "9042"
@@ -51,9 +48,7 @@ object PrimitiveTypeConfig {
 
   def apply(config: Map[String, String]): PrimitiveTypeConfig = {
 
-    log.error(s"$config")
-    println(s"THIS IS WHAT I PULLED AS THE CONFIG FROM ZOOKEEPER: $config")
-
+    log.info(s"ZooKeeper Cassandra Config:\n$config")
     val consistencyLevel = config.getOrElse("consistencyLevel", DEFAULT_CONSISTENCYLEVEL)
     val dateFormat = config.getOrElse("dateFormat", DEFAULT_DATEFORMAT)
     val localDC = config.getOrElse("localdc", DEFAULT_LOCALDC)
