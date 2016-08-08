@@ -52,12 +52,10 @@ public class CassandraSink extends AbstractOperator {
     String connectionConfigZNode = null;
     String nullMapZnode = null;
 
-    OperatorMetrics opMetrics = getOperatorContext().getMetrics();
+    OperatorMetrics opMetrics = null;
 
-    Metric failures = opMetrics.createCustomMetric("nWriteFailures",
-            "Number of tuples that failed to get written to Cassandra", Metric.Kind.COUNTER);
-    Metric successes = opMetrics.createCustomMetric("nWriteSuccesses",
-            "Number of tuples that were written to Cassandra successfully", Metric.Kind.COUNTER);
+    Metric failures = null;
+    Metric successes = null;
 
 
     /**
@@ -72,10 +70,16 @@ public class CassandraSink extends AbstractOperator {
         super.initialize(context);
         log.trace("Operator " + context.getName() + " initializing in PE: " + context.getPE().getPEId() + " in Job: " + context.getPE().getJobId() );
 
+        opMetrics = getOperatorContext().getMetrics();
+
+        failures = opMetrics.createCustomMetric("nWriteFailures",
+                "Number of tuples that failed to get written to Cassandra", Metric.Kind.COUNTER);
+        successes = opMetrics.createCustomMetric("nWriteSuccesses",
+                "Number of tuples that were written to Cassandra successfully", Metric.Kind.COUNTER);
+
         if (impl == null) {
             impl = CassandraSinkImpl.mkWriter(connectionConfigZNode, nullMapZnode);
         }
-
     }
 
     /**
