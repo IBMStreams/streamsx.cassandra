@@ -10,6 +10,13 @@ import com.ibm.streams.operator.model.InputPortSet.WindowPunctuationInputMode;
 import com.ibm.streams.operator.model.InputPorts;
 import com.ibm.streams.operator.model.Parameter;
 import com.ibm.streams.operator.model.PrimitiveOperator;
+import com.ibm.streams.operator.metrics.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.log4j.Logger;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Class for an operator that consumes tuples and does not produce an output stream.
@@ -38,9 +45,20 @@ import com.ibm.streams.operator.model.PrimitiveOperator;
 })
 public class CassandraSink extends AbstractOperator {
 
+    Logger log = Logger.getLogger(this.getClass());
+
+
     CassandraSinkImpl impl = null;
     String connectionConfigZNode = null;
     String nullMapZnode = null;
+
+    OperatorMetrics opMetrics = getOperatorContext().getMetrics();
+
+    Metric failures = opMetrics.createCustomMetric("nWriteFailures",
+            "Number of tuples that failed to get written to Cassandra", Metric.Kind.COUNTER);
+    Metric successes = opMetrics.createCustomMetric("nWriteSuccesses",
+            "Number of tuples that were written to Cassandra successfully", Metric.Kind.COUNTER);
+
 
     /**
      * Initialize this operator. Called once before any tuples are processed.
@@ -52,7 +70,7 @@ public class CassandraSink extends AbstractOperator {
             throws Exception {
         // Must call super.initialize(context) to correctly setup an operator.
         super.initialize(context);
-//        Logger.getLogger(this.getClass()).trace("Operator " + context.getName() + " initializing in PE: " + context.getPE().getPEId() + " in Job: " + context.getPE().getJobId() );
+        log.trace("Operator " + context.getName() + " initializing in PE: " + context.getPE().getPEId() + " in Job: " + context.getPE().getJobId() );
 
         if (impl == null) {
             impl = CassandraSinkImpl.mkWriter(connectionConfigZNode, nullMapZnode);
@@ -69,7 +87,16 @@ public class CassandraSink extends AbstractOperator {
     @Override
     public void process(StreamingInput<Tuple> stream, Tuple tuple)
             throws Exception {
-        if(impl != null) impl.insertTuple(tuple);
+        if(impl != null){
+            try{
+                impl.insertTuple(tuple);
+                successes.increment();
+            }
+            catch(Exception e) {
+                failures.increment();
+                log.error("Failed to write tuple to Cassandra.\n"+ stringifyStackTrace(e) );
+            }
+        }
     }
 
     /**
@@ -78,7 +105,9 @@ public class CassandraSink extends AbstractOperator {
      */
     @Override
     public synchronized void shutdown() throws Exception {
-//        OperatorContext context = getOperatorContext();
+        OperatorContext context = getOperatorContext();
+        log.trace("Operator " + context.getName() + " shutting down in PE: " + context.getPE().getPEId() + " in Job: " + context.getPE().getJobId() );
+
         if(impl != null) {
             impl.shutdown();
             impl = null;
@@ -92,4 +121,11 @@ public class CassandraSink extends AbstractOperator {
 
     @Parameter(name="nullMapZnode", description = "Name of the Znode where the map of fieldnames to the value representing null is stored")
     public void setNullValueZnode(String str) {nullMapZnode = str;}
+
+
+    private String stringifyStackTrace(Exception e) {
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        return sw.toString();
+    }
 }

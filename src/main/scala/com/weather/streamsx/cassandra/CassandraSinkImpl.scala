@@ -5,6 +5,7 @@ import com.ibm.streams.operator.Tuple
 import com.weather.analytics.zooklient.ZooKlient
 import com.weather.streamsx.cassandra.config.{NullValueConfig, CassSinkClientConfig, PrimitiveTypeConfig}
 import com.weather.streamsx.cassandra.connection.{ZKClient, CassandraConnector, CassandraAwaiter}
+import com.weather.streamsx.cassandra.exception.CassandraWriterException
 import com.weather.streamsx.util.{StringifyStackTrace => SST}
 
 object CassandraSinkImpl {
@@ -37,7 +38,7 @@ class CassandraSinkImpl(cfg: CassSinkClientConfig, connector: CassandraConnector
     try{
       val bs: BoundStatement = TupleToStatement(tuple, connector.session, cfg, nullMapValues)
       logFailure(awaitOne()(connector.session.executeAsync(bs)))
-    } catch { case e: Throwable => log.error(s"Failed to write agg to Cassandra.\n${SST(e)}", e) }
+    } catch { case e: Throwable => throw new CassandraWriterException(s"Failed to write tuple to Cassandra. \n ${SST(e)}", e) }
   }
 
   def shutdown(): Unit = {

@@ -9,6 +9,11 @@ import com.ibm.streams.operator.meta.{MapType, CollectionType}
 import scala.collection.immutable.BitSet
 import scalaz.Failure
 
+class TupleBasedSetup(t: Tuple) {
+
+}
+
+
 object TupleToStatement {
 
   /*
