@@ -26,6 +26,8 @@ object CassandraSinkImpl {
       new CassandraSinkImpl(clientConfig, cassConnector, nullMapValues)
     } catch { case e: Exception => log.error(s"Failed to create Cassandra client\n${SST(e)})", e); null }
   }
+
+
 }
 
 //TODO CHECK AND SEE IF EMPTY COLLECTIONS ARE TRUE NULLS OR TOMBSTONES
@@ -34,9 +36,12 @@ class CassandraSinkImpl(cfg: CassSinkClientConfig, connector: CassandraConnector
   override protected val log = org.slf4j.LoggerFactory.getLogger(getClass)
   override protected val writeOperationTimeout = connector.writeOperationTimeout
 
+  private var tbs: Option[TupleBasedStructures] = None
+
   def insertTuple(tuple: Tuple): Unit = {
+    tbs match { case None => tbs = Some(new TupleBasedStructures(tuple, connector.session, cfg))}
     try{
-      val bs: BoundStatement = TupleToStatement(tuple, connector.session, cfg, nullMapValues)
+      val bs: BoundStatement = TupleToStatement(tuple, tbs.get, cfg, nullMapValues)
       logFailure(awaitOne()(connector.session.executeAsync(bs)))
     } catch { case e: Throwable => throw new CassandraWriterException(s"Failed to write tuple to Cassandra. \n ${SST(e)}", e) }
   }

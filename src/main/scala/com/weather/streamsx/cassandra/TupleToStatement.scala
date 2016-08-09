@@ -9,44 +9,29 @@ import com.ibm.streams.operator.meta.{MapType, CollectionType}
 import scala.collection.immutable.BitSet
 import scalaz.Failure
 
-class TupleBasedSetup(t: Tuple) {
-
+class TupleBasedStructures(t: Tuple, session: Session, cfg: CassSinkClientConfig) {
+  val attributeList = TupleToStatement.mkAttrList(t)
+  val indexMap = new DualHash(attributeList)
+  val cache = new StatementCache(cfg, session, indexMap)
 }
-
 
 object TupleToStatement {
 
-  /*
-    Yes, yes, yes, this var is not kosher, this creates a race condition, etc.
-    However, this var is only going to mutated at the very front of the program,
-    and it will always get initialized to the same thing, even if it's by multiple threads.
-    So yes, this is not kosher, but it's fine.
-   */
-  //TODO: think about different ways to do this (the var for indexMap)
-  //TODO: The StatementCache is getting created over and over, that's mega bad
   //TODO: Reach out to Senthil about unit testing for Streams Java operators
 
-
-
-  //TODO move everything that relies on the first tuple for startup into a class (or case class) and use a var for THAT
-
-  private var indexMap: Option[DualHashy] = None
-
-  def apply(tuple: Tuple, session: Session, cfg: CassSinkClientConfig, nullValueMap: Map[String, Any]): BoundStatement = {
+  def apply(tuple: Tuple, tbs: TupleBasedStructures, cassCfg: CassSinkClientConfig, nullValueMap: Map[String, Any]): BoundStatement = {
     val attributeList = mkAttrList(tuple)
-    indexMap = indexMap.orElse(Some(new DualHash(attributeList)))
-    val cache = new StatementCache(cfg, session, indexMap.get)
     val valuesMap: Map[String, Any] = attributeList.map(getValueFromTuple(tuple, _)).toMap
-    mkBoundStatement(valuesMap, nullValueMap, cache)
+    mkBoundStatement(valuesMap, nullValueMap, tbs)
   }
 
   private[cassandra] def mkBoundStatement(
                                            valuesMap: Map[String, Any],
                                            nullValueMap: Map[String, Any],
-                                           cache: StatementCache
+                                           tbs: TupleBasedStructures
                                          ): BoundStatement = {
-    val (bitSet, nonNulls) = mkBitSet(valuesMap, nullValueMap, indexMap.get)
-    val ps = cache(bitSet)
+    val (bitSet, nonNulls) = mkBitSet(valuesMap, nullValueMap, tbs.indexMap)
+    val ps = tbs.cache(bitSet)
     val bindingValues = nonNulls.map(kv => kv._2)
     ps.bind(bindingValues.asInstanceOf[Seq[Object]]:_*)
   }
@@ -62,7 +47,7 @@ object TupleToStatement {
   }
 
   // TODO: see if this can be converted to use the iterator
-  private def mkAttrList(t: Tuple): List[Attribute] = {
+  def mkAttrList(t: Tuple): List[Attribute] = {
     val schema = t.getStreamSchema
     (0 until schema.getAttributeCount).map(schema.getAttribute).sortBy(_.getName).toList
   }
