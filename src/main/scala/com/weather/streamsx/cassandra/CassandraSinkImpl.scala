@@ -39,7 +39,11 @@ class CassandraSinkImpl(cfg: CassSinkClientConfig, connector: CassandraConnector
   private var tbs: Option[TupleBasedStructures] = None
 
   def insertTuple(tuple: Tuple): Unit = {
-    tbs match { case None => tbs = Some(new TupleBasedStructures(tuple, connector.session, cfg))}
+    tbs match {
+      case None => tbs = Some(new TupleBasedStructures(tuple, connector.session, cfg))
+      case _ => ()
+    }
+    
     try{
       val bs: BoundStatement = TupleToStatement(tuple, tbs.get, cfg, nullMapValues)
       logFailure(awaitOne()(connector.session.executeAsync(bs)))
