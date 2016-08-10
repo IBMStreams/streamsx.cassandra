@@ -1,5 +1,7 @@
 # CassandraSink
 
+**NOTE: tuple field names need to match the field names in your Cassandra table EXACTLY.** 
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 #Table of Contents
@@ -23,18 +25,14 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Version 0.3: ZooKeeper Based Config and Caching for Prepared Statements
+# Version 1.2
 
-This version adds the ability/requirement of configuring the connection to Cassandra
-via JSON stored in ZooKeeper
-
-NOTE: tuple field names need to match the field names in your Cassandra table EXACTLY. 
+This version fixes a bug in the caching logic.
 
 ## Coming in Future Versions
 
 ### Future Functionality
-- refactoring the nullMap situation in a big way
-- improving caching performance
+- Proper unit tests
 
 ### Documentation To-Dos
 - create a table showing SPL types and their corresponding Cassandra types
@@ -187,9 +185,3 @@ If fields do not have a null value configured, they are assumed to always be val
 Empty collections (maps, lists, sets) will automatically be written as nulls, no need to configure that.
 
 See [the gist](https://gist.github.com/ecurtin/2f0baf2d238dddbc461d3594ec3988e1) for examples of null value configuration for the sample application.
-    
-# Things That May Come Up In Testing
-- RString vs. String: I had some issues with this writing the base code. 
-I think rstrings are getting writing to Cassandra correctly, but it wouldn't surprise me if there's issues.
-- Numeric types not mapping properly. It wouldn't surprise me if this is an issue.
-
