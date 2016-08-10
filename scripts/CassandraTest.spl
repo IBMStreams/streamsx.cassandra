@@ -1,0 +1,27 @@
+﻿namespace com.weather.test;
+
+composite CassandraTest {
+
+	graph
+
+		// The names of the fields in Greeting need to match the fieldnames in the Cassandra table _exactly_
+		stream<rstring greeting, uint64 count, list<int32> testList, set<int32> testSet, map<int32, boolean> testMap, int32 nInt> Greeting = Beacon() {
+			param
+				iterations: 1000000u; //generate 100 tuples
+				period : 0.5; //generate a tuple every 0.5 seconds
+			output
+				Greeting:
+					greeting =  "Hello Streams!",
+					count = IterationCount() + 1ul,
+					testList = (list<int32>)[],
+					testSet = (set<int32>){},
+					testMap = (map<int32, boolean>){},
+					nInt = -2147483647;
+		}
+
+		() as CassandraSink = com.weather.streamsx.cassandra::CassandraSink(Greeting) {
+			param
+				connectionConfigZNode: "/cassandra_config";
+				nullMapZnode: "/null_values";
+		}
+}
