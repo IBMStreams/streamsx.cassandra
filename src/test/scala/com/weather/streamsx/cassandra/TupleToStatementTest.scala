@@ -4,33 +4,32 @@ import java.io._
 
 import com.ibm.streams.flow.declare.{InputPortDeclaration, OperatorInvocation}
 import com.ibm.streams.flow.javaprimitives.{JavaOperatorTester, JavaTestableGraph}
+import com.weather.streamsx.cassandra.mock.StreamsMock
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
-import com.ibm.streams.operator.{StreamingOutput, OutputTuple, Tuple}
+import com.ibm.streams.operator.{Attribute, StreamingOutput, OutputTuple, Tuple}
 
 import scala.util.Random
 
 @RunWith(classOf[JUnitRunner])
 class TupleToStatementTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
-  "I" should "write some tests" in {
+  "mkAttrList" should "return a List of com.ibm...Attribute" in {
 
-//    try {
-//      val session = CasAnalyticsConnector.session
-//      val (map, tuple) = TupleGenerator()
-////      TupleToStatement(tuple, map, session)
-//    }
-//    catch{
-//      case e: Exception => {
-//        println(e.getCause)
-//        val sw = new StringWriter
-//        e.printStackTrace(new PrintWriter(sw))
-//        println(sw.toString)
-//      }
-//
-//    }
-    assert(true)
+    val tupleMaker = new StreamsMock("tuple<int32 a>")
+    val t: OutputTuple = tupleMaker.newEmptyTuple()
+    t.setInt("a", 12)
+
+    val list: List[Attribute] = TupleToStatement.mkAttrList(t)
+
+    val bool: Boolean = list match {
+      case _:List[Attribute] => true
+      case _ => false
+    }
+
+    assert(bool)
+
   }
 
 //  "Prepared Statements" should "have the right number of values" in {
