@@ -2,7 +2,7 @@
 
 name := "streamsx.cassandra"
 organization := "com.weather"
-version := "1.1-RELEASE"
+version := "1.2-RELEASE"
 scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 compileOrder in Compile := CompileOrder.ScalaThenJava
