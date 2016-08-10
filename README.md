@@ -6,7 +6,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 #Table of Contents
 
-- [Version 0.3: ZooKeeper Based Config and Caching for Prepared Statements](#version-03-zookeeper-based-config-and-caching-for-prepared-statements)
+- [Version 1.2](#version-12)
   - [Coming in Future Versions](#coming-in-future-versions)
     - [Future Functionality](#future-functionality)
     - [Documentation To-Dos](#documentation-to-dos)
@@ -21,7 +21,6 @@
 - [Usage](#usage)
   - [Sample SPL Gists](#sample-spl-gists)
   - [Null Value Configuration](#null-value-configuration)
-- [Things That May Come Up In Testing](#things-that-may-come-up-in-testing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
