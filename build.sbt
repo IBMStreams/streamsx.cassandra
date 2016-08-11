@@ -39,12 +39,12 @@ libraryDependencies ++= Seq(
   "io.circe"                    %% "circe-generic"         % circeVersion,
   "io.circe"                    %% "circe-jawn"            % circeVersion,
   "org.scalaz"                  %% "scalaz-core"           % scalazVersion,
-  "org.apache.logging.log4j"    %% "log4j-api"             % log4jVersion,
-  "org.slf4j"                   %% "slf4j-api"             % slf4jVersion,
-  "junit"                       %% "junit"                 % junitVersion            % "test",
+  "org.apache.logging.log4j"    % "log4j-api"             % log4jVersion,
+  "org.slf4j"                   % "slf4j-api"             % slf4jVersion,
+  "junit"                       % "junit"                 % junitVersion            % "test",
   "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
   "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test",
-  "org.slf4j"                   %% "slf4j-simple"          % slf4jVersion            % "test",
+  "org.slf4j"                   % "slf4j-simple"          % slf4jVersion            % "test",
   "org.cassandraunit"            % "cassandra-unit"        % "2.2.2.1"               % "test",
   "org.apache.curator" % "curator-test" % "2.11.0"
 )
