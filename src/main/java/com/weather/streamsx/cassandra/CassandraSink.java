@@ -94,11 +94,9 @@ public class CassandraSink extends AbstractOperator {
         if(impl != null){
             try{
                 impl.insertTuple(tuple);
-                System.out.println("COOL STUFF NOW I'M GOING TO INCREMENT THE SUCCESS METRIC");
                 if(successes != null) successes.increment();
             }
             catch(Exception e) {
-                System.out.println("BAD STUFF NOW I'M GOING TO INCREMENT THE FAILURE METRIC");
                 if(failures != null) failures.increment();
                 log.error("Failed to write tuple to Cassandra.\n"+ stringifyStackTrace(e) );
             }
