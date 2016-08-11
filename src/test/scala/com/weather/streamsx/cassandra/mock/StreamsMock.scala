@@ -21,7 +21,9 @@ class StreamsMock(splStyleTupleStructureDeclaration: String) {
 
   val graph: OperatorGraph = OperatorGraphFactory.newGraph()
   val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])
-  op.setIntParameter("port", 0)
+//  op.setIntParameter("port", 0)
+  op.setStringParameter("connectionConfigZNode", "lol")
+  op.setStringParameter("nullMapZnode", "lol")
   // Create the object representing the type of tuple that is coming into the operator
   val tuplez: InputPortDeclaration = op.addInput(splStyleTupleStructureDeclaration)
   // Create the testable version of the graph
