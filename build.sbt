@@ -90,30 +90,6 @@ dist := {
 val toolkit = TaskKey[Unit]("toolkit", "Makes the SPL toolkit")
 toolkit <<= assembly map mkToolkit
 dist <<= dist.dependsOn(toolkit)
-//
-//
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.install.dependency.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.management.jmxmp.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.operator.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.operator.samples.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.management.mx.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.symphony.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.utils.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.yarn.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.security.authc.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.spl.expressions.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.domainmgr.base.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.domainmgr.server.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.annotation.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.base.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.bi.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.client.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.dsmutils.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.internal.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.tools.jar")),
-//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.util.jar"))
-
 
 (fullClasspath in Test) := (fullClasspath in Test).value ++ Seq(
   Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.install.dependency.jar")),
@@ -137,5 +113,4 @@ dist <<= dist.dependsOn(toolkit)
   Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.internal.jar")),
   Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.tools.jar")),
   Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.util.jar"))
-
 )
