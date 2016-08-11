@@ -1,4 +1,4 @@
-//import scala.language.postfixOps // <- making IntelliJ hush about the ! bash command postfix
+import scala.language.postfixOps // <- making IntelliJ hush about the ! bash command postfix
 
 name := "streamsx.cassandra"
 organization := "com.weather"
@@ -39,12 +39,12 @@ libraryDependencies ++= Seq(
   "io.circe"                    %% "circe-generic"         % circeVersion,
   "io.circe"                    %% "circe-jawn"            % circeVersion,
   "org.scalaz"                  %% "scalaz-core"           % scalazVersion,
-  "org.apache.logging.log4j"     % "log4j-api"             % log4jVersion,
-  "org.slf4j"                    % "slf4j-api"             % slf4jVersion,
-  "junit"                        % "junit"                 % junitVersion            % "test",
+  "org.apache.logging.log4j"    %% "log4j-api"             % log4jVersion,
+  "org.slf4j"                   %% "slf4j-api"             % slf4jVersion,
+  "junit"                       %% "junit"                 % junitVersion            % "test",
   "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
   "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test",
-  "org.slf4j"                    % "slf4j-simple"          % slf4jVersion            % "test",
+  "org.slf4j"                   %% "slf4j-simple"          % slf4jVersion            % "test",
   "org.cassandraunit"            % "cassandra-unit"        % "2.2.2.1"               % "test",
   "org.apache.curator" % "curator-test" % "2.11.0"
 )
@@ -90,3 +90,52 @@ dist := {
 val toolkit = TaskKey[Unit]("toolkit", "Makes the SPL toolkit")
 toolkit <<= assembly map mkToolkit
 dist <<= dist.dependsOn(toolkit)
+//
+//
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.install.dependency.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.management.jmxmp.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.operator.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.operator.samples.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.management.mx.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.symphony.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.utils.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.yarn.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.security.authc.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.spl.expressions.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.domainmgr.base.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.domainmgr.server.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.annotation.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.base.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.bi.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.client.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.dsmutils.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.internal.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.tools.jar")),
+//Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.util.jar"))
+
+
+(fullClasspath in Test) := (fullClasspath in Test).value ++ Seq(
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.install.dependency.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.management.jmxmp.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.operator.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.operator.samples.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.management.mx.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.symphony.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.utils.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.yarn.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.security.authc.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.spl.expressions.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.domainmgr.base.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.domainmgr.server.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.annotation.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.base.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.bi.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.client.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.dsmutils.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.internal.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.tools.jar")),
+  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.util.jar"))
+
+)

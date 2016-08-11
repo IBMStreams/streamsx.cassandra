@@ -13,6 +13,7 @@ import com.ibm.streams.flow.handlers.MostRecent;
 import com.ibm.streams.flow.javaprimitives.JavaOperatorTester;
 import com.ibm.streams.flow.javaprimitives.JavaTestableGraph;
 import com.ibm.streams.operator.{StreamingOutput, OutputTuple, Tuple}
+import com.ibm.streams.operator.internal._
 
 
 

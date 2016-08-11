@@ -1,7 +1,5 @@
 package com.weather.streamsx.cassandra
 
-import java.io._
-
 import com.ibm.streams.flow.declare.{InputPortDeclaration, OperatorInvocation}
 import com.ibm.streams.flow.javaprimitives.{JavaOperatorTester, JavaTestableGraph}
 import com.weather.streamsx.cassandra.mock.StreamsMock
