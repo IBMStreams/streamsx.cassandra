@@ -33,7 +33,6 @@ class NullValueConfigTest extends FlatSpec with Matchers with BeforeAndAfterAll{
 
   "The raw string" should "get fetched and parsed" in {
     MockZK.createZNode("/test", cfg)
-    MockZK.cli.
 
     val mizzap = JSON.parseFull(MockZK.getZNode("/test")).get.asInstanceOf[Map[String, Any]]
     mizzap should equal(compareMap)
