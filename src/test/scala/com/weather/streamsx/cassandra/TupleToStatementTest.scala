@@ -2,7 +2,7 @@ package com.weather.streamsx.cassandra
 
 import com.ibm.streams.flow.declare.{InputPortDeclaration, OperatorInvocation}
 import com.ibm.streams.flow.javaprimitives.{JavaOperatorTester, JavaTestableGraph}
-import com.weather.streamsx.cassandra.mock.StreamsMock
+import com.weather.streamsx.cassandra.mock.MockStreams
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
@@ -15,7 +15,7 @@ class TupleToStatementTest extends FlatSpec with Matchers with BeforeAndAfterAll
 
   "mkAttrList" should "return a List of com.ibm...Attribute" in {
 
-    val tupleMaker = new StreamsMock("tuple<int32 a>")
+    val tupleMaker = new MockStreams("tuple<int32 a>")
     val t: OutputTuple = tupleMaker.newEmptyTuple()
     t.setInt("a", 12)
 

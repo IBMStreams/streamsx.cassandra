@@ -91,6 +91,7 @@ val toolkit = TaskKey[Unit]("toolkit", "Makes the SPL toolkit")
 toolkit <<= assembly map mkToolkit
 dist <<= dist.dependsOn(toolkit)
 
+
 (fullClasspath in Test) := (fullClasspath in Test).value ++ Seq(
   Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.install.dependency.jar")),
   Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.management.jmxmp.jar")),

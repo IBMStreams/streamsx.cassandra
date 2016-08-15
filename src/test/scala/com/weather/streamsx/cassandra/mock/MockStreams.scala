@@ -15,15 +15,17 @@ import com.ibm.streams.flow.javaprimitives.JavaTestableGraph;
 import com.ibm.streams.operator.{StreamingOutput, OutputTuple, Tuple}
 import com.ibm.streams.operator.internal._
 
+class MockStreams(splStyleTupleStructureDeclaration: String) {
 
-
-class StreamsMock(splStyleTupleStructureDeclaration: String) {
+  // setup mock ZK nodes
+  MockZK.createZNode("lol", "{}")
+  MockZK.createZNode("lolol", "{}")
 
   val graph: OperatorGraph = OperatorGraphFactory.newGraph()
   val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])
 //  op.setIntParameter("port", 0)
-  op.setStringParameter("connectionConfigZNode", "lol")
-  op.setStringParameter("nullMapZnode", "lol")
+  op.setStringParameter("connectionConfigZNode", "/lol")
+  op.setStringParameter("nullMapZnode", "/lolol")
   // Create the object representing the type of tuple that is coming into the operator
   val tuplez: InputPortDeclaration = op.addInput(splStyleTupleStructureDeclaration)
   // Create the testable version of the graph
