@@ -45,7 +45,7 @@ This version fixes a bug in the caching logic.
 2. Untar the tar
 3. Add the extracted tar as a toolkit location in Streams Studio
 
-That's it!
+For more detailed instructions on adding external toolkits, see this page: <https://github.com/TheWeatherCompany/analytics-streams-docs/blob/master/adding-a-toolkit.md> 
 
 ## Building From Source
 
