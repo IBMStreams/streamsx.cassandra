@@ -10,7 +10,7 @@ object MockZK {
   private val zkPort = 4445
   private val retryMS = 2000
   private val zkTestServer = new TestingServer(zkPort)
-  private val cli: CuratorFramework = CuratorFrameworkFactory.newClient(zkTestServer.getConnectString, new RetryOneTime(retryMS))
+  private[cassandra] val cli: CuratorFramework = CuratorFrameworkFactory.newClient(zkTestServer.getConnectString, new RetryOneTime(retryMS))
 
   val connectString = zkTestServer.getConnectString
 

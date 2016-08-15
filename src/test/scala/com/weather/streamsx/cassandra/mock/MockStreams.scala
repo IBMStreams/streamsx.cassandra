@@ -17,15 +17,39 @@ import com.ibm.streams.operator.internal._
 
 class MockStreams(splStyleTupleStructureDeclaration: String) {
 
+  val cassStr =
+    """
+      |{
+      |  "consistencyLevel": "local_quorum",
+      |  "dateFormat": "yy-MM-dd HH:mm:ss",
+      |  "localdc": "",
+      |  "port": 9042,
+      |  "remapClusterMinutes": 15,
+      |  "seeds": "10.0.2.2",
+      |  "writeOperationTimeout": 10000,
+      |  "authEnabled": false,
+      |  "authUsername": "cinple",
+      |  "authPassword": "omgwtfbBq",
+      |  "sslEnabled": false,
+      |  "sslKeystore": "/etc/certs/dev_analytics.p12",
+      |  "sslPassword": "omgwtfbbq",
+      |  "keyspace" : "testkeyspace",
+      |  "table" : "testtable",
+      |  "ttl" : 2592000,
+      |  "cacheSize" : 1000
+      |}
+    """.stripMargin
+
+
   // setup mock ZK nodes
-  MockZK.createZNode("lol", "{}")
-  MockZK.createZNode("lolol", "{}")
+  MockZK.createZNode("cassConn", cassStr)
+  MockZK.createZNode("nullV", "{}")
 
   val graph: OperatorGraph = OperatorGraphFactory.newGraph()
   val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])
 //  op.setIntParameter("port", 0)
-  op.setStringParameter("connectionConfigZNode", "/lol")
-  op.setStringParameter("nullMapZnode", "/lolol")
+  op.setStringParameter("connectionConfigZNode", "/cassConn")
+  op.setStringParameter("nullMapZnode", "/nullV")
   op.setStringParameter("zkConnectionString", MockZK.connectString)
   // Create the object representing the type of tuple that is coming into the operator
   val tuplez: InputPortDeclaration = op.addInput(splStyleTupleStructureDeclaration)
