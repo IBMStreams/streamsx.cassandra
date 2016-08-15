@@ -3,13 +3,16 @@ package com.weather.streamsx.cassandra.connection
 import com.weather.analytics.zooklient.{ZooKlient, ZooKlientCfg}
 
 object ZKClient {
-  def apply(): ZooKlient  = {
-    val cfg = ZooKlientCfg("streamsx.cassandra", sys.env.getOrElse("STREAMS_ZKCONNECT", "localhost:2181"))
-    ZooKlient(cfg)
-  }
 
-  private[cassandra] def apply(znodePrefix: String, connectStr: String): ZooKlient  = {
-    val cfg = ZooKlientCfg(znodePrefix, connectStr)
+  def apply( znodePrefix: String = "streamsx.cassandra", connectStr: Option[String] = None
+           ): ZooKlient  = {
+
+    val connectString = connectStr match {
+      case None => sys.env.getOrElse("STREAMS_ZKCONNECT", "localhost:2181")
+      case Some(s) => s
+    }
+
+    val cfg = ZooKlientCfg(znodePrefix, connectString)
     ZooKlient(cfg)
   }
 }

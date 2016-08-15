@@ -57,6 +57,8 @@ public class CassandraSink extends AbstractOperator {
     Metric failures = null;
     Metric successes = null;
 
+    String zkConnectionString = null;
+
 
     /**
      * Initialize this operator. Called once before any tuples are processed.
@@ -78,7 +80,12 @@ public class CassandraSink extends AbstractOperator {
                 "Number of tuples that were written to Cassandra successfully", Metric.Kind.COUNTER);
 
         if (impl == null) {
-            impl = CassandraSinkImpl.mkWriter(connectionConfigZNode, nullMapZnode);
+            if(zkConnectionString == null) {
+                impl = CassandraSinkImpl.mkWriter(connectionConfigZNode, nullMapZnode, "");
+            }
+            else{
+                impl = CassandraSinkImpl.mkWriter(connectionConfigZNode, nullMapZnode, zkConnectionString);
+            }
         }
     }
 
@@ -126,6 +133,8 @@ public class CassandraSink extends AbstractOperator {
     @Parameter(name="nullMapZnode", description = "Name of the Znode where the map of fieldnames to the value representing null is stored")
     public void setNullValueZnode(String str) {nullMapZnode = str;}
 
+    @Parameter(name="zkConnectionString", description = "connection string for ZooKeeper, useful for testing", optional = true)
+    public void setZKConnectionString(String s) {zkConnectionString = s;}
 
     private String stringifyStackTrace(Exception e) {
         StringWriter sw = new StringWriter();

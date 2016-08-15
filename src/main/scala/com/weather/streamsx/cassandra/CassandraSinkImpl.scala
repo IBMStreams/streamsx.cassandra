@@ -11,9 +11,14 @@ import com.weather.streamsx.util.{StringifyStackTrace => SST}
 object CassandraSinkImpl {
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)
 
-  def mkWriter(connectionConfigZNode: String, nullMapZnode: String): CassandraSinkImpl = {
+  def mkWriter(connectionConfigZNode: String, nullMapZnode: String, zkConnectionString: String = ""): CassandraSinkImpl = {
     try {
-      val zkCli: ZooKlient = ZKClient()
+      val connectStr: Option[String] = zkConnectionString match {
+        case "" => None
+        case s: String => Some(s)
+        case _ => None
+      }
+      val zkCli: ZooKlient = ZKClient(connectStr = connectStr)
       val clientConfig = PrimitiveTypeConfig.read(zkCli, connectionConfigZNode) match {
         case Some(cc) => CassSinkClientConfig(cc)
         case _ => log.error(s"Failed to getData from $connectionConfigZNode"); null
@@ -26,8 +31,6 @@ object CassandraSinkImpl {
       new CassandraSinkImpl(clientConfig, cassConnector, nullMapValues)
     } catch { case e: Exception => log.error(s"Failed to create Cassandra client\n${SST(e)})", e); null }
   }
-
-
 }
 
 //TODO CHECK AND SEE IF EMPTY COLLECTIONS ARE TRUE NULLS OR TOMBSTONES

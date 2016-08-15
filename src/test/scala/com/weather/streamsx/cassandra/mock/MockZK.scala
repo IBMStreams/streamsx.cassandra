@@ -11,9 +11,12 @@ object MockZK {
   private val retryMS = 2000
   private val zkTestServer = new TestingServer(zkPort)
   private val cli: CuratorFramework = CuratorFrameworkFactory.newClient(zkTestServer.getConnectString, new RetryOneTime(retryMS))
+
+  val connectString = zkTestServer.getConnectString
+
   cli.start()
 
-  val zkCli = ZKClient(s"$topLevelZnode", zkTestServer.getConnectString)
+  val zkCli = ZKClient(s"$topLevelZnode", Some(connectString))
   cli.create().forPath(s"/$topLevelZnode")
 
   def start(): Unit = {
