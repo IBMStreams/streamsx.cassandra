@@ -42,8 +42,8 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
 
 
   // setup mock ZK nodes
-  MockZK.createZNode("cassConn", cassStr)
-  MockZK.createZNode("nullV", "{}")
+  MockZK.createZNode("/cassConn", cassStr)
+  MockZK.createZNode("/nullV", "{}")
 
   val graph: OperatorGraph = OperatorGraphFactory.newGraph()
   val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])
