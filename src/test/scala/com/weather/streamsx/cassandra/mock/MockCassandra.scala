@@ -1,47 +1,36 @@
-//package com.weather.streamsx.cassandra
-//
-//import java.net.InetAddress
-//
-//import com.datastax.driver.core.{ConsistencyLevel, SSLOptions, AuthProvider}
-//import com.weather.streamsx.cassandra.config.CassSinkClientConfig
-//import org.cassandraunit.CassandraCQLUnit
-//import org.cassandraunit.dataset.cql.ClassPathCQLDataSet
-//import org.cassandraunit.utils.EmbeddedCassandraServerHelper
-//import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-//
-//object MockCassandra {
-//
-////  EmbeddedCassandraServerHelper.startEmbeddedCassandra(EmbeddedCassandraServerHelper.CASSANDRA_RNDPORT_YML_FILE);
-//
-//  val cassandra: CassandraCQLUnit = new CassandraCQLUnit(new ClassPathCQLDataSet("abc.cql", "test"),
-//    EmbeddedCassandraServerHelper.CASSANDRA_RNDPORT_YML_FILE);
-//
-//  val session = cassandra.session
-//
-//
-//  val clientConfig = CassSinkClientConfig(
-//    localdc = "",
-//    port = 9042,
-//    remapClusterMinutes = 1000,
-//    writeOperationTimeout = 1000,
-//    authEnabled = false,
-//    authUsername = "",
-//    authPassword = "",
-//    sslEnabled = false,
-//    sslKeystore = "",
-//    sslPassword = "",
-//    dateFormat = DateTimeFormat.forPattern("yy-MM-dd HH:mm:ss"),
-//    authProvider = AuthProvider.NONE,
-//    sslOptions = None,
-//    consistencylevel = ConsistencyLevel.LOCAL_QUORUM,
-//    seeds = InetAddress.getAllByName("localhost").toList,
-//    keyspace = "test",
-//    table = "test",
-//    ttl = 10000,
-//    cacheSize = 1000
-//  )
-//
-//
-//
-//
-//}
+package com.weather.streamsx.cassandra
+
+import org.cassandraunit.utils.{EmbeddedCassandraServerHelper => helper}
+import org.junit.runner.RunWith
+import org.scalatest.{BeforeAndAfterAll, Matchers, FlatSpec}
+import org.scalatest.junit.JUnitRunner
+
+object MockCassandra {
+
+//  private val helper = EmbeddedCassandraServerHelper
+
+  def start(): Unit = helper.startEmbeddedCassandra()
+//  def stop(): Unit = helper.stopEmbeddedCassandra() // The stop method was deprecated in cassandra-unit with no replacement
+  def clean(): Unit = helper.cleanEmbeddedCassandra()
+
+  start()
+  val ip: String = helper.getHost
+  val port: Int = helper.getNativeTransportPort // This is the CQL port
+}
+
+
+@RunWith(classOf[JUnitRunner])
+class MockCassandraTest extends FlatSpec with Matchers with BeforeAndAfterAll {
+  override def beforeAll() {
+//    MockCassandra.start()
+  }
+
+  override def afterAll() {
+    MockCassandra.clean()
+  }
+
+  "MockCassandra" should "be running on localhost:9142" in {
+    MockCassandra.ip shouldBe "localhost"
+    MockCassandra.port shouldBe 9142
+  }
+}

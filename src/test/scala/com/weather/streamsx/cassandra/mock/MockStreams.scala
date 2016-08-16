@@ -1,19 +1,11 @@
 package com.weather.streamsx.cassandra.mock
 
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-
-import com.ibm.streams.flow.{handlers, declare}
 import com.weather.streamsx.cassandra.CassandraSink
 import com.ibm.streams.flow.declare._
 
-import com.ibm.streams.flow.handlers.MostRecent;
-import com.ibm.streams.flow.javaprimitives.JavaOperatorTester;
-import com.ibm.streams.flow.javaprimitives.JavaTestableGraph;
-import com.ibm.streams.operator.{StreamingOutput, OutputTuple, Tuple}
-import com.ibm.streams.operator.internal._
+import com.ibm.streams.flow.javaprimitives.JavaOperatorTester
+import com.ibm.streams.flow.javaprimitives.JavaTestableGraph
+import com.ibm.streams.operator.{StreamingOutput, OutputTuple}
 
 class MockStreams(splStyleTupleStructureDeclaration: String) {
 
@@ -23,9 +15,9 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
       |  "consistencyLevel": "local_quorum",
       |  "dateFormat": "yy-MM-dd HH:mm:ss",
       |  "localdc": "",
-      |  "port": 9042,
+      |  "port": 9142,
       |  "remapClusterMinutes": 15,
-      |  "seeds": "10.0.2.2",
+      |  "seeds": "localhost",
       |  "writeOperationTimeout": 10000,
       |  "authEnabled": false,
       |  "authUsername": "cinple",
@@ -58,7 +50,7 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
   // Create the injector to inject test tuples.
   val injector: StreamingOutput[OutputTuple] = testableGraph.getInputTester(tuplez)
   // Execute the initialization of operators within graph.
-  testableGraph.initialize().get().allPortsReady().get();
+  testableGraph.initialize().get().allPortsReady().get()
 
   // omg can I actually get a tuple out of this???
   def newEmptyTuple(): OutputTuple = injector.newTuple()
