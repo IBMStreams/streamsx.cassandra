@@ -7,6 +7,7 @@ scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 compileOrder in Compile := CompileOrder.ScalaThenJava
 
+parallelExecution in Test := false
 
 val cassandraDriverVersion = "2.1.9"
 val circeVersion           = "0.3.0"
