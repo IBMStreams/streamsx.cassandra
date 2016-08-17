@@ -10,14 +10,14 @@ import com.ibm.streams.operator.{StreamingOutput, OutputTuple}
 class MockStreams(splStyleTupleStructureDeclaration: String) {
 
   val cassStr =
-    """
+    s"""
       |{
       |  "consistencyLevel": "local_quorum",
       |  "dateFormat": "yy-MM-dd HH:mm:ss",
       |  "localdc": "",
-      |  "port": 9142,
+      |  "port": ${MockCassandra.port},
       |  "remapClusterMinutes": 15,
-      |  "seeds": "127.0.0.1",
+      |  "seeds": "${MockCassandra.ip}",
       |  "writeOperationTimeout": 10000,
       |  "authEnabled": false,
       |  "authUsername": "cinple",
