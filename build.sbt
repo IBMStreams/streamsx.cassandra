@@ -29,7 +29,9 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "io.dropwizard.metrics" % "metrics-core" % "3.1.0" % "test",
+  "org.cassandraunit"            % "cassandra-unit"        % "2.2.2.1"               % "test",
+
+//  "io.dropwizard.metrics" % "metrics-core" % "3.1.0" % "test",
 "com.datastax.cassandra"       % "cassandra-driver-core" % cassandraDriverVersion
     classifier "shaded"
     excludeAll(
@@ -49,7 +51,6 @@ libraryDependencies ++= Seq(
   "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
   "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test",
   "org.slf4j"                   % "slf4j-simple"          % slf4jVersion            % "test",
-  "org.cassandraunit"            % "cassandra-unit"        % "2.2.2.1"               % "test",
   "org.apache.curator" % "curator-test" % "2.11.0"
 )
 
