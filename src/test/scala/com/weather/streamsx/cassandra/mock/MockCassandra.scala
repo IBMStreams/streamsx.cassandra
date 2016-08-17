@@ -33,4 +33,8 @@ class MockCassandraTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     MockCassandra.ip shouldBe "localhost"
     MockCassandra.port shouldBe 9142
   }
+
+  it should "be printing output on these tests, where is my output??" in {
+    2 + 2 shouldBe 4
+  }
 }

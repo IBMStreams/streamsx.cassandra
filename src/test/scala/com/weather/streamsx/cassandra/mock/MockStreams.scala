@@ -17,7 +17,7 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
       |  "localdc": "",
       |  "port": 9142,
       |  "remapClusterMinutes": 15,
-      |  "seeds": "localhost",
+      |  "seeds": "127.0.0.1",
       |  "writeOperationTimeout": 10000,
       |  "authEnabled": false,
       |  "authUsername": "cinple",
