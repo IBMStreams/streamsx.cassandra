@@ -21,7 +21,7 @@ val streamsxZKVersion      = "0.3-SNAPSHOT"
 val streamsxUtilVersion    = "0.2.5-RELEASE"
 
 parallelExecution in Test := false
-fork in Test := true
+//fork in Test := true
 
 
 resolvers ++= Seq(
