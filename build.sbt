@@ -7,7 +7,6 @@ scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 compileOrder in Compile := CompileOrder.ScalaThenJava
 
-parallelExecution in Test := false
 
 val cassandraDriverVersion = "2.1.9"
 val circeVersion           = "0.3.0"
@@ -20,6 +19,9 @@ val slf4jVersion           = "1.7.12"
 val streamsOperatorVersion = "4.1.0.0"
 val streamsxZKVersion      = "0.3-SNAPSHOT"
 val streamsxUtilVersion    = "0.2.5-RELEASE"
+
+parallelExecution in Test := false
+fork in Test := true
 
 
 resolvers ++= Seq(
