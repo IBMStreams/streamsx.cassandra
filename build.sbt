@@ -8,7 +8,7 @@ scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 compileOrder in Compile := CompileOrder.ScalaThenJava
 
 
-val cassandraDriverVersion = "2.1.9"
+val cassandraDriverVersion = "2.1.10.2"
 val circeVersion           = "0.3.0"
 val junitVersion           = "4.10"
 val log4jVersion           = "2.2"
