@@ -29,14 +29,19 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "org.cassandraunit"            % "cassandra-unit"        % "2.2.2.1"               % "test",
+  "org.cassandraunit"            % "cassandra-unit"        % "2.2.2.1"               % "test"
+    classifier "shaded"
+    excludeAll(
+    ExclusionRule(organization = "com.codahale.metrics")
+    ),
 
 //  "io.dropwizard.metrics" % "metrics-core" % "3.1.0" % "test",
 "com.datastax.cassandra"       % "cassandra-driver-core" % cassandraDriverVersion
     classifier "shaded"
     excludeAll(
     ExclusionRule(organization = "io.netty"),
-    ExclusionRule(organization = "com.google.guava")
+    ExclusionRule(organization = "com.google.guava"),
+  ExclusionRule(organization = "com.codahale.metrics")
     ),
   "com.ibm"                      % "streams.operator"      % streamsOperatorVersion  % "provided",
   "com.weather"                 %% "streamsx-util"         % streamsxUtilVersion,
