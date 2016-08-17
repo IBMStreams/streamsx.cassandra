@@ -2,7 +2,7 @@ package com.weather.streamsx.cassandra
 
 import com.ibm.streams.flow.declare.{InputPortDeclaration, OperatorInvocation}
 import com.ibm.streams.flow.javaprimitives.{JavaOperatorTester, JavaTestableGraph}
-import com.weather.streamsx.cassandra.mock.MockStreams
+import com.weather.streamsx.cassandra.mock.{MockZK, MockStreams}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
@@ -12,6 +12,14 @@ import scala.util.Random
 
 @RunWith(classOf[JUnitRunner])
 class TupleToStatementTest extends FlatSpec with Matchers with BeforeAndAfterAll {
+
+  override def beforeAll(): Unit = {
+    MockZK.start()
+  }
+
+  override def afterAll(): Unit = {
+    MockZK.shutdown()
+  }
 
   "mkAttrList" should "return a List of com.ibm...Attribute" in {
 
@@ -27,7 +35,7 @@ class TupleToStatementTest extends FlatSpec with Matchers with BeforeAndAfterAll
     }
 
     assert(bool)
-
+    tupleMaker.shutdown()
   }
 
 //  "Prepared Statements" should "have the right number of values" in {
