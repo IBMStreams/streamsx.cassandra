@@ -15,6 +15,8 @@ class TupleToStatementTest extends FlatSpec with Matchers with BeforeAndAfterAll
 
   override def beforeAll(): Unit = {
     MockZK.start()
+    MockCassandra.start()
+
     val cassStr =
       s"""
          |{
@@ -42,7 +44,8 @@ class TupleToStatementTest extends FlatSpec with Matchers with BeforeAndAfterAll
     // setup mock ZK nodes
     MockZK.createZNode("/cassConn", cassStr)
     MockZK.createZNode("/nullV", "{}")
-    MockCassandra.start()
+
+
   }
 
   override def afterAll(): Unit = {

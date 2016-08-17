@@ -13,6 +13,14 @@ import scala.util.parsing.json.JSON
 
 @RunWith(classOf[JUnitRunner])
 class NullValueConfigTest extends FlatSpec with Matchers with BeforeAndAfterAll{
+  override def beforeAll(): Unit = {
+    MockZK.start()
+  }
+
+  override def afterAll(): Unit = {
+    MockZK.shutdown()
+  }
+
   val cfg =
     """
       |{
