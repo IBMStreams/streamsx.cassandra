@@ -55,4 +55,6 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
 
   // omg can I actually get a tuple out of this???
   def newEmptyTuple(): OutputTuple = injector.newTuple()
+
+  testableGraph.shutdown().get().shutdown().get()
 }
