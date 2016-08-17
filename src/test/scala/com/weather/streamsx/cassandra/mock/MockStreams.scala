@@ -9,34 +9,7 @@ import com.ibm.streams.operator.{StreamingOutput, OutputTuple}
 
 class MockStreams(splStyleTupleStructureDeclaration: String) {
 
-  val cassStr =
-    s"""
-      |{
-      |  "consistencyLevel": "local_quorum",
-      |  "dateFormat": "yy-MM-dd HH:mm:ss",
-      |  "localdc": "",
-      |  "port": ${MockCassandra.port},
-      |  "remapClusterMinutes": 15,
-      |  "seeds": "${MockCassandra.ip}",
-      |  "writeOperationTimeout": 10000,
-      |  "authEnabled": false,
-      |  "authUsername": "cinple",
-      |  "authPassword": "omgwtfbBq",
-      |  "sslEnabled": false,
-      |  "sslKeystore": "/etc/certs/dev_analytics.p12",
-      |  "sslPassword": "omgwtfbbq",
-      |  "keyspace" : "testkeyspace",
-      |  "table" : "testtable",
-      |  "ttl" : 2592000,
-      |  "cacheSize" : 1000
-      |}
-    """.stripMargin
 
-
-  // setup mock ZK nodes
-  MockZK.createZNode("/cassConn", cassStr)
-  MockZK.createZNode("/nullV", "{}")
-  MockCassandra.start()
 
   val graph: OperatorGraph = OperatorGraphFactory.newGraph()
   val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])

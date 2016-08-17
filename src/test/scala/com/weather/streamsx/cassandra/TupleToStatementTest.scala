@@ -14,7 +14,35 @@ import scala.util.Random
 class TupleToStatementTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   override def beforeAll(): Unit = {
-//    MockZK.start()
+    MockZK.start()
+    val cassStr =
+      s"""
+         |{
+         |  "consistencyLevel": "local_quorum",
+         |  "dateFormat": "yy-MM-dd HH:mm:ss",
+         |  "localdc": "",
+         |  "port": ${MockCassandra.port},
+         |  "remapClusterMinutes": 15,
+         |  "seeds": "${MockCassandra.ip}",
+         |  "writeOperationTimeout": 10000,
+         |  "authEnabled": false,
+         |  "authUsername": "cinple",
+         |  "authPassword": "omgwtfbBq",
+         |  "sslEnabled": false,
+         |  "sslKeystore": "/etc/certs/dev_analytics.p12",
+         |  "sslPassword": "omgwtfbbq",
+         |  "keyspace" : "testkeyspace",
+         |  "table" : "testtable",
+         |  "ttl" : 2592000,
+         |  "cacheSize" : 1000
+         |}
+    """.stripMargin
+
+
+    // setup mock ZK nodes
+    MockZK.createZNode("/cassConn", cassStr)
+    MockZK.createZNode("/nullV", "{}")
+    MockCassandra.start()
   }
 
   override def afterAll(): Unit = {
