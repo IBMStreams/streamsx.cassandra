@@ -14,7 +14,7 @@ import scala.util.Random
 class TupleToStatementTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   override def beforeAll(): Unit = {
-    MockZK.start()
+//    MockZK.start()
   }
 
   override def afterAll(): Unit = {
