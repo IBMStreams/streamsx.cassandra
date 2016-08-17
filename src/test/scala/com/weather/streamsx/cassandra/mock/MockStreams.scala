@@ -1,6 +1,6 @@
 package com.weather.streamsx.cassandra.mock
 
-import com.weather.streamsx.cassandra.CassandraSink
+import com.weather.streamsx.cassandra.{MockCassandra, CassandraSink}
 import com.ibm.streams.flow.declare._
 
 import com.ibm.streams.flow.javaprimitives.JavaOperatorTester
@@ -36,6 +36,7 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
   // setup mock ZK nodes
   MockZK.createZNode("/cassConn", cassStr)
   MockZK.createZNode("/nullV", "{}")
+  MockCassandra.start()
 
   val graph: OperatorGraph = OperatorGraphFactory.newGraph()
   val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])
