@@ -35,7 +35,6 @@ class MockCassandraTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     MockCassandra.port should be
   }
 
-  it should "be printing output on these tests, where is my output??" in {
-    2 + 2 shouldBe 4
-  }
+
+
 }

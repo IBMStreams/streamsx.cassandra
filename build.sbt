@@ -28,6 +28,7 @@ resolvers ++= Seq(
   "Artifactory" at "https://repo.artifacts.weather.com/analytics-virtual"
 )
 
+
 libraryDependencies ++= Seq(
   "org.cassandraunit"            % "cassandra-unit"        % "2.2.2.1"               % "test"
     classifier "shaded"
