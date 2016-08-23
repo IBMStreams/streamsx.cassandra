@@ -38,6 +38,9 @@ class GreetingTest extends PipelineTest(
     val tuple, valuesMap = genAndSubmitTuple(structureMap)
 
     val rows = session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
+
+    println(s"These are the rows I got back: $rows")
+
     rows should have size 1
   }
 
