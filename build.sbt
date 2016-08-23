@@ -41,8 +41,8 @@ libraryDependencies ++= Seq(
     classifier "shaded"
     excludeAll(
     ExclusionRule(organization = "io.netty"),
-    ExclusionRule(organization = "com.google.guava")
-//  ExclusionRule(organization = "com.codahale.metrics")
+    ExclusionRule(organization = "com.google.guava"),
+  ExclusionRule(organization = "com.codahale.metrics")
     ),
   "com.ibm"                      % "streams.operator"      % streamsOperatorVersion  % "provided",
   "com.weather"                 %% "streamsx-util"         % streamsxUtilVersion,
@@ -126,6 +126,7 @@ dist <<= dist.dependsOn(toolkit)
   Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.tools.jar")),
   Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.util.jar"))
 )
+
 
 // This is horrible, I'm sorry
 test in Test <<= test in Test map{ (Unit) => {

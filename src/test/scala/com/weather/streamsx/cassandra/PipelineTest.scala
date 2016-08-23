@@ -79,16 +79,6 @@ class PipelineTest(
     session.execute(s"drop keyspace if exists $keyspace")
   }
 
-//  val structureMap = Map( "greeting" -> "rstring",
-//                          "count" -> "uint64",
-//                          "testList" -> "list<int32>",
-//                          "testSet" -> "set<int32>",
-//                          "testMap" -> "map<int32, boolean>",
-//                          "nullInt" -> "int32"
-//                        )
-//  val tupleStructure = "tuple<rstring greeting, uint64 count, list<int32> testList, set<int32> testSet, map<int32, boolean> testMap, int32 nullInt>"
-//  val generator = new MockStreams(tupleStructure)
-
   def genAndSubmitTuple(m: Map[String, String]): (Tuple, Map[String, Any]) = {
     val tupleStructure = {
       val tupleOpen = "tuple<"
@@ -97,10 +87,10 @@ class PipelineTest(
       s"$tupleOpen$meat$tupleClose"
     }
     val generator = new MockStreams(tupleStructure)
-    var t = generator.newEmptyTuple()
+    val t = generator.newEmptyTuple()
 
     def addValToTuple(kv: (String, String), t: OutputTuple): (OutputTuple, (String, Any)) = {
-      val entry: (String, Any) = kv._1 -> generator.addField(kv._1, kv._2, t)._2
+      val entry: (String, Any) = kv._1 -> generator.assignAValue(kv, t)._2._2
       (t, entry)
     }
 
