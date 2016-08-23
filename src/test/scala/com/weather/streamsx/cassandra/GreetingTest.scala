@@ -8,19 +8,24 @@ class GreetingTest extends PipelineTest(
      |create table IF NOT EXISTS testk.testt (
      |  greeting varchar,
      |  count bigint,
-     |  testList list<int>,
-     |  testSet set<int>,
-     |  testMap map<int, boolean>,
-     |  nInt int,
      |  PRIMARY KEY (count)
      |) with caching = 'none';
   """.stripMargin
 ){
 
-
+//  """
+//    |create table IF NOT EXISTS testk.testt (
+//    |  greeting varchar,
+//    |  count bigint,
+//    |  testList list<int>,
+//    |  testSet set<int>,
+//    |  testMap map<int, boolean>,
+//    |  nInt int,
+//    |  PRIMARY KEY (count)
+//    |) with caching = 'none';
+//  """.stripMargin
 
   "Tuples" should "get written to Cassandra" in {
-//    var t = generator.newEmptyTuple()
 
     val structureMap = Map( "greeting" -> "rstring",
                             "count" -> "uint64"
