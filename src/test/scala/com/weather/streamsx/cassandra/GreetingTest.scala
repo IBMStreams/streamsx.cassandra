@@ -23,11 +23,11 @@ class GreetingTest extends PipelineTest(
 //    var t = generator.newEmptyTuple()
 
     val structureMap = Map( "greeting" -> "rstring",
-                            "count" -> "uint64",
-                            "testList" -> "list<int32>",
-                            "testSet" -> "set<int32>",
-                            "testMap" -> "map<int32, boolean>",
-                            "nullInt" -> "int32"
+                            "count" -> "uint64"
+//                            "testList" -> "list<int32>",
+//                            "testSet" -> "set<int32>",
+//                            "testMap" -> "map<int32, boolean>",
+//                            "nullInt" -> "int32"
                           )
 
     val tuple, valuesMap = genAndSubmitTuple(structureMap)
@@ -37,8 +37,3 @@ class GreetingTest extends PipelineTest(
   }
 
 }
-
-/*
-I like Ryan a lot and today is his birthday
-Hello world I donh'rt reall ty likr this keybooard because the keys are not in the riught place and this for me is vberyu frustrating and also my hands are not centered very well so it's even more frustrating and I have no idea how I would feelk enteriung numbers siuce I usualluy use only one hand for that.nl
- */

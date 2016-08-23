@@ -103,7 +103,7 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
   op.setStringParameter("nullMapZnode", "/nullV")
   op.setStringParameter("zkConnectionString", MockZK.connectString)
   // Create the object representing the type of tuple that is coming into the operator
-  private val tuplez: InputPortDeclaration = op.addInput("tuple<rstring greeting>")
+  private val tuplez: InputPortDeclaration = op.addInput("tuple<rstring greeting, uint64 count>")
   // Create the testable version of the graph
   private val testableGraph: JavaTestableGraph  = new JavaOperatorTester().executable(graph)
   // Create the injector to inject test tuples.
