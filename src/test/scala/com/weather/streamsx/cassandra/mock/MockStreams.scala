@@ -96,14 +96,14 @@ object MockStreams {
 class MockStreams(splStyleTupleStructureDeclaration: String) {
   import MockStreams._
 
-  println(s"THIS IS THE TUPLE STRUCTURE I'M GETTING: $splStyleTupleStructureDeclaration\n but i'm gonna use my own instead so suck it!")
+  println(s"THIS IS THE TUPLE STRUCTURE I'M GETTING: $splStyleTupleStructureDeclaration")
   private val graph: OperatorGraph = OperatorGraphFactory.newGraph()
   private val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])
   op.setStringParameter("connectionConfigZNode", "/cassConn")
   op.setStringParameter("nullMapZnode", "/nullV")
   op.setStringParameter("zkConnectionString", MockZK.connectString)
   // Create the object representing the type of tuple that is coming into the operator
-  private val tuplez: InputPortDeclaration = op.addInput("tuple<rstring greeting, uint64 count>")
+  private val tuplez: InputPortDeclaration = op.addInput(splStyleTupleStructureDeclaration)
   // Create the testable version of the graph
   private val testableGraph: JavaTestableGraph  = new JavaOperatorTester().executable(graph)
   // Create the injector to inject test tuples.

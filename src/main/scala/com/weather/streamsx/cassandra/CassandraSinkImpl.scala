@@ -12,6 +12,7 @@ object CassandraSinkImpl {
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)
 
   def mkWriter(connectionConfigZNode: String, nullMapZnode: String, zkConnectionString: String = ""): CassandraSinkImpl = {
+    log.trace("Making the Cassandra writer operator")
     try {
       val connectStr: Option[String] = zkConnectionString match {
         case "" => None
@@ -42,6 +43,8 @@ class CassandraSinkImpl(cfg: CassSinkClientConfig, connector: CassandraConnector
   private var tbs: Option[TupleBasedStructures] = None
 
   def insertTuple(tuple: Tuple): Unit = {
+    log.trace("Inserting tuple...")
+
     tbs match {
       case None => tbs = Some(new TupleBasedStructures(tuple, connector.session, cfg))
       case _ => ()
@@ -50,6 +53,7 @@ class CassandraSinkImpl(cfg: CassSinkClientConfig, connector: CassandraConnector
     try{
       val bs: BoundStatement = TupleToStatement(tuple, tbs.get, cfg, nullMapValues)
       logFailure(awaitOne()(connector.session.executeAsync(bs)))
+      log.trace("Tuple inserted sucessfully!")
     } catch { case e: Throwable => throw new CassandraWriterException(s"Failed to write tuple to Cassandra. \n ${SST(e)}", e) }
   }
 

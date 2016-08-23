@@ -58,7 +58,10 @@ class PipelineTest(
       s"""
          |{
          |  "consistencyLevel": "local_quorum",
+         |  "dateFormat": "yy-MM-dd HH:mm:ss",
+         |  "localdc": "",
          |  "port": ${MockCassandra.port},
+         |  "remapClusterMinutes": 15,
          |  "seeds": "${MockCassandra.ip}",
          |  "keyspace" : "testkeyspace",
          |  "table" : "testtable",
