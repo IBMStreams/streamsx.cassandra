@@ -11,30 +11,7 @@ import scala.util.Random
 import scalaz.Failure
 import scala.collection.JavaConverters._
 
-
-class MockStreams(splStyleTupleStructureDeclaration: String) {
-
-  private val graph: OperatorGraph = OperatorGraphFactory.newGraph()
-  private val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])
-  op.setStringParameter("connectionConfigZNode", "/cassConn")
-  op.setStringParameter("nullMapZnode", "/nullV")
-  op.setStringParameter("zkConnectionString", MockZK.connectString)
-  // Create the object representing the type of tuple that is coming into the operator
-  private val tuplez: InputPortDeclaration = op.addInput(splStyleTupleStructureDeclaration)
-  // Create the testable version of the graph
-  private val testableGraph: JavaTestableGraph  = new JavaOperatorTester().executable(graph)
-  // Create the injector to inject test tuples.
-  private val injector: StreamingOutput[OutputTuple] = testableGraph.getInputTester(tuplez)
-  // Execute the initialization of operators within graph.
-  testableGraph.initialize().get().allPortsReady().get()
-
-  // omg can I actually get a tuple out of this???
-  def newEmptyTuple(): OutputTuple = injector.newTuple()
-
-  def shutdown(): Unit = testableGraph.shutdown().get().shutdown().get()
-
-  def submit(tuple: Tuple): Unit = injector.submit(tuple)
-
+object MockStreams {
   def genValue(splType: String): Any = splType match {
     case "boolean" => Random.nextBoolean()
     case "int8" => ((Math.abs(Random.nextInt) % 256) - 128).toByte
@@ -47,7 +24,7 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
     case "float32" => Random.nextFloat()
     case "float64" => Random.nextDouble()
     case "decimal32" | "decimal64" | "decimal128"  => Random.nextDouble().asInstanceOf[BigDecimal] //lame
-//      case "timestamp" => new Timestamp()
+    //      case "timestamp" => new Timestamp()
     case "rstring" | "ustring" => {
       val num = Random.nextInt % 20
       Random.alphanumeric.take(num).toString()
@@ -72,9 +49,9 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
     case "float32" => val f = genValue("float32").asInstanceOf[Float]; t.setFloat(kv._1, f); (t, (kv._2, f))
     case "float64" => val d = genValue("float64").asInstanceOf[Double]; t.setDouble(kv._1, d); (t, (kv._2, d))
     case "decimal32" | "decimal64" | "decimal128" => val bd = genValue("decimal32").asInstanceOf[java.math.BigDecimal]; t.setBigDecimal(kv._1, bd); (t, (kv._2, bd))
-////    case "timestamp" => t.setTimestamp(kv._1, "cool")
+    ////    case "timestamp" => t.setTimestamp(kv._1, "cool")
     case "rstring" | "ustring" => val s = genValue("rstring").asInstanceOf[String]; t.setString(kv._1, s); (t, (kv._2, s))
-////    case "blob" =>
+    ////    case "blob" =>
     case _ => (null, (kv._2, null))
 
   }
@@ -105,8 +82,6 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
       val arr = sp.split(", ")
       (arr(0), arr(1))
     }
-
-//    val cool: (Int, String) = 1 -> "a"
     val numEntries = Random.nextInt % 20
     val list = ListBuffer[(Any, Any)]()
     for(i <- 0 until numEntries) list += genValue(splKeyType) -> genValue(splValType)
@@ -115,5 +90,31 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
     (t, (fieldName, map))
   }
 
+}
+
+
+class MockStreams(splStyleTupleStructureDeclaration: String) {
+
+  private val graph: OperatorGraph = OperatorGraphFactory.newGraph()
+  private val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])
+  op.setStringParameter("connectionConfigZNode", "/cassConn")
+  op.setStringParameter("nullMapZnode", "/nullV")
+  op.setStringParameter("zkConnectionString", MockZK.connectString)
+  // Create the object representing the type of tuple that is coming into the operator
+  private val tuplez: InputPortDeclaration = op.addInput(splStyleTupleStructureDeclaration)
+  // Create the testable version of the graph
+  private val testableGraph: JavaTestableGraph  = new JavaOperatorTester().executable(graph)
+  // Create the injector to inject test tuples.
+  private val injector: StreamingOutput[OutputTuple] = testableGraph.getInputTester(tuplez)
+  // Execute the initialization of operators within graph.
+  testableGraph.initialize().get().allPortsReady().get()
+
+  // omg can I actually get a tuple out of this???
+  def newEmptyTuple(): OutputTuple = injector.newTuple()
+
+  def shutdown(): Unit = testableGraph.shutdown().get().shutdown().get()
+
+  def submit(tuple: Tuple): Unit = injector.submit(tuple)
+  
 }
 
