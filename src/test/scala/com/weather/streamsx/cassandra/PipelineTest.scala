@@ -63,8 +63,15 @@ class PipelineTest(
          |  "port": ${MockCassandra.port},
          |  "remapClusterMinutes": 15,
          |  "seeds": "${MockCassandra.ip}",
-         |  "keyspace" : "testkeyspace",
-         |  "table" : "testtable",
+         |  "writeOperationTimeout": 10000,
+         |  "authEnabled": false,
+         |  "authUsername": "foo",
+         |  "authPassword": "bar",
+         |  "sslEnabled": false,
+         |  "sslKeystore": "lol",
+         |  "sslPassword": "liketotally",
+         |  "keyspace" : "$keyspace",
+         |  "table" : "$table",
          |  "ttl" : 2592000,
          |  "cacheSize" : 1000
          |}
