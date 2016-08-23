@@ -94,6 +94,8 @@ object MockStreams {
 
 
 class MockStreams(splStyleTupleStructureDeclaration: String) {
+  import MockStreams._
+
 
   private val graph: OperatorGraph = OperatorGraphFactory.newGraph()
   private val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])
@@ -115,6 +117,6 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
   def shutdown(): Unit = testableGraph.shutdown().get().shutdown().get()
 
   def submit(tuple: Tuple): Unit = injector.submit(tuple)
-  
+
 }
 

@@ -43,13 +43,14 @@ class PipelineTest(
     cacheSize = 100
   )
 
-
-
   val cassConnect = new CassandraConnector(ccfg)
-
   val session = cassConnect.session
 
+
+
   override def beforeAll(): Unit = {
+
+
     MockZK.start()
     MockCassandra.start()
 
@@ -77,6 +78,7 @@ class PipelineTest(
 
   override def afterAll(): Unit = {
     session.execute(s"drop keyspace if exists $keyspace")
+    session.close()
   }
 
   def genAndSubmitTuple(m: Map[String, String]): (Tuple, Map[String, Any]) = {
@@ -90,7 +92,7 @@ class PipelineTest(
     val t = generator.newEmptyTuple()
 
     def addValToTuple(kv: (String, String), t: OutputTuple): (OutputTuple, (String, Any)) = {
-      val entry: (String, Any) = kv._1 -> generator.assignAValue(kv, t)._2._2
+      val entry: (String, Any) = kv._1 -> MockStreams.assignAValue(kv, t)._2._2
       (t, entry)
     }
 
