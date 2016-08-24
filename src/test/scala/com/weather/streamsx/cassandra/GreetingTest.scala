@@ -8,6 +8,7 @@ class GreetingTest extends PipelineTest(
      |create table IF NOT EXISTS testk.testt (
      |  greeting varchar,
      |  count bigint,
+     |  cool varchar,
      |  PRIMARY KEY (count)
      |) with caching = 'none';
   """.stripMargin
@@ -28,7 +29,8 @@ class GreetingTest extends PipelineTest(
   "Tuples" should "get written to Cassandra" in {
 
     val structureMap = Map( "greeting" -> "rstring",
-                            "count" -> "uint64"
+                            "count" -> "uint64",
+                            "cool" -> "rstring"
 //                            "testList" -> "list<int32>",
 //                            "testSet" -> "set<int32>",
 //                            "testMap" -> "map<int32, boolean>",

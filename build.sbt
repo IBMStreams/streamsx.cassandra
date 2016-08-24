@@ -102,7 +102,7 @@ val toolkit = TaskKey[Unit]("toolkit", "Makes the SPL toolkit")
 toolkit <<= assembly map mkToolkit
 dist <<= dist.dependsOn(toolkit)
 
-testOptions in Test += Tests.Argument("-oF")
+testOptions in Test += Tests.Argument("-oF") //full stack trace when running tests
 
 (fullClasspath in Test) := (fullClasspath in Test).value ++ Seq(
   Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.install.dependency.jar")),
