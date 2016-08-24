@@ -37,7 +37,7 @@ class GreetingTest extends PipelineTest(
 //                            "nullInt" -> "int32"
                           )
 
-    val tuple, valuesMap = genAndSubmitTuple(structureMap)
+    val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
 
     val rows = session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
 
