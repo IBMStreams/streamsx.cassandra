@@ -42,6 +42,7 @@ class GreetingTest extends PipelineTest(
     val rows = session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
 
     println(s"These are the rows I got back: $rows")
+    println(s"this is the map I got back: $valuesMap")
 
     rows should have size 1
   }

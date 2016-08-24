@@ -26,10 +26,25 @@ object MockStreams {
     case "decimal32" | "decimal64" | "decimal128"  => Random.nextDouble().asInstanceOf[BigDecimal] //lame
     //      case "timestamp" => new Timestamp()
     case "rstring" | "ustring" => {
-      val num = Random.nextInt % 20
-      Random.alphanumeric.take(num).toString()
+      val num = randomPosNum(20)
+      randomString(num)
     }
     case _ => Failure(CassandraWriterException( s"Unrecognized type: $splType", new Exception))
+  }
+
+  def randomString(length: Int) = {
+    val r = new scala.util.Random
+    val sb = new StringBuilder
+    for (i <- 1 to length) {
+      sb.append(r.nextPrintableChar)
+    }
+    sb.toString
+  }
+
+  def randomPosNum(limit: Int): Int =   {
+    val i = Random.nextInt % limit
+    if(i < 0) i * -1
+    else i
   }
 
   // kv = key value pair = (fieldname, spltype)
@@ -50,8 +65,7 @@ object MockStreams {
     case "float64" => val d = genValue("float64").asInstanceOf[Double]; t.setDouble(kv._1, d); (t, (kv._2, d))
     case "decimal32" | "decimal64" | "decimal128" => val bd = genValue("decimal32").asInstanceOf[java.math.BigDecimal]; t.setBigDecimal(kv._1, bd); (t, (kv._2, bd))
     ////    case "timestamp" => t.setTimestamp(kv._1, "cool")
-//    case "rstring" | "ustring" => val s = genValue("rstring").asInstanceOf[String]; t.setString(kv._1, s); (t, (kv._2, s))
-    case "rstring" => val s = "buttz"; t.setString(kv._1, s); (t, (kv._2, s))
+    case "rstring" | "ustring" => val s = genValue("rstring").asInstanceOf[String]; t.setString(kv._1, s); (t, (kv._2, s))
     ////    case "blob" =>
     case _ => (null, (kv._2, null))
 
@@ -117,7 +131,7 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
 
   def shutdown(): Unit = testableGraph.shutdown().get().shutdown().get()
 
-  def submit(tuple: Tuple): Unit = injector.submit(tuple)
+  def submit(tuple: OutputTuple): Unit = injector.submit(tuple)
 
 }
 
