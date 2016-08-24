@@ -111,6 +111,7 @@ object MockStreams {
 class MockStreams(splStyleTupleStructureDeclaration: String) {
   import MockStreams._
 
+  Thread.currentThread().getStackTrace()
   println(s"THIS IS THE TUPLE STRUCTURE I'M GETTING: $splStyleTupleStructureDeclaration")
   private val graph: OperatorGraph = OperatorGraphFactory.newGraph()
   private val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])
