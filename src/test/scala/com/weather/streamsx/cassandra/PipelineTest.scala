@@ -23,7 +23,7 @@ class PipelineTest(
 
   val ccfg = new CassSinkClientConfig(
     localdc = "",
-    port = MockCassandra.port,
+    port = 9042,
     remapClusterMinutes = 15,
     writeOperationTimeout = 10000L,
     authEnabled = false,
@@ -36,7 +36,7 @@ class PipelineTest(
     authProvider = AuthProvider.NONE,
     sslOptions = None,
     consistencylevel = ConsistencyLevel.ALL,
-    seeds = Array(MockCassandra.ip),
+    seeds = Array("10.0.2.2"),
     keyspace = keyspace,
     table = table,
     ttl = 10000000L,
@@ -52,7 +52,30 @@ class PipelineTest(
 
 
     MockZK.start()
-    MockCassandra.start()
+//    MockCassandra.start()
+
+//    val cassStr =
+//      s"""
+//         |{
+//         |  "consistencyLevel": "local_quorum",
+//         |  "dateFormat": "yy-MM-dd HH:mm:ss",
+//         |  "localdc": "",
+//         |  "port": ${MockCassandra.port},
+//         |  "remapClusterMinutes": 15,
+//         |  "seeds": "${MockCassandra.ip}",
+//         |  "writeOperationTimeout": 10000,
+//         |  "authEnabled": false,
+//         |  "authUsername": "foo",
+//         |  "authPassword": "bar",
+//         |  "sslEnabled": false,
+//         |  "sslKeystore": "lol",
+//         |  "sslPassword": "liketotally",
+//         |  "keyspace" : "$keyspace",
+//         |  "table" : "$table",
+//         |  "ttl" : 2592000,
+//         |  "cacheSize" : 1000
+//         |}
+//    """.stripMargin
 
     val cassStr =
       s"""
@@ -60,22 +83,23 @@ class PipelineTest(
          |  "consistencyLevel": "local_quorum",
          |  "dateFormat": "yy-MM-dd HH:mm:ss",
          |  "localdc": "",
-         |  "port": ${MockCassandra.port},
+         |  "port": 9042,
          |  "remapClusterMinutes": 15,
-         |  "seeds": "${MockCassandra.ip}",
+         |  "seeds": "10.0.2.2",
          |  "writeOperationTimeout": 10000,
          |  "authEnabled": false,
-         |  "authUsername": "foo",
-         |  "authPassword": "bar",
+         |  "authUsername": "cinple",
+         |  "authPassword": "omgwtfbBq",
          |  "sslEnabled": false,
-         |  "sslKeystore": "lol",
-         |  "sslPassword": "liketotally",
+         |  "sslKeystore": "/etc/certs/dev_analytics.p12",
+         |  "sslPassword": "omgwtfbbq",
          |  "keyspace" : "$keyspace",
          |  "table" : "$table",
          |  "ttl" : 2592000,
          |  "cacheSize" : 1000
          |}
-    """.stripMargin
+       """.stripMargin
+
 
     // setup mock ZK nodes
     MockZK.createZNode("/cassConn", cassStr)
