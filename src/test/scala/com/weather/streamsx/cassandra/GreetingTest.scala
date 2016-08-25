@@ -29,7 +29,6 @@ class GreetingTest extends PipelineTest(
 //    |) with caching = 'none';
 //  """.stripMargin
 
-  "Tuples" should "get written to Cassandra" in {
 
     val structureMap = Map( "greeting" -> "rstring",
                             "count" -> "uint64",
@@ -48,16 +47,15 @@ class GreetingTest extends PipelineTest(
     }
 
     val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
-
     val rows: Seq[Row] = session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
-
-    println(s"These are the rows I got back: $rows")
-    println(s"this is the map I got back: $valuesMap")
-
-    rows should have size 1
-
     val received = row2greeting(rows.head)
 
+
+  "The operator" should "write only one tuple to C*" in {
+    rows should have size 1
+  }
+
+  it should "match the random values assigned" in {
     received shouldBe valuesMap
   }
 
