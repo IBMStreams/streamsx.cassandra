@@ -107,6 +107,8 @@ class PipelineTest(
     session.execute(s"drop keyspace if exists $keyspace") //necessary for when runtime errors prevent afterAll from being called
     session.execute(s"create keyspace $keyspace with replication = {'class': 'SimpleStrategy', 'replication_factor': 1}")
     session.execute(tableCreateStr)
+
+    println(s"I SHOULD HAVE CREATED $keyspace.$table")
   }
 
   override def afterAll(): Unit = {
