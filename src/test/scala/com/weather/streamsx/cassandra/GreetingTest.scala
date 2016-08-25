@@ -1,4 +1,7 @@
 package com.weather.streamsx.cassandra
+
+import com.datastax.driver.core.Row
+
 import scala.collection.JavaConverters._
 
 class GreetingTest extends PipelineTest(
@@ -36,15 +39,26 @@ class GreetingTest extends PipelineTest(
 //                            "testMap" -> "map<int32, boolean>",
 //                            "nullInt" -> "int32"
                           )
+    def row2greeting(r: Row): Map[String, Any] = {
+      Map(
+        "greeting" -> r.getString("greeting"),
+        "count" -> r.getLong("count"),
+        "cool" -> r.getString("cool")
+      )
+    }
 
     val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
 
-    val rows = session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
+    val rows: Seq[Row] = session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
 
     println(s"These are the rows I got back: $rows")
     println(s"this is the map I got back: $valuesMap")
 
     rows should have size 1
+
+    val received = row2greeting(rows.head)
+
+    received shouldBe valuesMap
   }
 
 }

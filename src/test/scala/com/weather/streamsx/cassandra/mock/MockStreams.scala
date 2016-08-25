@@ -104,15 +104,9 @@ object MockStreams {
     t.setMap(fieldName, map.asJava)
     (t, (fieldName, map))
   }
-
 }
 
-
 class MockStreams(splStyleTupleStructureDeclaration: String) {
-  import MockStreams._
-
-//  Thread.currentThread().getStackTrace()
-  println(s"THIS IS THE TUPLE STRUCTURE I'M GETTING: $splStyleTupleStructureDeclaration")
   private val graph: OperatorGraph = OperatorGraphFactory.newGraph()
   private val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])
   op.setStringParameter("connectionConfigZNode", "/cassConn")
@@ -133,6 +127,4 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
   def shutdown(): Unit = testableGraph.shutdown().get().shutdown().get()
 
   def submit(tuple: OutputTuple): Unit = injector.submit(tuple)
-
 }
-
