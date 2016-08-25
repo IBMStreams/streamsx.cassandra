@@ -23,7 +23,7 @@ object MockCassandra {
 @RunWith(classOf[JUnitRunner])
 class MockCassandraTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   override def beforeAll() {
-//    MockCassandra.start()
+    MockCassandra.start()
   }
 
   override def afterAll() {
