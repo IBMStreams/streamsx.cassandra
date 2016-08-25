@@ -23,7 +23,7 @@ class PipelineTest(
 
   val ccfg = new CassSinkClientConfig(
     localdc = "",
-    port = 9042,
+    port = MockCassandra.port,
     remapClusterMinutes = 15,
     writeOperationTimeout = 10000L,
     authEnabled = false,
@@ -36,13 +36,12 @@ class PipelineTest(
     authProvider = AuthProvider.NONE,
     sslOptions = None,
     consistencylevel = ConsistencyLevel.ALL,
-    seeds = Array("10.0.2.2"),
+    seeds = Array(MockCassandra.ip),
     keyspace = keyspace,
     table = table,
     ttl = 10000000L,
     cacheSize = 100
   )
-
   val cassConnect = new CassandraConnector(ccfg)
   val session = cassConnect.session
 
