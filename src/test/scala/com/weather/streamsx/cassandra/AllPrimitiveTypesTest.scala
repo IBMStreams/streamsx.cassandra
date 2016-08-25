@@ -7,10 +7,10 @@ import com.datastax.driver.core.Row
 import scala.collection.JavaConverters._
 
 class AllPrimitiveTypesTest extends PipelineTest(
-  "testk",
-  "testt",
+  "testkeyspace",
+  "testtable",
   """
-     |create table IF NOT EXISTS testk.testt (
+     |create table IF NOT EXISTS testkeyspace.testtable (
      |boolean boolean,
      |int8 int,
      |uint8 int,
