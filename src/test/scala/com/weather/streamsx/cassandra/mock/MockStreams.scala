@@ -23,7 +23,7 @@ object MockStreams {
     case "uint32" => (Math.abs(Random.nextLong()) % 4294967296L).toInt
     case "float32" => Random.nextFloat()
     case "float64" => Random.nextDouble()
-    case "decimal32" | "decimal64" | "decimal128"  => BigDecimal(Random.nextDouble())
+    case "decimal32" | "decimal64" | "decimal128"  => BigDecimal(Random.nextDouble()).asInstanceOf[java.math.BigDecimal]
     //      case "timestamp" => new Timestamp()
     case "rstring" | "ustring" => {
       val num = randomPosNum(20)

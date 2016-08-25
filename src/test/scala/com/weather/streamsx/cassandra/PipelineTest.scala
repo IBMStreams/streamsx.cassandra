@@ -52,30 +52,7 @@ class PipelineTest(
 
 
     MockZK.start()
-//    MockCassandra.start()
-
-//    val cassStr =
-//      s"""
-//         |{
-//         |  "consistencyLevel": "local_quorum",
-//         |  "dateFormat": "yy-MM-dd HH:mm:ss",
-//         |  "localdc": "",
-//         |  "port": ${MockCassandra.port},
-//         |  "remapClusterMinutes": 15,
-//         |  "seeds": "${MockCassandra.ip}",
-//         |  "writeOperationTimeout": 10000,
-//         |  "authEnabled": false,
-//         |  "authUsername": "foo",
-//         |  "authPassword": "bar",
-//         |  "sslEnabled": false,
-//         |  "sslKeystore": "lol",
-//         |  "sslPassword": "liketotally",
-//         |  "keyspace" : "$keyspace",
-//         |  "table" : "$table",
-//         |  "ttl" : 2592000,
-//         |  "cacheSize" : 1000
-//         |}
-//    """.stripMargin
+    MockCassandra.start()
 
     val cassStr =
       s"""
@@ -83,22 +60,45 @@ class PipelineTest(
          |  "consistencyLevel": "local_quorum",
          |  "dateFormat": "yy-MM-dd HH:mm:ss",
          |  "localdc": "",
-         |  "port": 9042,
+         |  "port": ${MockCassandra.port},
          |  "remapClusterMinutes": 15,
-         |  "seeds": "10.0.2.2",
+         |  "seeds": "${MockCassandra.ip}",
          |  "writeOperationTimeout": 10000,
          |  "authEnabled": false,
-         |  "authUsername": "cinple",
-         |  "authPassword": "omgwtfbBq",
+         |  "authUsername": "foo",
+         |  "authPassword": "bar",
          |  "sslEnabled": false,
-         |  "sslKeystore": "/etc/certs/dev_analytics.p12",
-         |  "sslPassword": "omgwtfbbq",
+         |  "sslKeystore": "lol",
+         |  "sslPassword": "liketotally",
          |  "keyspace" : "$keyspace",
          |  "table" : "$table",
          |  "ttl" : 2592000,
          |  "cacheSize" : 1000
          |}
-       """.stripMargin
+    """.stripMargin
+
+//    val cassStr =
+//      s"""
+//         |{
+//         |  "consistencyLevel": "local_quorum",
+//         |  "dateFormat": "yy-MM-dd HH:mm:ss",
+//         |  "localdc": "",
+//         |  "port": 9042,
+//         |  "remapClusterMinutes": 15,
+//         |  "seeds": "10.0.2.2",
+//         |  "writeOperationTimeout": 10000,
+//         |  "authEnabled": false,
+//         |  "authUsername": "cinple",
+//         |  "authPassword": "omgwtfbBq",
+//         |  "sslEnabled": false,
+//         |  "sslKeystore": "/etc/certs/dev_analytics.p12",
+//         |  "sslPassword": "omgwtfbbq",
+//         |  "keyspace" : "$keyspace",
+//         |  "table" : "$table",
+//         |  "ttl" : 2592000,
+//         |  "cacheSize" : 1000
+//         |}
+//       """.stripMargin
 
 
     // setup mock ZK nodes
