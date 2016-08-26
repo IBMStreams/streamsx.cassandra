@@ -48,7 +48,7 @@ class PipelineTest(
 
 
   override def beforeAll(): Unit = {
-
+    println("I'M CALLING THE PIPELINE TEST BEFOREALL")
 
     MockZK.start()
     MockCassandra.start()

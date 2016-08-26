@@ -57,17 +57,12 @@ class GreetingTest extends PipelineTest(
       )
     }
 
+  "The operator" should "write only one tuple to C*" in {
     val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
     val rows: Seq[Row] = session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
     val received = row2greeting(rows.head)
 
-
-  "The operator" should "write only one tuple to C*" in {
     rows should have size 1
-  }
-
-  it should "match the random values assigned" in {
     received shouldBe valuesMap
   }
-
 }
