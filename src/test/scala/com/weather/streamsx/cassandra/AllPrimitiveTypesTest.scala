@@ -41,7 +41,6 @@ class AllPrimitiveTypesTest extends PipelineTest(
 
   override def afterAll(): Unit = {
     println("I'M CALLING AFTERALL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-
     super.afterAll()
   }
 
@@ -95,9 +94,10 @@ class AllPrimitiveTypesTest extends PipelineTest(
   "The operator" should "write only one tuple to C*" in {
     val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
     val rows: Seq[Row] = session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
-    val received = row2primitiveTypes(rows.head)
 
     rows should have size 1
+    val received = row2primitiveTypes(rows.head)
+
     received shouldBe valuesMap
   }
 }
