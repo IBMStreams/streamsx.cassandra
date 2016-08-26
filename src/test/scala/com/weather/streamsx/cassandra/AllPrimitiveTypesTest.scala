@@ -27,7 +27,7 @@ class AllPrimitiveTypesTest extends PipelineTest(
      |decimal128 decimal,
      |rstring varchar,
      |ustring varchar,
-     |xml varchar
+     |xml varchar,
      |  PRIMARY KEY (int32)
      |) with caching = 'none';
   """.stripMargin
