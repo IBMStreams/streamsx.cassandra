@@ -33,6 +33,15 @@ class AllPrimitiveTypesTest extends PipelineTest(
   """.stripMargin
 ){
 
+
+  override def beforeAll(): Unit = {
+    super.beforeAll()
+  }
+
+  override def afterAll(): Unit = {
+    super.afterAll()
+  }
+
     val structureMap = Map(
       "boolean"    -> "boolean",
       "int8"       -> "int8",

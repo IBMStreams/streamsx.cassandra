@@ -5,7 +5,7 @@ import com.weather.streamsx.cassandra.CassandraSink
 import com.ibm.streams.flow.declare._
 import com.ibm.streams.flow.javaprimitives.JavaOperatorTester
 import com.ibm.streams.flow.javaprimitives.JavaTestableGraph
-import com.ibm.streams.operator.{Tuple, StreamingOutput, OutputTuple}
+import com.ibm.streams.operator.{StreamingOutput, OutputTuple}
 import scala.collection.mutable.ListBuffer
 import scala.util.Random
 import scalaz.Failure
@@ -32,7 +32,7 @@ object MockStreams {
     case _ => Failure(CassandraWriterException( s"Unrecognized type: $splType", new Exception))
   }
 
-  def randomString(length: Int) = {
+  def randomString(length: Int): String = {
     val r = new scala.util.Random
     val sb = new StringBuilder
     for (i <- 1 to length) {
