@@ -17,6 +17,17 @@ class GreetingTest extends PipelineTest(
   """.stripMargin
 ){
 
+  override def beforeAll(): Unit = {
+    println("I'M CALLING BEFOREALL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    super.beforeAll()
+  }
+
+  override def afterAll(): Unit = {
+    println("I'M CALLING AFTERALL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+    super.afterAll()
+  }
+
 //  """
 //    |create table IF NOT EXISTS testk.testt (
 //    |  greeting varchar,
