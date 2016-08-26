@@ -29,6 +29,11 @@ object MockZK {
     cli.create().forPath(s"/$topLevelZnode$path", content.getBytes)
   }
 
+  def deleteZnode(path: String): Unit = {
+    cli.delete().forPath(s"/$topLevelZnode$path")
+  }
+
+
   def getZNode(path: String): String = {
     zkCli.readRawString(path).get
   }

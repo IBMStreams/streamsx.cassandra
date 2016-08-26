@@ -114,6 +114,8 @@ class PipelineTest(
   override def afterAll(): Unit = {
     session.execute(s"drop keyspace if exists $keyspace")
     session.close()
+    MockZK.deleteZnode("/cassConn")
+    MockZK.deleteZnode("/nullV")
   }
 
   def genAndSubmitTuple(m: Map[String, String]): (Tuple, Map[String, Any]) = {
