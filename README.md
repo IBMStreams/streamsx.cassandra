@@ -65,7 +65,9 @@ bounded map type	| Supported      | map\<CQL K equivalent, CQL V equivalent\> |
 tuple\<T name, ...\>  | Not supported  | |
 
 \* CQL 3.3 has support for bytes and shorts, however it is not supported by this operator at this time.
+
 \*\* XML support is not fully tested. There is no native XML type in C\* so XML is brought in as a String.
+
 \*\*\* Consider using a unix timestamp as a uint64.
 
 ### Additional documentation
