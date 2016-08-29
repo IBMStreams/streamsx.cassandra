@@ -5,6 +5,7 @@ import java.sql.Blob
 import com.datastax.driver.core.Row
 
 import scala.collection.JavaConverters._
+import org.scalatest.Matchers
 
 class AllPrimitiveTypesTest extends PipelineTest(
   "testkeyspace",
@@ -102,7 +103,27 @@ class AllPrimitiveTypesTest extends PipelineTest(
     println(s"HERE'S THE RECEIVED  VALUE FOR DECIMAL32: ${received("decimal32")}")
 
 
-    received shouldBe valuesMap
+//    received shouldBe valuesMap +- 0.0000001
+
+    received("boolean") shouldBe valuesMap("boolean")
+    received("int8") shouldBe valuesMap("int8")
+    received("uint8") shouldBe valuesMap("uint8")
+    received("int16") shouldBe valuesMap("int16")
+    received("uint16") shouldBe valuesMap("uint16")
+    received("int32") shouldBe valuesMap("int32")
+    received("uint32") shouldBe valuesMap("uint32")
+    received("int64") shouldBe valuesMap("int64")
+    received("uint64") shouldBe valuesMap("uint64")
+    received("float32") shouldBe valuesMap("float32")
+    received("float64") shouldBe valuesMap("float64")
+    received("decimal32").asInstanceOf[BigDecimal] shouldBe valuesMap("decimal32").asInstanceOf[BigDecimal] +- 0.000001
+    received("decimal64").asInstanceOf[BigDecimal] shouldBe valuesMap("decimal64").asInstanceOf[BigDecimal] +- 0.000001
+    received("decimal128").asInstanceOf[BigDecimal] shouldBe valuesMap("decimal128").asInstanceOf[BigDecimal]  +- 0.000001
+    received("rstring") shouldBe valuesMap("rstring")
+    received("ustring") shouldBe valuesMap("ustring")
+    received("xml") shouldBe valuesMap("xml")
+
+
   }
 }
 
