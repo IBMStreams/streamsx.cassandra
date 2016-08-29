@@ -22,10 +22,12 @@ class CollectionsTest extends PipelineTest(
 ){
 
   override def beforeAll(): Unit = {
+    println("I'M CALLING BEFORE ALL FOR THE COLLECTIONS TEST")
     super.beforeAll()
   }
 
   override def afterAll(): Unit = {
+    println("I'M CALLING AFTER ALL FOR THE COLLECTIONS TEST")
     super.afterAll()
   }
 
