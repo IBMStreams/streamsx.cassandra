@@ -28,19 +28,6 @@ class GreetingTest extends PipelineTest(
     super.afterAll()
   }
 
-//  """
-//    |create table IF NOT EXISTS testk.testt (
-//    |  greeting varchar,
-//    |  count bigint,
-//    |  testList list<int>,
-//    |  testSet set<int>,
-//    |  testMap map<int, boolean>,
-//    |  nInt int,
-//    |  PRIMARY KEY (count)
-//    |) with caching = 'none';
-//  """.stripMargin
-
-
     val structureMap = Map( "greeting" -> "rstring",
                             "count" -> "uint64",
                             "cool" -> "rstring"
