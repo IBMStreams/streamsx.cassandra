@@ -78,8 +78,8 @@ class PipelineTest(
 
     // setup mock ZK nodes
     // first delete in case there was a bad run beforehand
-    MockZK.deleteZnode("/cassConn")
-    MockZK.deleteZnode("/nullV")
+//    MockZK.deleteZnode("/cassConn")
+//    MockZK.deleteZnode("/nullV")
     // then create
     MockZK.createZNode("/cassConn", cassStr)
     MockZK.createZNode("/nullV", nullValueJSON)
