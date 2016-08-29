@@ -6,7 +6,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 #Table of Contents
 
-- [Version 1.2](#version-12)
+- [Version 1.3.0](#version-12)
   - [Coming in Future Versions](#coming-in-future-versions)
     - [Future Functionality](#future-functionality)
     - [Documentation To-Dos](#documentation-to-dos)
@@ -24,28 +24,57 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Version 1.2
+# Cassandra Sink Version 1.3.0
 
-This version fixes a bug in the caching logic.
+## Supports
+**Streams Version:** 4.0.0+
+**Cassandra Version:** 2.0, 2.1 (these releases use CQL 3.1)
 
-## Coming in Future Versions
+## Data Types
 
-### Future Functionality
-- Proper unit tests
+SPL Type            | Support Status | CQL 3.1 Type | Notes  |
+--------            | -------------- | -----------  | ------ |
+boolean             | Supported      | boolean | |
+enum	            | Not supported  | | |
+int8	            | Supported      | int\* | |
+int16	            | Supported      | int\* | |
+int32	            | Supported      | int | |
+int64	            | Supported      | bigint | |
+uint8	            | Supported      | int\* | |
+uint16	            | Supported      | int\* | |
+uint32	            | Supported      | int | |
+uint64	            | Supported      | bigint | |
+float32	            | Supported      | float | |
+float64	            | Supported      | double | |
+decimal32	        | Supported      | decimal | |
+decimal64	        | Supported      | decimal | |
+decimal128	        | Supported      | decimal | |
+complex32	        | Not supported  | | |
+complex64	        | Not supported  | | |
+timestamp	        | Not supported  | | Consider using a Unix timestamp in the form of a uint64 |
+rstring	            | Supported      | varchar | |
+ustring	            | Supported      | varchar | |
+blob     	        | Not supported  | | |
+xml	                | Experimental   | varchar | XML is not supported natively, but is inserted as a string. XML is not fully tested in this operator. |
+list<T>	            | Supported      | list<CQL equivalent> | |
+bounded list type	| Supported      | list<CQL equivalent> | |
+set<T>          	| Supported      | set<CQL equivalent>  | |
+bounded set type	| Supported      | set<CQL equivalent>  | |
+map<K,V>        	| Supported      | map<CQL K equivalent, CQL V equivalent> | |
+bounded map type	| Supported      | map<CQL K equivalent, CQL V equivalent> | |
+tuple<T name, ...>  | Not supported  | | |
 
-### Documentation To-Dos
-- create a table showing SPL types and their corresponding Cassandra types
-- include a section about Artifactory
+\* CQL 3.3 has support for bytes and shorts, however it is not supported by this operator at this time.
 
+### Additional documentation
+[Java equivalents for SPL types](http://www.ibm.com/support/knowledgecenter/SSCRJU_4.1.1/com.ibm.streams.dev.doc/doc/workingwithspltypes.html)
 
 # Installation
 
 ## Using the Distribution
 1. Download the tar to your VM
 2. Untar the tar
-3. Add the extracted tar as a toolkit location in Streams Studio
-
-That's it!
+3. Add the extracted tar as a toolkit location in Streams Studio. For more information, see [these instructions](https://github.com/TheWeatherCompany/analytics-streams-docs/blob/master/adding-a-toolkit.md).
 
 ## Building From Source
 
@@ -62,6 +91,8 @@ sbt ctk toolkit
 Refresh the toolkit location in Streams Studio, and you should be good to go!
 
 ### Installing Toolkit From Scratch
+
+You will need access to the Artifactory Analytics-Virtual repo to fetch dependencies on analytics-zooklient and streamsx.util
 
 1. Install SBT on your virtual machine. See instructions for RedHat here: <http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Linux.html>
 2. Clone this repo somewhere convenient on the filesystem of your virtual machine. It doesn't need to be in your Eclipse workspace
