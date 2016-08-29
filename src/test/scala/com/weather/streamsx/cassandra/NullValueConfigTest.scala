@@ -18,7 +18,7 @@ class NullValueConfigTest extends FlatSpec with Matchers with BeforeAndAfterAll{
   }
 
   override def afterAll(): Unit = {
-    MockZK.shutdown()
+//    MockZK.shutdown()
   }
 
   val cfg =
