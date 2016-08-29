@@ -58,7 +58,7 @@ object TupleToStatement {
       case "int8"  | "uint8" => tuple.getByte(attr.getIndex).toInt   //TODO C* 3.0+ has support for different data types for byte and short
       case "int16" | "uint16" => tuple.getShort(attr.getIndex).toInt //TODO C* 3.0+ has support for different data types for byte and short
       case "int32" | "uint32" => tuple.getInt(attr.getIndex)
-      case "int64" | "uint64" => tuple.getLong(attr.getIndex)
+      case "int64" | "uint64" => tuple.getLong(attr.getIndex).asInstanceOf[java.math.BigInteger]
       case "float32" => tuple.getFloat(attr.getIndex)
       case "float64" => tuple.getDouble(attr.getIndex)
       case "decimal32" | "decimal64" | "decimal128" => tuple.getBigDecimal(attr.getIndex)
