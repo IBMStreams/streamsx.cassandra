@@ -32,37 +32,37 @@
 
 ## Data Types
 
-SPL Type            | Support Status | CQL 3.1 Type | Notes  |
---------            | -------------- | -----------  | ------ |
-boolean             | Supported      | boolean | |
-enum	            | Not supported  | | |
-int8	            | Supported      | int\* | |
-int16	            | Supported      | int\* | |
-int32	            | Supported      | int | |
-int64	            | Supported      | bigint | |
-uint8	            | Supported      | int\* | |
-uint16	            | Supported      | int\* | |
-uint32	            | Supported      | int | |
-uint64	            | Supported      | bigint | |
-float32	            | Supported      | float | |
-float64	            | Supported      | double | |
-decimal32	        | Supported      | decimal | |
-decimal64	        | Supported      | decimal | |
-decimal128	        | Supported      | decimal | |
-complex32	        | Not supported  | | |
-complex64	        | Not supported  | | |
-timestamp	        | Not supported  | | Consider using a Unix timestamp in the form of a uint64 |
-rstring	            | Supported      | varchar | |
-ustring	            | Supported      | varchar | |
-blob     	        | Not supported  | | |
-xml	                | Experimental   | varchar | XML is inserted as a string. XML is not fully tested in this operator. |
-list<T>	            | Supported      | list<CQL equivalent> | |
-bounded list type	| Supported      | list<CQL equivalent> | |
-set<T>          	| Supported      | set<CQL equivalent>  | |
-bounded set type	| Supported      | set<CQL equivalent>  | |
-map<K,V>        	| Supported      | map<CQL K equivalent, CQL V equivalent> | |
-bounded map type	| Supported      | map<CQL K equivalent, CQL V equivalent> | |
-tuple<T name, ...>  | Not supported  | | |
+SPL Type            | Support Status | CQL 3.1 Type | 
+--------            | -------------- | -----------  |
+boolean             | Supported      | boolean |
+enum	            | Not supported  | |
+int8	            | Supported      | int\* |
+int16	            | Supported      | int\* |
+int32	            | Supported      | int |
+int64	            | Supported      | bigint |
+uint8	            | Supported      | int\* |
+uint16	            | Supported      | int\* |
+uint32	            | Supported      | int |
+uint64	            | Supported      | bigint |
+float32	            | Supported      | float |
+float64	            | Supported      | double |
+decimal32	        | Supported      | decimal |
+decimal64	        | Supported      | decimal |
+decimal128	        | Supported      | decimal |
+complex32	        | Not supported  | |
+complex64	        | Not supported  | |
+timestamp	        | Not supported  | |
+rstring	            | Supported      | varchar |
+ustring	            | Supported      | varchar |
+blob     	        | Not supported  | |
+xml	                | Experimental   | varchar |
+list<T>	            | Supported      | list<CQL equivalent> |
+bounded list type	| Supported      | list<CQL equivalent> |
+set<T>          	| Supported      | set<CQL equivalent>  |
+bounded set type	| Supported      | set<CQL equivalent>  |
+map<K,V>        	| Supported      | map<CQL K equivalent, CQL V equivalent> |
+bounded map type	| Supported      | map<CQL K equivalent, CQL V equivalent> |
+tuple<T name, ...>  | Not supported  | |
 
 \* CQL 3.3 has support for bytes and shorts, however it is not supported by this operator at this time.
 
