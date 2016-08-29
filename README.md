@@ -51,20 +51,22 @@ decimal64	        | Supported      | decimal |
 decimal128	        | Supported      | decimal |
 complex32	        | Not supported  | |
 complex64	        | Not supported  | |
-timestamp	        | Not supported  | |
+timestamp	        | Not supported  | \*\*\* |
 rstring	            | Supported      | varchar |
 ustring	            | Supported      | varchar |
 blob     	        | Not supported  | |
-xml	                | Experimental   | varchar |
-list<T>	            | Supported      | list<CQL equivalent> |
-bounded list type	| Supported      | list<CQL equivalent> |
-set<T>          	| Supported      | set<CQL equivalent>  |
-bounded set type	| Supported      | set<CQL equivalent>  |
-map<K,V>        	| Supported      | map<CQL K equivalent, CQL V equivalent> |
-bounded map type	| Supported      | map<CQL K equivalent, CQL V equivalent> |
-tuple<T name, ...>  | Not supported  | |
+xml	                | Experimental   | varchar\*\*|
+list\<T\>	            | Supported      | list<CQL equivalent> |
+bounded list type	| Supported      | list\<CQL equivalent\> |
+set\<T\>          	| Supported      | set\<CQL equivalent\>  |
+bounded set type	| Supported      | set\<CQL equivalent\>  |
+map\<K,V\>        	| Supported      | map\<CQL K equivalent, CQL V equivalent\> |
+bounded map type	| Supported      | map\<CQL K equivalent, CQL V equivalent\> |
+tuple\<T name, ...\>  | Not supported  | |
 
 \* CQL 3.3 has support for bytes and shorts, however it is not supported by this operator at this time.
+\*\* XML support is not fully tested. There is no native XML type in C\* so XML is brought in as a String.
+\*\*\* Consider using a unix timestamp as a uint64.
 
 ### Additional documentation
 [Java equivalents for SPL types](http://www.ibm.com/support/knowledgecenter/SSCRJU_4.1.1/com.ibm.streams.dev.doc/doc/workingwithspltypes.html)
