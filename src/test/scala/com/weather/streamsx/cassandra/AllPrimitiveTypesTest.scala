@@ -116,9 +116,9 @@ class AllPrimitiveTypesTest extends PipelineTest(
     received("uint64") shouldBe valuesMap("uint64")
     received("float32") shouldBe valuesMap("float32")
     received("float64") shouldBe valuesMap("float64")
-    received("decimal32").asInstanceOf[scala.math.BigDecimal] shouldBe valuesMap("decimal32").asInstanceOf[scala.math.BigDecimal] +- 0.000001
-    received("decimal64").asInstanceOf[scala.math.BigDecimal] shouldBe valuesMap("decimal64").asInstanceOf[scala.math.BigDecimal] +- 0.000001
-    received("decimal128").asInstanceOf[scala.math.BigDecimal] shouldBe valuesMap("decimal128").asInstanceOf[scala.math.BigDecimal]  +- 0.000001
+    scala.math.BigDecimal(received("decimal32").asInstanceOf[java.math.BigDecimal]) shouldBe scala.math.BigDecimal(valuesMap("decimal32").asInstanceOf[java.math.BigDecimal]) +- 0.000001
+    scala.math.BigDecimal(received("decimal64").asInstanceOf[java.math.BigDecimal]) shouldBe scala.math.BigDecimal(valuesMap("decimal64").asInstanceOf[java.math.BigDecimal]) +- 0.000001
+    scala.math.BigDecimal(received("decimal128").asInstanceOf[java.math.BigDecimal]) shouldBe scala.math.BigDecimal(valuesMap("decimal128").asInstanceOf[java.math.BigDecimal]) +- 0.000001
     received("rstring") shouldBe valuesMap("rstring")
     received("ustring") shouldBe valuesMap("ustring")
     received("xml") shouldBe valuesMap("xml")
