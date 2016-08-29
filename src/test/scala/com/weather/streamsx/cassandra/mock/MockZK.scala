@@ -22,6 +22,7 @@ object MockZK {
 
   def start(): Unit = cli.getState match {
     case CuratorFrameworkState.LATENT => cli.start()
+    case CuratorFrameworkState.STOPPED => cli.start()
     case _ => ()
   }
 
