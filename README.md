@@ -6,10 +6,10 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 #Table of Contents
 
-- [Version 1.3.0](#version-12)
-  - [Coming in Future Versions](#coming-in-future-versions)
-    - [Future Functionality](#future-functionality)
-    - [Documentation To-Dos](#documentation-to-dos)
+- [Cassandra Sink Version 1.3.0](#cassandra-sink-version-130)
+  - [Supported Versions](#supported-versions)
+  - [Data Types](#data-types)
+    - [Additional documentation](#additional-documentation)
 - [Installation](#installation)
   - [Using the Distribution](#using-the-distribution)
   - [Building From Source](#building-from-source)
@@ -26,7 +26,7 @@
 
 # Cassandra Sink Version 1.3.0
 
-## Supports
+## Supported Versions
 **Streams Version:** 4.0.0+
 **Cassandra Version:** 2.0, 2.1 (these releases use CQL 3.1)
 
@@ -72,6 +72,7 @@ tuple\<T name, ...\>  | Not supported  | |
 
 ### Additional documentation
 [Java equivalents for SPL types](http://www.ibm.com/support/knowledgecenter/SSCRJU_4.1.1/com.ibm.streams.dev.doc/doc/workingwithspltypes.html)
+[CQL 3.1 data type reference](https://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html)
 
 # Installation
 

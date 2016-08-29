@@ -1,11 +1,7 @@
 package com.weather.streamsx.cassandra
 
-import java.sql.Blob
-
 import com.datastax.driver.core.Row
-
 import scala.collection.JavaConverters._
-import org.scalatest.Matchers
 
 class AllPrimitiveTypesTest extends PipelineTest(
   "testkeyspace",
@@ -33,14 +29,11 @@ class AllPrimitiveTypesTest extends PipelineTest(
   """.stripMargin
 ){
 
-
   override def beforeAll(): Unit = {
-    println("I'M CALLING BEFOREALL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     super.beforeAll()
   }
 
   override def afterAll(): Unit = {
-    println("I'M CALLING AFTERALL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     super.afterAll()
   }
 
@@ -59,11 +52,8 @@ class AllPrimitiveTypesTest extends PipelineTest(
       "decimal32"  -> "decimal32",
       "decimal64"  -> "decimal64",
       "decimal128" -> "decimal128",
-//      "timestamp"  -> "timestamp",
       "rstring"    -> "rstring",
       "ustring"    -> "ustring"
-//      "blob"       -> "blob",
-//      "xml"        -> "xml"
     )
     def row2primitiveTypes(r: Row): Map[String, Any] = {
       Map(
@@ -81,15 +71,10 @@ class AllPrimitiveTypesTest extends PipelineTest(
         "decimal32"  -> r.getDecimal("decimal32"),
         "decimal64"  -> r.getDecimal("decimal64"),
         "decimal128" -> r.getDecimal("decimal128"),
-//        "timestamp"  -> r.get("timestamp",
         "rstring"    -> r.getString("rstring"),
         "ustring"    -> r.getString("ustring")
-//        "blob"       -> r.getBytes("blob").asInstanceOf[Blob],
-//        "xml"        -> r.getString("xml")
       )
     }
-
-
 
   "The operator" should "write only one tuple to C*" in {
     val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
