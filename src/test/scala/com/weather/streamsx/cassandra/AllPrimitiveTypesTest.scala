@@ -98,6 +98,10 @@ class AllPrimitiveTypesTest extends PipelineTest(
     rows should have size 1
     val received = row2primitiveTypes(rows.head)
 
+    println(s"HERE'S THE GENERATED VALUE FOR DECIMAL32: ${valuesMap("decimal32")}")
+    println(s"HERE'S THE RECEIVED  VALUE FOR DECIMAL32: ${received("decimal32")}")
+
+
     received shouldBe valuesMap
   }
 }
