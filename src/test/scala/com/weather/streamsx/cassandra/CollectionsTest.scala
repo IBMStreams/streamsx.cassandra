@@ -8,14 +8,14 @@ class CollectionsTest extends PipelineTest(
   "testKEYS",
   "testTABLE",
   """
-     |create table IF NOT EXISTS testk.testt (
+     |create table IF NOT EXISTS testKEYS.testTABLE (
      |      count bigint,
      |      map1 map<varchar, boolean>,
      |      map2  map<bigint, varchar>,
      |      list1 list<int>,
      |      list2 list<int>,
      |      set1 set<varchar>,
-     |      set2 set<float>
+     |      set2 set<float>,
      |  PRIMARY KEY (count)
      |) with caching = 'none';
   """.stripMargin
