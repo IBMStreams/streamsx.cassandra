@@ -55,7 +55,7 @@ timestamp	        | Not supported  | | Consider using a Unix timestamp in the fo
 rstring	            | Supported      | varchar | |
 ustring	            | Supported      | varchar | |
 blob     	        | Not supported  | | |
-xml	                | Experimental   | varchar | XML is not supported natively, but is inserted as a string. XML is not fully tested in this operator. |
+xml	                | Experimental   | varchar | XML is inserted as a string. XML is not fully tested in this operator. |
 list<T>	            | Supported      | list<CQL equivalent> | |
 bounded list type	| Supported      | list<CQL equivalent> | |
 set<T>          	| Supported      | set<CQL equivalent>  | |
