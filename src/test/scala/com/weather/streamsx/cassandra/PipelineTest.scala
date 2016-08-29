@@ -5,7 +5,7 @@ import com.ibm.streams.operator.{OutputTuple, Tuple}
 import com.weather.streamsx.cassandra.config.CassSinkClientConfig
 import com.weather.streamsx.cassandra.connection.CassandraConnector
 import com.weather.streamsx.cassandra.mock.{MockStreams, MockZK}
-import org.joda.time.format.{DateTimeFormat}
+import org.joda.time.format.DateTimeFormat
 import org.junit.runner.RunWith
 import org.scalatest.{BeforeAndAfterAll, Matchers, FlatSpec}
 import org.scalatest.junit.JUnitRunner
@@ -76,36 +76,11 @@ class PipelineTest(
          |}
     """.stripMargin
 
-//    val cassStr =
-//      s"""
-//         |{
-//         |  "consistencyLevel": "local_quorum",
-//         |  "dateFormat": "yy-MM-dd HH:mm:ss",
-//         |  "localdc": "",
-//         |  "port": 9042,
-//         |  "remapClusterMinutes": 15,
-//         |  "seeds": "10.0.2.2",
-//         |  "writeOperationTimeout": 10000,
-//         |  "authEnabled": false,
-//         |  "authUsername": "cinple",
-//         |  "authPassword": "omgwtfbBq",
-//         |  "sslEnabled": false,
-//         |  "sslKeystore": "/etc/certs/dev_analytics.p12",
-//         |  "sslPassword": "omgwtfbbq",
-//         |  "keyspace" : "$keyspace",
-//         |  "table" : "$table",
-//         |  "ttl" : 2592000,
-//         |  "cacheSize" : 1000
-//         |}
-//       """.stripMargin
-
-
     // setup mock ZK nodes
-
-    //first delete in case there was a bad run beforehand
+    // first delete in case there was a bad run beforehand
     MockZK.deleteZnode("/cassConn")
     MockZK.deleteZnode("/nullV")
-    //then create
+    // then create
     MockZK.createZNode("/cassConn", cassStr)
     MockZK.createZNode("/nullV", nullValueJSON)
 
