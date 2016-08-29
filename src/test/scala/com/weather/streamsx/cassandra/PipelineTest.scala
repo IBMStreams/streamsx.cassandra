@@ -96,6 +96,7 @@ class PipelineTest(
     session.close()
     MockZK.deleteZnode("/cassConn")
     MockZK.deleteZnode("/nullV")
+    MockZK.shutdown()
   }
 
   def genAndSubmitTuple(m: Map[String, String]): (Tuple, Map[String, Any]) = {
