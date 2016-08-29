@@ -5,8 +5,8 @@ import com.datastax.driver.core.Row
 import scala.collection.JavaConverters._
 
 class CollectionsTest extends PipelineTest(
-  "testk",
-  "testt",
+  "testKEYS",
+  "testTABLE",
   """
      |create table IF NOT EXISTS testk.testt (
      |      count bigint,
