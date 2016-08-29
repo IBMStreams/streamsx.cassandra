@@ -65,7 +65,7 @@ object MockStreams {
     case "float64" => val d = genValue("float64").asInstanceOf[Double]; t.setDouble(kv._1, d); (t, (kv._2, d))
     case "decimal32" | "decimal64" | "decimal128" => val bd = genValue("decimal32").asInstanceOf[java.math.BigDecimal]; t.setBigDecimal(kv._1, bd); (t, (kv._2, bd))
     ////    case "timestamp" => t.setTimestamp(kv._1, "cool")
-    case "rstring" | "ustring" => val s = genValue("rstring").asInstanceOf[String]; t.setString(kv._1, s); (t, (kv._2, s))
+    case "rstring" | "ustring" | "xml" => val s = genValue("rstring").asInstanceOf[String]; t.setString(kv._1, s); (t, (kv._2, s))
     ////    case "blob" =>
     case _ => (null, (kv._2, null))
 
