@@ -46,7 +46,7 @@ class CollectionsTest extends PipelineTest(
         "list1" -> r.getList("list1", classOf[Int]),
         "list2" -> r.getList("list2", classOf[Int]),
         "set1" -> r.getSet("set1", classOf[String]),
-        "set2" -> r.getSet("set1", classOf[Float]),
+        "set2" -> r.getSet("set1", classOf[Float])
       )
     }
 
