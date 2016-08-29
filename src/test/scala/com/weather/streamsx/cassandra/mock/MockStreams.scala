@@ -1,5 +1,9 @@
 package com.weather.streamsx.cassandra.mock
 
+import java.io.InputStream
+import javax.xml.transform.stream.StreamSource
+
+import com.ibm.streams.operator.types.XML
 import com.weather.streamsx.cassandra.exception.CassandraWriterException
 import com.weather.streamsx.cassandra.CassandraSink
 import com.ibm.streams.flow.declare._
@@ -65,11 +69,13 @@ object MockStreams {
     case "float64" => val d = genValue("float64").asInstanceOf[Double]; t.setDouble(kv._1, d); (t, (kv._2, d))
     case "decimal32" | "decimal64" | "decimal128" => val bd = genValue("decimal32").asInstanceOf[java.math.BigDecimal]; t.setBigDecimal(kv._1, bd); (t, (kv._2, bd))
     ////    case "timestamp" => t.setTimestamp(kv._1, "cool")
-    case "rstring" | "ustring" | "xml" => val s = genValue("rstring").asInstanceOf[String]; t.setString(kv._1, s); (t, (kv._2, s))
+    case "rstring" | "ustring" => val s = genValue("rstring").asInstanceOf[String]; t.setString(kv._1, s); (t, (kv._2, s))
+//    case "xml" => val s: XML = "<note>\n<to>Tove</to>\n<from>Jani</from>\n<heading>Reminder</heading>\n<body>This xml isn't randomly generated but it'll work</body>\n</note>"; t.setXML(kv._1, s); (t, (kv._2, s))
     ////    case "blob" =>
     case _ => (null, (kv._2, null))
 
   }
+
 
   def setList(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
     val splType = l.stripPrefix("list<").stripSuffix(">").trim

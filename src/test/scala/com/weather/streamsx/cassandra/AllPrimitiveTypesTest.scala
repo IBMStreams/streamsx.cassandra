@@ -28,7 +28,6 @@ class AllPrimitiveTypesTest extends PipelineTest(
      |decimal128 decimal,
      |rstring varchar,
      |ustring varchar,
-     |xml varchar,
      |  PRIMARY KEY (int32)
      |) with caching = 'none';
   """.stripMargin
@@ -62,9 +61,9 @@ class AllPrimitiveTypesTest extends PipelineTest(
       "decimal128" -> "decimal128",
 //      "timestamp"  -> "timestamp",
       "rstring"    -> "rstring",
-      "ustring"    -> "ustring",
+      "ustring"    -> "ustring"
 //      "blob"       -> "blob",
-      "xml"        -> "xml"
+//      "xml"        -> "xml"
     )
     def row2primitiveTypes(r: Row): Map[String, Any] = {
       Map(
@@ -84,9 +83,9 @@ class AllPrimitiveTypesTest extends PipelineTest(
         "decimal128" -> r.getDecimal("decimal128"),
 //        "timestamp"  -> r.get("timestamp",
         "rstring"    -> r.getString("rstring"),
-        "ustring"    -> r.getString("ustring"),
+        "ustring"    -> r.getString("ustring")
 //        "blob"       -> r.getBytes("blob").asInstanceOf[Blob],
-        "xml"        -> r.getString("xml")
+//        "xml"        -> r.getString("xml")
       )
     }
 
@@ -98,12 +97,6 @@ class AllPrimitiveTypesTest extends PipelineTest(
 
     rows should have size 1
     val received = row2primitiveTypes(rows.head)
-
-    println(s"HERE'S THE GENERATED VALUE FOR DECIMAL32: ${valuesMap("decimal32")}")
-    println(s"HERE'S THE RECEIVED  VALUE FOR DECIMAL32: ${received("decimal32")}")
-
-
-//    received shouldBe valuesMap +- 0.0000001
 
     received("boolean") shouldBe valuesMap("boolean")
     received("int8") shouldBe valuesMap("int8")
@@ -121,52 +114,5 @@ class AllPrimitiveTypesTest extends PipelineTest(
     scala.math.BigDecimal(received("decimal128").asInstanceOf[java.math.BigDecimal]) shouldBe scala.math.BigDecimal(valuesMap("decimal128").asInstanceOf[java.math.BigDecimal]) +- 0.000001
     received("rstring") shouldBe valuesMap("rstring")
     received("ustring") shouldBe valuesMap("ustring")
-    received("xml") shouldBe valuesMap("xml")
-
-
   }
 }
-
-
-//
-//"boolean"    -> "boolean"
-//"int8"       -> "int8"
-//"uint8"      -> "uint8"
-//"int16"      -> "int16"
-//"uint16"     -> "uint16"
-//"int32"      -> "int32"
-//"uint32"     -> "uint32"
-//"int64"      -> "int64"
-//"uint64"     -> "uint64"
-//"float32"    -> "float32"
-//"float64"    -> "float64"
-//"decimal32"  -> "decimal32"
-//"decimal64"  -> "decimal64"
-//"decimal128" -> "decimal128"
-//"timestamp"  -> "timestamp"
-//"rstring"    -> "rstring"
-//"ustring"    -> "ustring"
-//"blob"       -> "blob"
-//"xml"        -> "xml"
-//
-//
-//
-//boolean boolean,
-//int8 int,
-//uint8 int,
-//int16 int,
-//uint16 int,
-//int32 int,
-//uint32 int,
-//int64 varint,
-//uint64 varint,
-//float32 float,
-//float64 double,
-//decimal32 decimal,
-//decimal64 decimal,
-//decimal128 decimal,
-//timestamp timestamp,
-//rstring varchar,
-//ustring varchar,
-//blob blob,
-//xml varchar
