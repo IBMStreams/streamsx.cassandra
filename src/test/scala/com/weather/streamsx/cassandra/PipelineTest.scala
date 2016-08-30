@@ -100,13 +100,13 @@ class PipelineTest(
   }
 
   def genAndSubmitTuple(m: Map[String, String]): (Tuple, Map[String, Any]) = {
-//    val tupleStructure = {
-//      val tupleOpen = "tuple<"
-//      val meat = m.map(kv => s"${kv._2} ${kv._1}").mkString(", ")
-//      val tupleClose = ">"
-//      s"$tupleOpen$meat$tupleClose"
-//    }
-    val tupleStructure = "tuple<set<float32> setB, uint64 count, list<int32> listA, map<int64, rstring> mapB, list<uint8> listB, map<rstring, boolean> mapA, set<rstring> setA>"
+    val tupleStructure = {
+      val tupleOpen = "tuple<"
+      val meat = m.map(kv => s"${kv._2} ${kv._1}").mkString(", ")
+      val tupleClose = ">"
+      s"$tupleOpen$meat$tupleClose"
+    }
+//    val tupleStructure = "tuple<set<float32> setB, uint64 count, list<int32> listA, map<int64, rstring> mapB, list<uint8> listB, map<rstring, boolean> mapA, set<rstring> setA>"
     println(s"THIS IS MY TUPLE STRUCTURE: $tupleStructure")
     val generator = new MockStreams(tupleStructure)
     val t = generator.newEmptyTuple()

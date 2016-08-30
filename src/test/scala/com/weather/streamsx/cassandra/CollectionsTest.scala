@@ -10,8 +10,6 @@ class CollectionsTest extends PipelineTest(
   """
      |create table IF NOT EXISTS testKEYS.testTABLE (
      |      count bigint,
-     |      mapA map<varchar, boolean>,
-     |      mapB  map<bigint, varchar>,
      |      listA list<int>,
      |      listB list<int>,
      |      setA set<varchar>,
@@ -33,8 +31,6 @@ class CollectionsTest extends PipelineTest(
 
     val structureMap = Map(
                             "count" -> "uint64",
-                            "mapA"  -> "map<rstring, boolean>",
-                            "mapB"  -> "map<int64, rstring>",
                             "listA" -> "list<int32>",
                             "listB" -> "list<uint8>",
                             "setA"  -> "set<rstring>",
@@ -43,8 +39,6 @@ class CollectionsTest extends PipelineTest(
     def row2greeting(r: Row): Map[String, Any] = {
       Map(
         "count" -> r.getLong("count"),
-        "map1" -> r.getMap("mapA", classOf[String], classOf[Boolean]),
-        "map2" -> r.getMap("mapB", classOf[Long], classOf[String]),
         "list1" -> r.getList("listA", classOf[Int]),
         "list2" -> r.getList("listB", classOf[Int]),
         "set1" -> r.getSet("setA", classOf[String]),
