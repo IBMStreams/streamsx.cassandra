@@ -10,12 +10,12 @@ class CollectionsTest extends PipelineTest(
   """
      |create table IF NOT EXISTS testKEYS.testTABLE (
      |      count bigint,
-     |      map1 map<varchar, boolean>,
-     |      map2  map<bigint, varchar>,
-     |      list1 list<int>,
-     |      list2 list<int>,
-     |      set1 set<varchar>,
-     |      set2 set<float>,
+     |      mapA map<varchar, boolean>,
+     |      mapB  map<bigint, varchar>,
+     |      listA list<int>,
+     |      listB list<int>,
+     |      setA set<varchar>,
+     |      setB set<float>,
      |  PRIMARY KEY (count)
      |) with caching = 'none';
   """.stripMargin
@@ -33,22 +33,22 @@ class CollectionsTest extends PipelineTest(
 
     val structureMap = Map(
                             "count" -> "uint64",
-                            "map1"  -> "map<rstring, boolean>",
-                            "map2"  -> "map<int64, ustring>",
-                            "list1" -> "list<int32>",
-                            "list2" -> "list<uint8>",
-                            "set1"  -> "set<rstring>",
-                            "set2"  -> "set<float32>"
+                            "mapA"  -> "map<rstring, boolean>",
+                            "mapB"  -> "map<int64, ustring>",
+                            "listA" -> "list<int32>",
+                            "listB" -> "list<uint8>",
+                            "setA"  -> "set<rstring>",
+                            "setB"  -> "set<float32>"
                           )
     def row2greeting(r: Row): Map[String, Any] = {
       Map(
         "count" -> r.getLong("count"),
-        "map1" -> r.getMap("map1", classOf[String], classOf[Boolean]),
-        "map2" -> r.getMap("map1", classOf[Long], classOf[String]),
-        "list1" -> r.getList("list1", classOf[Int]),
-        "list2" -> r.getList("list2", classOf[Int]),
-        "set1" -> r.getSet("set1", classOf[String]),
-        "set2" -> r.getSet("set1", classOf[Float])
+        "map1" -> r.getMap("mapA", classOf[String], classOf[Boolean]),
+        "map2" -> r.getMap("mapB", classOf[Long], classOf[String]),
+        "list1" -> r.getList("listA", classOf[Int]),
+        "list2" -> r.getList("listB", classOf[Int]),
+        "set1" -> r.getSet("setA", classOf[String]),
+        "set2" -> r.getSet("setB", classOf[Float])
       )
     }
 
