@@ -34,7 +34,7 @@ class CollectionsTest extends PipelineTest(
     val structureMap = Map(
                             "count" -> "uint64",
                             "mapA"  -> "map<rstring, boolean>",
-                            "mapB"  -> "map<int64, ustring>",
+                            "mapB"  -> "map<int64, rstring>",
                             "listA" -> "list<int32>",
                             "listB" -> "list<uint8>",
                             "setA"  -> "set<rstring>",
