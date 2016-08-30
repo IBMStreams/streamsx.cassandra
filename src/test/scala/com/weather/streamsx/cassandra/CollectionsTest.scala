@@ -10,7 +10,6 @@ class CollectionsTest extends PipelineTest(
   """
      |create table IF NOT EXISTS testKEYS.testTABLE (
      |      count bigint,
-     |      listA list<varchar>,
      |      setA set<varchar>,
      |  PRIMARY KEY (count)
      |) with caching = 'none';
@@ -29,13 +28,11 @@ class CollectionsTest extends PipelineTest(
 
     val structureMap = Map(
                             "count" -> "uint64",
-                            "listA" -> "list<rstring>",
                             "setA"  -> "set<rstring>"
                           )
     def row2greeting(r: Row): Map[String, Any] = {
       Map(
         "count" -> r.getLong("count"),
-        "list1" -> r.getList("listA", classOf[String]),
         "set1" -> r.getSet("setA", classOf[String])
       )
     }

@@ -92,6 +92,10 @@ object MockStreams {
     val list = ListBuffer[String]()
     for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String]
     val set: util.Set[String] = list.toSet.asJava
+
+    val whatever: java.util.Set[String] = new java.util.HashSet()
+    whatever.add("aa")
+    whatever.add("bb")
     t.setSet(fieldName, set)
     (t, (fieldName, set))
   }
