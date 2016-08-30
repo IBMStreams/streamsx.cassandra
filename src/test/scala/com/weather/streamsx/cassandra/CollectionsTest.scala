@@ -32,7 +32,7 @@ class CollectionsTest extends PipelineTest(
                             "count" -> "uint64",
                             "setA"  -> "set<rstring>",
                             "listA" -> "list<rstring>",
-                            "mapA" -> "map<rstring, rstring>"
+                            "mapA" -> "map<rstring,rstring>"
                           )
     def row2greeting(r: Row): Map[String, Any] = {
       Map(
