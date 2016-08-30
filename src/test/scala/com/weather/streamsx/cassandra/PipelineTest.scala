@@ -106,6 +106,7 @@ class PipelineTest(
       val tupleClose = ">"
       s"$tupleOpen$meat$tupleClose"
     }
+    println(s"THIS IS MY TUPLE STRUCTURE: $tupleStructure")
     val generator = new MockStreams(tupleStructure)
     val t = generator.newEmptyTuple()
 
