@@ -91,7 +91,7 @@ object MockStreams {
     val numEntries = Random.nextInt % 20
     val list = ListBuffer[String]()
     for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String]
-    val set: java.util.HashSet[String] = list.toSet.asJava.asInstanceOf[util.HashSet[String]]
+    val set: java.util.Set[String] = list.toSet.asJava
 //
 //    val whatever: java.util.Set[String] = new java.util.HashSet()
 //    whatever.add("aa")
