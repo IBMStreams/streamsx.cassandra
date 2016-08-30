@@ -36,7 +36,7 @@ class CollectionsTest extends PipelineTest(
       Map(
         "count" -> r.getLong("count"),
         "list1" -> r.getList("listA", classOf[String]),
-        "set1" -> r.getSet("setA", classOf[String]),
+        "set1" -> r.getSet("setA", classOf[String])
       )
     }
 
