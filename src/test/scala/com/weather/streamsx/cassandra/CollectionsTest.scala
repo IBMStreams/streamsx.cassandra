@@ -33,7 +33,7 @@ class CollectionsTest extends PipelineTest(
     def row2greeting(r: Row): Map[String, Any] = {
       Map(
         "count" -> r.getLong("count"),
-        "set1" -> r.getSet("setA", classOf[String])
+        "setA" -> r.getSet("setA", classOf[String])
       )
     }
 
