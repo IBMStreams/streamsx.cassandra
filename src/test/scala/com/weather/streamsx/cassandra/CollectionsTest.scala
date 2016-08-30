@@ -80,12 +80,12 @@ class CollectionsTest extends PipelineTest(
 
     val structureMap = Map(
                             "count" -> "uint64",
-                            "setA"  -> "set<rstring>",
+                            "setA"  -> "set<rstring>"
                           )
     def row2greeting(r: Row): Map[String, Any] = {
       Map(
         "count" -> r.getLong("count"),
-        "setA" -> r.getSet("setA", classOf[String]),
+        "setA" -> r.getSet("setA", classOf[String])
       )
     }
 
