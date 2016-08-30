@@ -1,6 +1,7 @@
 package com.weather.streamsx.cassandra.mock
 
 import java.io.InputStream
+import java.util
 import javax.xml.transform.stream.StreamSource
 
 import com.ibm.streams.operator.types.XML
@@ -53,9 +54,9 @@ object MockStreams {
 
   // kv = key value pair = (fieldname, spltype)
   def assignAValue(kv: (String, String), t: OutputTuple): (OutputTuple, (String, Any)) = kv._2 match {
-    case l: String if l.startsWith("list") => setList(l, t, kv._1)
-    case s: String if s.startsWith("set") => setSet(s, t, kv._1)
-    case m: String if m.startsWith("map") => setMap(m, t, kv._1)
+    case l: String if l.startsWith("list") => setStringList(l, t, kv._1)
+    case s: String if s.startsWith("set") => setStringSet(s, t, kv._1)
+    case m: String if m.startsWith("map") => setStringToStringMap(m, t, kv._1)
     case "boolean" => val b = genValue("boolean").asInstanceOf[Boolean]; t.setBoolean(kv._1, b); (t, (kv._2, b))
     case "int8" => val b = genValue("int8").asInstanceOf[Byte]; t.setByte(kv._1, b); (t, (kv._2, b))
     case "uint8" => val b = genValue("uint8").asInstanceOf[Byte]; t.setByte(kv._1, b); (t, (kv._2, b))
@@ -68,36 +69,34 @@ object MockStreams {
     case "float32" => val f = genValue("float32").asInstanceOf[Float]; t.setFloat(kv._1, f); (t, (kv._2, f))
     case "float64" => val d = genValue("float64").asInstanceOf[Double]; t.setDouble(kv._1, d); (t, (kv._2, d))
     case "decimal32" | "decimal64" | "decimal128" => val bd = genValue("decimal32").asInstanceOf[java.math.BigDecimal]; t.setBigDecimal(kv._1, bd); (t, (kv._2, bd))
-    ////    case "timestamp" => t.setTimestamp(kv._1, "cool")
     case "rstring" | "ustring" => val s = genValue("rstring").asInstanceOf[String]; t.setString(kv._1, s); (t, (kv._2, s))
-//    case "xml" => val s: XML = "<note>\n<to>Tove</to>\n<from>Jani</from>\n<heading>Reminder</heading>\n<body>This xml isn't randomly generated but it'll work</body>\n</note>"; t.setXML(kv._1, s); (t, (kv._2, s))
-    ////    case "blob" =>
     case _ => (null, (kv._2, null))
-
   }
 
 
-  def setList(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
+
+
+  def setStringList(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
     val splType = l.stripPrefix("list<").stripSuffix(">").trim
     val numEntries = Random.nextInt % 20
-    val list = ListBuffer[Any]()
-    for(i <- 0 until numEntries) list += genValue(splType)
+    val list = ListBuffer[String]()
+    for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String]
     val lizt = list.toList
     t.setList(fieldName, lizt.asJava)
     (t, (fieldName, lizt))
   }
 
-  def setSet(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
+  def setStringSet(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
     val splType = l.stripPrefix("set<").stripSuffix(">").trim
     val numEntries = Random.nextInt % 20
-    val list = ListBuffer[Any]()
-    for(i <- 0 until numEntries) list += genValue(splType)
-    val set = list.toSet
-    t.setSet(fieldName, set.asJava)
+    val list = ListBuffer[String]()
+    for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String]
+    val set: util.Set[String] = list.toSet.asJava
+    t.setSet(fieldName, set)
     (t, (fieldName, set))
   }
 
-  def setMap(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
+  def setStringToStringMap(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
     val (splKeyType: String, splValType: String) = {
       val sp = l.stripPrefix("map<").stripSuffix(">").trim
       val arr = sp.split(", ")
@@ -105,7 +104,7 @@ object MockStreams {
     }
     val numEntries = Random.nextInt % 20
     val list = ListBuffer[(Any, Any)]()
-    for(i <- 0 until numEntries) list += genValue(splKeyType) -> genValue(splValType)
+    for(i <- 0 until numEntries) list += genValue("rstring") -> genValue("rstring")
     val map = list.toMap
     t.setMap(fieldName, map.asJava)
     (t, (fieldName, map))
