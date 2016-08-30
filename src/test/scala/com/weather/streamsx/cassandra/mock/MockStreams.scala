@@ -81,8 +81,8 @@ object MockStreams {
     val numEntries = Random.nextInt % 20
     val list = ListBuffer[String]()
     for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String]
-    val lizt = list.toList
-    t.setList(fieldName, lizt.asJava)
+    val lizt: java.util.List[String] = list.toList.asJava
+    t.setList(fieldName, lizt)
     (t, (fieldName, lizt))
   }
 
@@ -92,10 +92,10 @@ object MockStreams {
     val list = ListBuffer[String]()
     for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String]
     val set: util.Set[String] = list.toSet.asJava
-
-    val whatever: java.util.Set[String] = new java.util.HashSet()
-    whatever.add("aa")
-    whatever.add("bb")
+//
+//    val whatever: java.util.Set[String] = new java.util.HashSet()
+//    whatever.add("aa")
+//    whatever.add("bb")
     t.setSet(fieldName, set)
     (t, (fieldName, set))
   }
@@ -107,10 +107,10 @@ object MockStreams {
       (arr(0), arr(1))
     }
     val numEntries = Random.nextInt % 20
-    val list = ListBuffer[(Any, Any)]()
-    for(i <- 0 until numEntries) list += genValue("rstring") -> genValue("rstring")
-    val map = list.toMap
-    t.setMap(fieldName, map.asJava)
+    val list = ListBuffer[(String, String)]()
+    for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String] -> genValue("rstring").asInstanceOf[String]
+    val map: java.util.Map[String, String] = list.toMap.asJava
+    t.setMap(fieldName, map)
     (t, (fieldName, map))
   }
 }
