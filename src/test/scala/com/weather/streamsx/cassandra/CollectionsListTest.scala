@@ -11,7 +11,7 @@ class CollectionsListTest extends PipelineTest(
   """
      |create table IF NOT EXISTS testKEYSLIST.testTABLELIST (
      |      count bigint,
-     |      listA list<varchar>,
+     |      listA list<int>,
      |  PRIMARY KEY (count)
      |) with caching = 'none';
   """.stripMargin
@@ -29,12 +29,12 @@ class CollectionsListTest extends PipelineTest(
 
     val structureMap = Map(
                             "count" -> "uint64",
-                            "listA"  -> "list<rstring>"
+                            "listA"  -> "list<int32>"
                           )
     def row2greeting(r: Row): Map[String, Any] = {
       Map(
         "count" -> r.getLong("count"),
-        "listA" -> r.getList("listA", classOf[String])
+        "listA" -> r.getList("listA", classOf[Int])
       )
     }
 
