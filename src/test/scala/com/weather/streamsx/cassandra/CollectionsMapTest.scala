@@ -34,7 +34,7 @@
 //    def row2greeting(r: Row): Map[String, Any] = {
 //      Map(
 //        "count" -> r.getLong("count"),
-//        "mapA" -> r.getMap("mapA", classOf[String], classOf[String])
+//        "mapA" -> r.getMap("mapA", classOf[String], classOf[java.lang.Integer])
 //      )
 //    }
 //
