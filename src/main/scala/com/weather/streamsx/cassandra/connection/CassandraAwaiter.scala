@@ -5,6 +5,7 @@ import java.util.concurrent.{TimeUnit, TimeoutException}
 import com.datastax.driver.core.exceptions.{NoHostAvailableException, UnavailableException}
 import com.datastax.driver.core.{ResultSet, ResultSetFuture}
 import com.weather.streamsx.cassandra.exception.CassandraWriterException
+import com.weather.streamsx.util.{StringifyStackTrace => SST}
 
 import scalaz._
 
@@ -31,16 +32,16 @@ trait CassandraAwaiter {
 
   def getTypicalExceptionHandler: PartialFunction[Any, AwaitResultSetV] = {
     case ex: NoHostAvailableException if ex.getErrors.size() == 0 =>
-      log.error("Handled NoHostAvailableException with 0 errors. Pausing....{}", ex)
+      log.error(s"Handled NoHostAvailableException with 0 errors. Pausing....$ex\n${SST(ex)}")
       Failure( CassandraWriterException(s"Handled NoHostAvailableException with 0 errors. Pausing....", ex) )
     case ex: UnavailableException =>
-      log.error("Handled UnavailableException. Pausing...{}", ex)
+      log.error(s"Handled UnavailableException. Pausing...$ex\\n${SST(ex)}")
       Failure( CassandraWriterException(s"Handled UnavailableException. Pausing...", ex) )
     case ex: TimeoutException =>
-      log.error("Handled TimeoutException. Pausing...{}", ex)
+      log.error(s"Handled TimeoutException. Pausing..$ex\n${SST(ex)}")
       Failure( CassandraWriterException(s"Handled TimeoutException. Pausing...", ex) )
     case e: Throwable =>
-      log.error(s"Error awaiting futures{}", e)
+      log.error(s"Error awaiting futures$e\n${SST(e)}")
       Failure( CassandraWriterException(s"Error awaiting futures", e) )
   }
 
@@ -49,3 +50,6 @@ trait CassandraAwaiter {
     case _ => ()
   }
 }
+
+
+$ex\n${SST(ex)}
