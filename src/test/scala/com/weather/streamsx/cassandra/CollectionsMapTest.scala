@@ -9,7 +9,7 @@ class CollectionsMapTest extends PipelineTest(
   "testKEYSMAP",
   "testTABLEMAP",
   """
-     |create table IF NOT EXISTS testKEYSLIST.testTABLEMAP (
+     |create table IF NOT EXISTS testKEYSMAP.testTABLEMAP (
      |      count bigint,
      |      mapA map<int, int>,
      |  PRIMARY KEY (count)
