@@ -109,7 +109,7 @@ object MockStreams {
     (t, (fieldName, whatever))
   }
 
-  def setStringToStringMap(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (Int, Any)) = {
+  def setStringToStringMap(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
 //    val (splKeyType: String, splValType: String) = {
 //      val sp = l.stripPrefix("map<").stripSuffix(">").trim
 //      val arr = sp.split(", ")
