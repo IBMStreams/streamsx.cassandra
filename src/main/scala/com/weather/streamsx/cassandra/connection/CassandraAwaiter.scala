@@ -50,6 +50,3 @@ trait CassandraAwaiter {
     case _ => ()
   }
 }
-
-
-$ex\n${SST(ex)}
