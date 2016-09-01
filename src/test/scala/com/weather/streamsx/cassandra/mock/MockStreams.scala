@@ -77,45 +77,55 @@ object MockStreams {
 
 
   def setStringList(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
-    val splType = l.stripPrefix("list<").stripSuffix(">").trim
-    val numEntries = Random.nextInt % 20
-    val list = ListBuffer[String]()
-    for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String]
-    val lizt: java.util.List[String] = list.toList.asJava
-    println(s"I'M ABOUT TO INSERT THIS SET INTO A TUPLE: $lizt")
-    t.setList(fieldName, lizt)
-    (t, (fieldName, lizt))
+//    val splType = l.stripPrefix("list<").stripSuffix(">").trim
+//    val numEntries = Random.nextInt % 20
+//    val list = ListBuffer[String]()
+//    for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String]
+//    val lizt: java.util.List[String] = list.toList.asJava
+//
+
+    val cool = new util.ArrayList[String]()
+    cool.add("a")
+    cool.add("b")
+    cool.add("c")
+    println(s"I'M ABOUT TO INSERT THIS SET INTO A TUPLE: $cool")
+    t.setList(fieldName, cool)
+    (t, (fieldName, cool))
   }
 
   def setStringSet(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
-    val splType = l.stripPrefix("set<").stripSuffix(">").trim
-    val numEntries = Random.nextInt % 20
-    val list = ListBuffer[String]()
-    for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String]
-    val set: java.util.Set[String] = list.toSet.asJava
-//
-//    val whatever: java.util.Set[String] = new java.util.HashSet()
-//    whatever.add("aa")
-//    whatever.add("bb")
-    println(s"I'M ABOUT TO INSERT THIS SET INTO A TUPLE: $set")
+//    val splType = l.stripPrefix("set<").stripSuffix(">").trim
+//    val numEntries = Random.nextInt % 20
+//    val list = ListBuffer[String]()
+//    for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String]
+//    val set: java.util.Set[String] = list.toSet.asJava
+////
+    val whatever: java.util.Set[String] = new java.util.HashSet()
+    whatever.add("d")
+    whatever.add("e")
+    println(s"I'M ABOUT TO INSERT THIS SET INTO A TUPLE: $whatever")
 
-    t.setSet(fieldName, set)
-    (t, (fieldName, set))
+    t.setSet(fieldName, whatever)
+    (t, (fieldName, whatever))
   }
 
   def setStringToStringMap(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
-    val (splKeyType: String, splValType: String) = {
-      val sp = l.stripPrefix("map<").stripSuffix(">").trim
-      val arr = sp.split(", ")
-      (arr(0), arr(1))
-    }
-    val numEntries = Random.nextInt % 20
-    val list = ListBuffer[(String, String)]()
-    for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String] -> genValue("rstring").asInstanceOf[String]
-    val map: java.util.Map[String, String] = list.toMap.asJava
-    println(s"I'M ABOUT TO INSERT THIS MAP INTO A TUPLE: $map")
-    t.setMap(fieldName, map)
-    (t, (fieldName, map))
+//    val (splKeyType: String, splValType: String) = {
+//      val sp = l.stripPrefix("map<").stripSuffix(">").trim
+//      val arr = sp.split(", ")
+//      (arr(0), arr(1))
+//    }
+//    val numEntries = Random.nextInt % 20
+//    val list = ListBuffer[(String, String)]()
+//    for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String] -> genValue("rstring").asInstanceOf[String]
+//    val map: java.util.Map[String, String] = list.toMap.asJava
+//
+    val m = new util.HashMap[String, String]()
+    m.put("f", "g")
+    m.put("h", "i")
+    println(s"I'M ABOUT TO INSERT THIS MAP INTO A TUPLE: $m")
+    t.setMap(fieldName, m)
+    (t, (fieldName, m))
   }
 }
 
