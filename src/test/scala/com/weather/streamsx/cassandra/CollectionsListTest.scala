@@ -34,7 +34,7 @@ class CollectionsListTest extends PipelineTest(
     def row2greeting(r: Row): Map[String, Any] = {
       Map(
         "count" -> r.getLong("count"),
-        "listA" -> r.getList("listA", classOf[Int])
+        "listA" -> r.getList("listA", classOf[java.lang.Integer])
       )
     }
 
