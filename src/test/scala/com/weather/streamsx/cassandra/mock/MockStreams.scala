@@ -88,7 +88,7 @@ object MockStreams {
     cool.add("a")
     cool.add("b")
     cool.add("c")
-    println(s"I'M ABOUT TO INSERT THIS SET INTO A TUPLE: $cool")
+    println(s"I'M ABOUT TO INSERT THIS LIST INTO A TUPLE: $cool")
     t.setList(fieldName, cool)
     (t, (fieldName, cool))
   }
