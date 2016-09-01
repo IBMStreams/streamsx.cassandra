@@ -29,7 +29,7 @@ class CollectionsMapTest extends PipelineTest(
 
     val structureMap = Map(
                             "count" -> "uint64",
-                            "mapA"  -> "map<int, int>"
+                            "mapA"  -> "map<int32, int32>"
                           )
     def row2greeting(r: Row): Map[String, Any] = {
       Map(
