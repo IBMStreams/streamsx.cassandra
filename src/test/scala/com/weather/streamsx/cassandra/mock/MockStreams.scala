@@ -82,6 +82,7 @@ object MockStreams {
     val list = ListBuffer[String]()
     for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String]
     val lizt: java.util.List[String] = list.toList.asJava
+    println(s"I'M ABOUT TO INSERT THIS SET INTO A TUPLE: $lizt")
     t.setList(fieldName, lizt)
     (t, (fieldName, lizt))
   }
@@ -96,6 +97,8 @@ object MockStreams {
 //    val whatever: java.util.Set[String] = new java.util.HashSet()
 //    whatever.add("aa")
 //    whatever.add("bb")
+    println(s"I'M ABOUT TO INSERT THIS SET INTO A TUPLE: $set")
+
     t.setSet(fieldName, set)
     (t, (fieldName, set))
   }
@@ -110,6 +113,7 @@ object MockStreams {
     val list = ListBuffer[(String, String)]()
     for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String] -> genValue("rstring").asInstanceOf[String]
     val map: java.util.Map[String, String] = list.toMap.asJava
+    println(s"I'M ABOUT TO INSERT THIS MAP INTO A TUPLE: $map")
     t.setMap(fieldName, map)
     (t, (fieldName, map))
   }

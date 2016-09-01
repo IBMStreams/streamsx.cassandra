@@ -21,6 +21,7 @@ class PipelineTest(
   val keyspace = keyspaceStr
   val table = tableStr
 
+
   val ccfg = new CassSinkClientConfig(
     localdc = "",
     port = MockCassandra.port,
@@ -41,7 +42,28 @@ class PipelineTest(
     table = table,
     ttl = 10000000L,
     cacheSize = 100
-  )
+
+//  val ccfg = new CassSinkClientConfig(
+//    localdc = "",
+//    port = MockCassandra.port,
+//    remapClusterMinutes = 15,
+//    writeOperationTimeout = 10000L,
+//    authEnabled = false,
+//    authUsername = "",
+//    authPassword = "",
+//    sslEnabled = false,
+//    sslKeystore = "",
+//    sslPassword = "",
+//    dateFormat = DateTimeFormat.forPattern("yyMMdd"),
+//    authProvider = AuthProvider.NONE,
+//    sslOptions = None,
+//    consistencylevel = ConsistencyLevel.ALL,
+//    seeds = Array(MockCassandra.ip),
+//    keyspace = keyspace,
+//    table = table,
+//    ttl = 10000000L,
+//    cacheSize = 100
+//  )
   val cassConnect = new CassandraConnector(ccfg)
   val session = cassConnect.session
 
