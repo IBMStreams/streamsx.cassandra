@@ -42,6 +42,7 @@ class PipelineTest(
     table = table,
     ttl = 10000000L,
     cacheSize = 100
+  )
 
 //  val ccfg = new CassSinkClientConfig(
 //    localdc = "",
