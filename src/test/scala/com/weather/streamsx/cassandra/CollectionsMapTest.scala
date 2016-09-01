@@ -11,7 +11,7 @@ class CollectionsMapTest extends PipelineTest(
   """
      |create table IF NOT EXISTS testKEYSLIST.testTABLEMAP (
      |      count bigint,
-     |      mapA map<varchar>,
+     |      mapA map<varchar, varchar>,
      |  PRIMARY KEY (count)
      |) with caching = 'none';
   """.stripMargin
