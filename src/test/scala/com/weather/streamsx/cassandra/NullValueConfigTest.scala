@@ -13,12 +13,15 @@ import scala.util.parsing.json.JSON
 
 @RunWith(classOf[JUnitRunner])
 class NullValueConfigTest extends FlatSpec with Matchers with BeforeAndAfterAll{
+
+  val mockZK = new MockZK()
+
   override def beforeAll(): Unit = {
-    MockZK.start()
+    mockZK.start()
   }
 
   override def afterAll(): Unit = {
-//    MockZK.shutdown()
+    mockZK.shutdown()
   }
 
   val cfg =
@@ -40,9 +43,8 @@ class NullValueConfigTest extends FlatSpec with Matchers with BeforeAndAfterAll{
   }
 
   "The raw string" should "get fetched and parsed" in {
-    MockZK.createZNode("/test", cfg)
-
-    val mizzap = JSON.parseFull(MockZK.getZNode("/test")).get.asInstanceOf[Map[String, Any]]
+    mockZK.createZNode("/test", cfg)
+    val mizzap = JSON.parseFull(mockZK.getZNode("/test")).get.asInstanceOf[Map[String, Any]]
     mizzap should equal(compareMap)
   }
 }

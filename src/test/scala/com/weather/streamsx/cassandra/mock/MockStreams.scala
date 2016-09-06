@@ -129,12 +129,13 @@ object MockStreams {
   }
 }
 
-class MockStreams(splStyleTupleStructureDeclaration: String) {
+class MockStreams(splStyleTupleStructureDeclaration: String, zkConnectString: String) {
+
   private val graph: OperatorGraph = OperatorGraphFactory.newGraph()
   private val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])
   op.setStringParameter("connectionConfigZNode", "/cassConn")
   op.setStringParameter("nullMapZnode", "/nullV")
-  op.setStringParameter("zkConnectionString", MockZK.connectString)
+  op.setStringParameter("zkConnectionString", zkConnectString)
   // Create the object representing the type of tuple that is coming into the operator
   private val tuplez: InputPortDeclaration = op.addInput(splStyleTupleStructureDeclaration)
   // Create the testable version of the graph
@@ -147,7 +148,9 @@ class MockStreams(splStyleTupleStructureDeclaration: String) {
   // omg can I actually get a tuple out of this???
   def newEmptyTuple(): OutputTuple = injector.newTuple()
 
-  def shutdown(): Unit = testableGraph.shutdown().get().shutdown().get()
+  def shutdown(): Unit = {
+    testableGraph.shutdown().get().shutdown().get()
+  }
 
   def submit(tuple: OutputTuple): Unit = injector.submit(tuple)
 }

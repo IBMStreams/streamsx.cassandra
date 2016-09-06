@@ -44,27 +44,6 @@ class PipelineTest(
     cacheSize = 100
   )
 
-//  val ccfg = new CassSinkClientConfig(
-//    localdc = "",
-//    port = MockCassandra.port,
-//    remapClusterMinutes = 15,
-//    writeOperationTimeout = 10000L,
-//    authEnabled = false,
-//    authUsername = "",
-//    authPassword = "",
-//    sslEnabled = false,
-//    sslKeystore = "",
-//    sslPassword = "",
-//    dateFormat = DateTimeFormat.forPattern("yyMMdd"),
-//    authProvider = AuthProvider.NONE,
-//    sslOptions = None,
-//    consistencylevel = ConsistencyLevel.ALL,
-//    seeds = Array(MockCassandra.ip),
-//    keyspace = keyspace,
-//    table = table,
-//    ttl = 10000000L,
-//    cacheSize = 100
-//  )
   val cassConnect = new CassandraConnector(ccfg)
   val session = cassConnect.session
 
@@ -73,7 +52,6 @@ class PipelineTest(
   override def beforeAll(): Unit = {
     println("I'M CALLING THE PIPELINE TEST BEFOREALL")
 
-    mockZK.start()
     MockCassandra.start()
 
     val cassStr =
@@ -99,10 +77,6 @@ class PipelineTest(
          |}
     """.stripMargin
 
-    // setup mock ZK nodes
-    // first delete in case there was a bad run beforehand
-//    MockZK.deleteZnode("/cassConn")
-//    MockZK.deleteZnode("/nullV")
     // then create
     mockZK.createZNode("/cassConn", cassStr)
     mockZK.createZNode("/nullV", nullValueJSON)
@@ -129,9 +103,8 @@ class PipelineTest(
       val tupleClose = ">"
       s"$tupleOpen$meat$tupleClose"
     }
-//    val tupleStructure = "tuple<set<float32> setB, uint64 count, list<int32> listA, map<int64, rstring> mapB, list<uint8> listB, map<rstring, boolean> mapA, set<rstring> setA>"
     println(s"THIS IS MY TUPLE STRUCTURE: $tupleStructure")
-    val generator = new MockStreams(tupleStructure)
+    val generator = new MockStreams(tupleStructure, mockZK.connectString)
     val t = generator.newEmptyTuple()
 
     def addValToTuple(kv: (String, String), t: OutputTuple): (OutputTuple, (String, Any)) = {
@@ -144,9 +117,6 @@ class PipelineTest(
     }
 
     generator.submit(t)
-
     (t, nameToValue)
   }
-
-
 }

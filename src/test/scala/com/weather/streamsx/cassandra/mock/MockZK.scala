@@ -16,25 +16,12 @@ class MockZK {
 
   val connectString = zkTestServer.getConnectString
 
-  cli.start()
-
-//  val zkClient = cli.getZookeeperClient
-//
-//  zkClient.start()
-//  zkClient.
-
   val zkCli = ZKClient(s"$topLevelZnode", Some(connectString))
-  cli.create().forPath(s"/$topLevelZnode")
-
-//  def start(): Unit = cli.getState match {
-//    case CuratorFrameworkState.LATENT => cli.start()
-////    case CuratorFrameworkState.STOPPED => cli.start()
-//    case _ => ()
-//  }
 
   def start(): Unit = {
     zkTestServer.start()
     cli.start()
+    cli.create().forPath(s"/$topLevelZnode")
   }
 
   def createZNode(path: String, content: String): Unit = {
