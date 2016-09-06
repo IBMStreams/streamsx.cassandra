@@ -78,6 +78,7 @@ class PipelineTest(
     """.stripMargin
 
     // then create
+    mockZK.start()
     mockZK.createZNode("/cassConn", cassStr)
     mockZK.createZNode("/nullV", nullValueJSON)
 
