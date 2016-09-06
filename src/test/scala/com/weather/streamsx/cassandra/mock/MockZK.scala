@@ -8,7 +8,7 @@ import org.apache.curator.test.TestingServer
 class MockZK {
   private val topLevelZnode = "streamsx.cassandra"
   private val zkPort = 4446
-  private val retryMS = 100000
+  private val retryMS = Int.MaxValue
   private val zkTestServer = new TestingServer(zkPort)
 
 
