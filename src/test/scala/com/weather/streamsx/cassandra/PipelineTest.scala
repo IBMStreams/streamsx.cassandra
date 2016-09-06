@@ -68,12 +68,12 @@ class PipelineTest(
   val cassConnect = new CassandraConnector(ccfg)
   val session = cassConnect.session
 
-
+  val mockZK = new MockZK()
 
   override def beforeAll(): Unit = {
     println("I'M CALLING THE PIPELINE TEST BEFOREALL")
 
-    MockZK.start()
+    mockZK.start()
     MockCassandra.start()
 
     val cassStr =
@@ -104,8 +104,8 @@ class PipelineTest(
 //    MockZK.deleteZnode("/cassConn")
 //    MockZK.deleteZnode("/nullV")
     // then create
-    MockZK.createZNode("/cassConn", cassStr)
-    MockZK.createZNode("/nullV", nullValueJSON)
+    mockZK.createZNode("/cassConn", cassStr)
+    mockZK.createZNode("/nullV", nullValueJSON)
 
     session.execute(s"drop keyspace if exists $keyspace") //necessary for when runtime errors prevent afterAll from being called
     session.execute(s"create keyspace $keyspace with replication = {'class': 'SimpleStrategy', 'replication_factor': 1}")
@@ -117,9 +117,9 @@ class PipelineTest(
   override def afterAll(): Unit = {
     session.execute(s"drop keyspace if exists $keyspace")
     session.close()
-    MockZK.deleteZnode("/cassConn")
-    MockZK.deleteZnode("/nullV")
-//    MockZK.shutdown()
+    mockZK.deleteZnode("/cassConn")
+    mockZK.deleteZnode("/nullV")
+    mockZK.shutdown()
   }
 
   def genAndSubmitTuple(m: Map[String, String]): (Tuple, Map[String, Any]) = {
