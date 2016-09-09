@@ -28,8 +28,8 @@ import scala.collection.JavaConverters._
 
 
 class NullWriteTest extends PipelineTest(
-  NullWriteTest.table,
   NullWriteTest.keyspace,
+  NullWriteTest.table,
   NullWriteTest.tableStr,
   NullWriteTest.nullVals
 ){
