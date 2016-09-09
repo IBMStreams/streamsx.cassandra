@@ -9,8 +9,8 @@ import scala.collection.JavaConverters._
   object NullWriteTest {
     val table = "testkEEEE"
     val keyspace = "testtAAAA"
-    val tableStr =   """
-                       |create table IF NOT EXISTS testk.testt (
+    val tableStr =   s"""
+                       |create table IF NOT EXISTS $keyspace.$table (
                        |  count bigint,
                        |  notnull int,
                        |  nullz int,
