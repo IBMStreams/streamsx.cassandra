@@ -129,10 +129,10 @@ testOptions in Test += Tests.Argument("-oF") //full stack trace when running tes
 )
 
 
-// This is horrible, I'm sorry
-test in Test <<= test in Test map{ (Unit) => {
-  import scala.sys.process._
-  val process = "lsof -i :4446" #| Process(Seq("awk", "{ print $2;}")) #| "head -n 2" #| "grep -v PID"
-  val pid = process.!!
-  s"kill -9 $pid"!
-}}
+//// This is horrible, I'm sorry
+//test in Test <<= test in Test map{ (Unit) => {
+//  import scala.sys.process._
+//  val process = "lsof -i :4446" #| Process(Seq("awk", "{ print $2;}")) #| "head -n 2" #| "grep -v PID"
+//  val pid = process.!!
+//  s"kill -9 $pid"!
+//}}
