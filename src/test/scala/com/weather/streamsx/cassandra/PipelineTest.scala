@@ -21,6 +21,7 @@ class PipelineTest(
   val keyspace = keyspaceStr
   val table = tableStr
 
+  val ipArr: Array[String] = MockCassandra.ip.split(",")
 
   val ccfg = new CassSinkClientConfig(
     localdc = "",
@@ -37,7 +38,7 @@ class PipelineTest(
     authProvider = AuthProvider.NONE,
     sslOptions = None,
     consistencylevel = ConsistencyLevel.ALL,
-    seeds = Array(MockCassandra.ip),
+    seeds = ipArr,
     keyspace = keyspace,
     table = table,
     ttl = 10000000L,
@@ -52,7 +53,7 @@ class PipelineTest(
   override def beforeAll(): Unit = {
     println("I'M CALLING THE PIPELINE TEST BEFOREALL")
 
-    MockCassandra.start()
+//    MockCassandra.start()
 
     val cassStr =
       s"""
