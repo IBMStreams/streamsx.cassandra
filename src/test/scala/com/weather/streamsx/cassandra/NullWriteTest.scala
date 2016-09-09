@@ -57,34 +57,36 @@ class NullWriteTest extends PipelineTest(
       )
     }
 
+  def genTuple(m: Map[String, String]): (Tuple, Map[String, Any]) = {
+    val tupleStructure = {
+      val tupleOpen = "tuple<"
+      val meat = m.map(kv => s"${kv._2} ${kv._1}").mkString(", ")
+      val tupleClose = ">"
+      s"$tupleOpen$meat$tupleClose"
+    }
+    println(s"THIS IS MY TUPLE STRUCTURE: $tupleStructure")
+    val generator = new MockStreams(tupleStructure, mockZK.connectString)
+    val t = generator.newEmptyTuple()
+
+    t.setLong("count", 12345678L)
+    t.setInt("notnull", Int.MaxValue)
+    t.setInt("nullz", Int.MaxValue)
+
+    generator.submit(t)
+
+    (t, Map(
+      "count" -> 12345678L,
+      "notnull" -> Int.MaxValue,
+      "nullz" -> Int.MaxValue
+    ))
+
+  }
+
   "The operator" should "write only one tuple to C*" in {
     val (tuple, valuesMap) = genTuple(structureMap)
 
 
-    def genTuple(m: Map[String, String]): (Tuple, Map[String, Any]) = {
-      val tupleStructure = {
-        val tupleOpen = "tuple<"
-        val meat = m.map(kv => s"${kv._2} ${kv._1}").mkString(", ")
-        val tupleClose = ">"
-        s"$tupleOpen$meat$tupleClose"
-      }
-      println(s"THIS IS MY TUPLE STRUCTURE: $tupleStructure")
-      val generator = new MockStreams(tupleStructure, mockZK.connectString)
-      val t = generator.newEmptyTuple()
 
-      t.setLong("count", 12345678L)
-      t.setInt("notnull", Int.MaxValue)
-      t.setInt("nullz", Int.MaxValue)
-
-      generator.submit(t)
-
-      (t, Map(
-        "count" -> 12345678L,
-        "notnull" -> Int.MaxValue,
-        "nullz" -> Int.MaxValue
-      ))
-
-    }
 
     val rows: Seq[Row] = session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
     val received = row2greeting(rows.head)
