@@ -52,8 +52,8 @@ class NullWriteTest extends PipelineTest(
     def row2greeting(r: Row): Map[String, Any] = {
       Map(
         "count" -> r.getLong("count"),
-        "notnull" -> r.getInt("notnull")
-
+        "notnull" -> r.getInt("notnull"),
+        "nullz" -> r.getInt("nullz")
       )
     }
 
