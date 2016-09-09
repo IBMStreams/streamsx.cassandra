@@ -92,6 +92,6 @@ class NullWriteTest extends PipelineTest(
     rows should have size 1
     received("count") shouldBe valuesMap("count")
     received("notnull") shouldBe valuesMap("notnull")
-    received("nullz") shouldBe null
+    received("nullz") shouldNot be
   }
 }
