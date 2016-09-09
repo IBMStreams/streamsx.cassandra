@@ -89,7 +89,7 @@ class NullWriteTest extends PipelineTest(
 
 
     val rows: Seq[Row] = session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
-    println s"I GOT BACK FROM THE NULL WRITE TEST: $rows"
+    println(s"I GOT BACK FROM THE NULL WRITE TEST: $rows")
     val received = row2greeting(rows.head)
 
     rows should have size 1
