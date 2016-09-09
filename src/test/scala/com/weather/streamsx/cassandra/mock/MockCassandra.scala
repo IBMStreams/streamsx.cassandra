@@ -7,34 +7,37 @@ import org.scalatest.junit.JUnitRunner
 
 object MockCassandra {
 
-//  private val helper = EmbeddedCassandraServerHelper
+////  private val helper = EmbeddedCassandraServerHelper
+//
+//  def start(): Unit = helper.startEmbeddedCassandra("test-cassandra.yml")
+//
+//  //  def stop(): Unit = helper.stopEmbeddedCassandra() // The stop method was deprecated in cassandra-unit with no replacement
+//  def clean(): Unit = helper.cleanEmbeddedCassandra()
+//
+//  start()
+//  val ip: String = helper.getHost
+//  val port: Int = helper.getNativeTransportPort // This is the CQL port
 
-  def start(): Unit = helper.startEmbeddedCassandra("test-cassandra.yml")
-
-  //  def stop(): Unit = helper.stopEmbeddedCassandra() // The stop method was deprecated in cassandra-unit with no replacement
-  def clean(): Unit = helper.cleanEmbeddedCassandra()
-
-  start()
-  val ip: String = helper.getHost
-  val port: Int = helper.getNativeTransportPort // This is the CQL port
+  val ip = "127.0.0.1,10.0.2.2"
+  val port = 9042
 }
 
-
-@RunWith(classOf[JUnitRunner])
-class MockCassandraTest extends FlatSpec with Matchers with BeforeAndAfterAll {
-  override def beforeAll() {
-    MockCassandra.start()
-  }
-
-  override def afterAll() {
-    MockCassandra.clean()
-  }
-
-  "MockCassandra" should "be running" in {
-    MockCassandra.ip should be
-    MockCassandra.port should be
-  }
-
-
-
-}
+//
+//@RunWith(classOf[JUnitRunner])
+//class MockCassandraTest extends FlatSpec with Matchers with BeforeAndAfterAll {
+//  override def beforeAll() {
+//    MockCassandra.start()
+//  }
+//
+//  override def afterAll() {
+//    MockCassandra.clean()
+//  }
+//
+//  "MockCassandra" should "be running" in {
+//    MockCassandra.ip should be
+//    MockCassandra.port should be
+//  }
+//
+//
+//
+//}
