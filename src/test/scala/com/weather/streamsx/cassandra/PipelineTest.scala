@@ -92,6 +92,7 @@ class PipelineTest(
   override def afterAll(): Unit = {
     session.execute(s"drop keyspace if exists $keyspace")
     session.close()
+    cassConnect.shutdown()
     mockZK.deleteZnode("/cassConn")
     mockZK.deleteZnode("/nullV")
     mockZK.shutdown()
