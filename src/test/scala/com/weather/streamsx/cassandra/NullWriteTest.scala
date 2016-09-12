@@ -35,12 +35,12 @@ class NullWriteTest extends PipelineTest(
 ){
 
   override def beforeAll(): Unit = {
-    println("I'M CALLING BEFOREALL FOR GREETING TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+//    println("I'M CALLING BEFOREALL FOR GREETING TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     super.beforeAll()
   }
 
   override def afterAll(): Unit = {
-    println("I'M CALLING AFTERALL FOR GREETING TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+//    println("I'M CALLING AFTERALL FOR GREETING TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
     super.afterAll()
   }
@@ -64,7 +64,7 @@ class NullWriteTest extends PipelineTest(
       val tupleClose = ">"
       s"$tupleOpen$meat$tupleClose"
     }
-    println(s"THIS IS MY TUPLE STRUCTURE: $tupleStructure")
+//    println(s"THIS IS MY TUPLE STRUCTURE: $tupleStructure")
     val generator = new MockStreams(tupleStructure, mockZK.connectString)
     val t = generator.newEmptyTuple()
 
@@ -82,19 +82,19 @@ class NullWriteTest extends PipelineTest(
 
   }
 
-  "The operator" should "write only one tuple to C*" in {
+  "The operator" should "not write the value that matches the null value specified" in {
     val (tuple, valuesMap) = genTuple(structureMap)
 
 
 
 
     val rows: Seq[Row] = session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
-    println(s"I GOT BACK FROM THE NULL WRITE TEST: $rows")
+//    println(s"I GOT BACK FROM THE NULL WRITE TEST: $rows")
     val received = row2greeting(rows.head)
 
     rows should have size 1
     received("count") shouldBe valuesMap("count")
     received("notnull") shouldBe valuesMap("notnull")
-    received("nullz") shouldNot be
+    received("nullz") shouldNot be // aka, should be null
   }
 }

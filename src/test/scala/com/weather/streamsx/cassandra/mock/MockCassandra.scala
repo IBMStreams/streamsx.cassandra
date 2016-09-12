@@ -5,6 +5,9 @@ import org.junit.runner.RunWith
 import org.scalatest.{BeforeAndAfterAll, Matchers, FlatSpec}
 import org.scalatest.junit.JUnitRunner
 
+// I have yet to find a library for embedded Cassandra for unit testing that doesn't SUCK.
+// I'm running cassandra locally while I run tests, which is not ideal, but it's better than these buggy Cassandra libraries.
+
 object MockCassandra {
 
 ////  private val helper = EmbeddedCassandraServerHelper

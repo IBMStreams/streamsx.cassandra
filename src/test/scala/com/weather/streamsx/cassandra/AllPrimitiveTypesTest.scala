@@ -30,12 +30,12 @@ class AllPrimitiveTypesTest extends PipelineTest(
 ){
 
   override def beforeAll(): Unit = {
-    println("I'M CALLING BEFORE ALL FOR THE PRIMITIVE TYPES TEST")
+//    println("I'M CALLING BEFORE ALL FOR THE PRIMITIVE TYPES TEST")
     super.beforeAll()
   }
 
   override def afterAll(): Unit = {
-    println("I'M CALLING AFTER ALL FOR THE PRIMITIVE TYPE TEST")
+//    println("I'M CALLING AFTER ALL FOR THE PRIMITIVE TYPE TEST")
     super.afterAll()
   }
 

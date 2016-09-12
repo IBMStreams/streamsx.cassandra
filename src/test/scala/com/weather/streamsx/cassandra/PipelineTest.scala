@@ -51,9 +51,6 @@ class PipelineTest(
   val mockZK = new MockZK()
 
   override def beforeAll(): Unit = {
-    println("I'M CALLING THE PIPELINE TEST BEFOREALL")
-
-//    MockCassandra.start()
 
     val cassStr =
       s"""
@@ -86,8 +83,6 @@ class PipelineTest(
     session.execute(s"drop keyspace if exists $keyspace") //necessary for when runtime errors prevent afterAll from being called
     session.execute(s"create keyspace $keyspace with replication = {'class': 'SimpleStrategy', 'replication_factor': 1}")
     session.execute(tableCreateStr)
-
-    println(s"I SHOULD HAVE CREATED $keyspace.$table")
   }
 
   override def afterAll(): Unit = {
@@ -106,7 +101,6 @@ class PipelineTest(
       val tupleClose = ">"
       s"$tupleOpen$meat$tupleClose"
     }
-    println(s"THIS IS MY TUPLE STRUCTURE: $tupleStructure")
     val generator = new MockStreams(tupleStructure, mockZK.connectString)
     val t = generator.newEmptyTuple()
 

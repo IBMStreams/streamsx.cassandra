@@ -22,15 +22,15 @@ object CassandraSinkImpl {
       val zkCli: ZooKlient = ZKClient(connectStr = connectStr)
       val clientConfig = PrimitiveTypeConfig.read(zkCli, connectionConfigZNode) match {
         case Some(cc) => CassSinkClientConfig(cc)
-        case _ => log.error(s"Failed to getData from $connectionConfigZNode"); null
+        case _ => throw new CassandraWriterException(s"Failed to getData from $connectionConfigZNode", new Exception); null
       }
       val nullMapValues = NullValueConfig(zkCli, nullMapZnode) match {
         case Some(map) => map
-        case _ => log.error(s"Failed to getData from $nullMapZnode."); null
+        case _ => Map[String, Any]()
       }
       val cassConnector = new CassandraConnector(clientConfig)
       new CassandraSinkImpl(clientConfig, cassConnector, nullMapValues)
-    } catch { case e: Exception => log.error(s"Failed to create Cassandra client\n${SST(e)})", e); null }
+    } catch { case e: Exception => throw new CassandraWriterException(s"Failed to create Cassandra client\n${SST(e)})", e); null }
   }
 }
 

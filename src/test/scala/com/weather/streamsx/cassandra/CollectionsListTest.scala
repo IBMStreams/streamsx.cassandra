@@ -18,12 +18,12 @@ class CollectionsListTest extends PipelineTest(
 ){
 
   override def beforeAll(): Unit = {
-    println("I'M CALLING BEFORE ALL FOR THE LIST TEST")
+//    println("I'M CALLING BEFORE ALL FOR THE LIST TEST")
     super.beforeAll()
   }
 
   override def afterAll(): Unit = {
-    println("I'M CALLING AFTER ALL FOR THE LIST TEST")
+//    println("I'M CALLING AFTER ALL FOR THE LIST TEST")
     super.afterAll()
   }
 
