@@ -17,7 +17,7 @@ val scalatestVersion       = "2.2.4"
 val scalazVersion          = "7.1.2"
 val slf4jVersion           = "1.7.12"
 val streamsOperatorVersion = "4.1.0.0"
-val streamsxZKVersion      = "0.3-SNAPSHOT"
+val zooKlientVersion       = "0.3.1-RELEASE"
 val streamsxUtilVersion    = "0.2.5-RELEASE"
 
 parallelExecution in Test := false
@@ -41,7 +41,7 @@ libraryDependencies ++= Seq(
     ),
   "com.ibm"                      % "streams.operator"      % streamsOperatorVersion  % "provided",
   "com.weather"                 %% "streamsx-util"         % streamsxUtilVersion,
-  "com.weather"                 %% "analytics-zooklient"   % streamsxZKVersion,
+  "com.weather"                 %% "analytics-zooklient"   % zooKlientVersion,
   "io.circe"                    %% "circe-core"            % circeVersion,
   "io.circe"                    %% "circe-generic"         % circeVersion,
   "io.circe"                    %% "circe-jawn"            % circeVersion,
