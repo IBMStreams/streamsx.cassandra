@@ -120,3 +120,4 @@ dist <<= dist.dependsOn(toolkit)
   Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.tools.jar")),
   Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.util.jar"))
 )
+

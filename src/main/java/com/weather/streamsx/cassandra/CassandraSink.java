@@ -130,7 +130,7 @@ public class CassandraSink extends AbstractOperator {
     @Parameter(name="connectionConfigZNode", description = "Name of the Znode where Cassandra connection configuration is stored")
     public void setCfgZnode(String s) {connectionConfigZNode = s;}
 
-    @Parameter(name="nullMapZnode", description = "Name of the Znode where the map of fieldnames to the value representing null is stored")
+    @Parameter(name="nullMapZnode", description = "Name of the Znode where the map of fieldnames to the value representing null is stored", optional = true)
     public void setNullValueZnode(String str) {nullMapZnode = str;}
 
     @Parameter(name="zkConnectionString", description = "connection string for ZooKeeper, useful for testing", optional = true)

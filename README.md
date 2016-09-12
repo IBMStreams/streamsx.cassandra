@@ -7,6 +7,7 @@
 #Table of Contents
 
 - [Cassandra Sink Version 1.3.0](#cassandra-sink-version-130)
+  - [Changes](#changes)
   - [Supported Versions](#supported-versions)
   - [Data Types](#data-types)
     - [Additional documentation](#additional-documentation)
@@ -25,6 +26,13 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Cassandra Sink Version 1.3.0
+
+## Changes
+- Bug fixes  
+- Better exception throwing
+  - Operator will now throw an error and fail to create if it can't connect to Cassandra  
+  - Operator will allow you not to have null values in a znode, but will throw errors if a znode is specified and it can't find your znode or decode your json  
+- Unit tests
 
 ## Supported Versions
 **Streams Version:** 4.0.0+
@@ -209,9 +217,7 @@ This gist shows a sample SPL file using the new ZooKeeper based configuration as
 
 ## Null Value Configuration
 
-In previous versions, you had to build a map of all your fields to booleans and pass it in with every tuple. No more!!
-
-There are now two ZooKeeper configuration files. 
+There are two ZooKeeper configuration files. 
 One of them describes the connection info for Cassandra, the other describes the values for each field that will be seen as "null",
 meaning that the value will not be present in the prepared statement for Cassandra.
 
@@ -220,3 +226,5 @@ If fields do not have a null value configured, they are assumed to always be val
 Empty collections (maps, lists, sets) will automatically be written as nulls, no need to configure that.
 
 See [the gist](https://gist.github.com/ecurtin/2f0baf2d238dddbc461d3594ec3988e1) for examples of null value configuration for the sample application.
+
+If you do not wish to configure null values, you can refrain from specifying the null value znode name in SPL or specify it as `""`.  
