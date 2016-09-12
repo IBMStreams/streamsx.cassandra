@@ -2,11 +2,11 @@ import scala.language.postfixOps // <- making IntelliJ hush about the ! bash com
 
 name := "streamsx.cassandra"
 organization := "com.weather"
-version := "1.2-RELEASE"
+version := "1.3.0-RELEASE"
 scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 compileOrder in Compile := CompileOrder.ScalaThenJava
-
+val ibmStreamsVersion = "4.1.0.0"
 
 val cassandraDriverVersion = "2.1.10.2"
 val circeVersion           = "0.3.0"
@@ -21,13 +21,10 @@ val streamsxZKVersion      = "0.3-SNAPSHOT"
 val streamsxUtilVersion    = "0.2.5-RELEASE"
 
 parallelExecution in Test := false
-//fork in Test := true
-
 
 resolvers ++= Seq(
   "Artifactory" at "https://repo.artifacts.weather.com/analytics-virtual"
 )
-
 
 libraryDependencies ++= Seq(
   "org.cassandraunit"            % "cassandra-unit"        % "2.2.2.1"               % "test"
@@ -35,9 +32,7 @@ libraryDependencies ++= Seq(
     excludeAll(
     ExclusionRule(organization = "com.codahale.metrics")
     ),
-
-//  "io.dropwizard.metrics" % "metrics-core" % "3.1.0" % "test",
-"com.datastax.cassandra"       % "cassandra-driver-core" % cassandraDriverVersion
+  "com.datastax.cassandra"       % "cassandra-driver-core" % cassandraDriverVersion
     classifier "shaded"
     excludeAll(
     ExclusionRule(organization = "io.netty"),
@@ -102,37 +97,26 @@ val toolkit = TaskKey[Unit]("toolkit", "Makes the SPL toolkit")
 toolkit <<= assembly map mkToolkit
 dist <<= dist.dependsOn(toolkit)
 
-testOptions in Test += Tests.Argument("-oF") //full stack trace when running tests
-
 (fullClasspath in Test) := (fullClasspath in Test).value ++ Seq(
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.install.dependency.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.management.jmxmp.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.operator.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.operator.samples.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.management.mx.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.symphony.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.utils.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.resourcemgr.yarn.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.security.authc.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/com.ibm.streams.spl.expressions.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.domainmgr.base.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.domainmgr.server.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.annotation.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.base.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.bi.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.client.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.dsmutils.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.internal.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.tools.jar")),
-  Attributed.blank(file("/opt/ibm/InfoSphere_Streams/4.1.0.0/lib/streams.sws.util.jar"))
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.install.dependency.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.management.jmxmp.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.operator.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.operator.samples.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.management.mx.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.resourcemgr.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.resourcemgr.symphony.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.resourcemgr.utils.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.resourcemgr.yarn.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.security.authc.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.spl.expressions.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.domainmgr.base.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.domainmgr.server.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.annotation.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.base.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.bi.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.client.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.dsmutils.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.internal.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.tools.jar")),
+  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.util.jar"))
 )
-
-
-//// This is horrible, I'm sorry
-//test in Test <<= test in Test map{ (Unit) => {
-//  import scala.sys.process._
-//  val process = "lsof -i :4446" #| Process(Seq("awk", "{ print $2;}")) #| "head -n 2" #| "grep -v PID"
-//  val pid = process.!!
-//  s"kill -9 $pid"!
-//}}
