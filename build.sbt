@@ -93,6 +93,8 @@ dist := {
   s"tar -zcf $parent/${name.value}_${version.value}.tgz -C $parent $dir $excludes" !
 }
 
+test in assembly := {}
+
 val toolkit = TaskKey[Unit]("toolkit", "Makes the SPL toolkit")
 toolkit <<= assembly map mkToolkit
 dist <<= dist.dependsOn(toolkit)
