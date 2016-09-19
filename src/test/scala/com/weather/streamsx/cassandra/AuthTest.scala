@@ -164,9 +164,9 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     val cassConnectRestricted = new CassandraConnector(ccfgRestricted)
 //    cassConnectRestricted.session.execute(insertStr)
 
-//    an [UnauthorizedException] should be thrownBy genAndSubmitTuple(structureMap)
+    an [Exception] should be thrownBy genAndSubmitTuple(structureMap)
 
-        an [UnauthorizedException] should be thrownBy cassConnectRestricted.session.execute(insertStr)
+//        an [UnauthorizedException] should be thrownBy cassConnectRestricted.session.execute(insertStr)
 
 
     //    val rows: Seq[Row] = cassConnectAdmin.session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
