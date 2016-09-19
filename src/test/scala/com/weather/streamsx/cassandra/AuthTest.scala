@@ -1,5 +1,6 @@
 package com.weather.streamsx.cassandra
 
+import com.datastax.driver.core.exceptions.UnauthorizedException
 import com.datastax.driver.core.{PlainTextAuthProvider, ConsistencyLevel, AuthProvider, Row}
 import com.ibm.streams.operator.{OutputTuple, Tuple}
 import com.weather.streamsx.cassandra.config.CassSinkClientConfig
@@ -161,16 +162,18 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     cassConnectAdmin.session.execute(s"REVOKE ALL ON $keyspace.$table FROM $user")
 
     val cassConnectRestricted = new CassandraConnector(ccfgRestricted)
-    cassConnectRestricted.session.execute(insertStr)
+//    cassConnectRestricted.session.execute(insertStr)
 
-//        val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
+//    an [UnauthorizedException] should be thrownBy genAndSubmitTuple(structureMap)
+
+        an [UnauthorizedException] should be thrownBy cassConnectRestricted.session.execute(insertStr)
 
 
-    val rows: Seq[Row] = cassConnectAdmin.session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
-    val received = row2greeting(rows.head)
-
-    rows should have size 1
-//    received shouldBe valuesMap
+    //    val rows: Seq[Row] = cassConnectAdmin.session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
+//    val received = row2greeting(rows.head)
+//
+//    rows should have size 1
+////    received shouldBe valuesMap
   }
   override def afterAll(): Unit = {
 
