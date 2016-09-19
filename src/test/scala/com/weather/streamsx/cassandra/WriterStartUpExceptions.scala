@@ -73,9 +73,13 @@ class WriterStartUpExceptions extends FlatSpec with Matchers with BeforeAndAfter
     val mockZK = new MockZK()
     mockZK.start()
 
-    val s = intercept[Exception] {
-      CassandraSinkImpl.mkWriter("/notAZnode", "/alsoNotAZone", mockZK.connectString)
-    }
+    // todo import the apache stuff necessary to type this more closely
+    an [Exception] should be thrownBy CassandraSinkImpl.mkWriter("/notAZnode", "/alsoNotAZone", mockZK.connectString)
+
+
+//    val s = intercept[Exception] {
+//      CassandraSinkImpl.mkWriter("/notAZnode", "/alsoNotAZone", mockZK.connectString)
+//    }
     mockZK.shutdown()
   }
 
