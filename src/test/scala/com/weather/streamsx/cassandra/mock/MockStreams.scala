@@ -86,12 +86,12 @@ object MockStreams {
 //
 
 //    val cool = new util.ArrayList[Int]()
-    val cool = List(1, 2, 3)
+    val cool = List(1, 2, 3).asJava
 //    cool.add(1)
 //    cool.add(2)
 //    cool.add(3)
     println(s"I'M ABOUT TO INSERT THIS LIST INTO A TUPLE: $cool")
-    t.setList(fieldName, cool.asJava)
+    t.setList(fieldName, cool)
     (t, (fieldName, cool))
   }
 
