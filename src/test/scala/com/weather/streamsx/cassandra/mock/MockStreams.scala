@@ -1,23 +1,17 @@
 package com.weather.streamsx.cassandra.mock
 
-import java.io.InputStream
 import java.util
-import javax.xml.transform.stream.StreamSource
-
-import com.ibm.streams.operator.types.XML
 import com.weather.streamsx.cassandra.exception.CassandraWriterException
 import com.weather.streamsx.cassandra.CassandraSink
 import com.ibm.streams.flow.declare._
 import com.ibm.streams.flow.javaprimitives.JavaOperatorTester
 import com.ibm.streams.flow.javaprimitives.JavaTestableGraph
 import com.ibm.streams.operator.{StreamingOutput, OutputTuple}
-import scala.collection.mutable.ListBuffer
 import scala.util.Random
 import scalaz.Failure
 import scala.collection.JavaConverters._
 
 object MockStreams {
-
 
   def genValue(splType: String): Any = splType match {
     case "boolean" => Random.nextBoolean()
@@ -74,62 +68,35 @@ object MockStreams {
     case _ => (null, (kv._2, null))
   }
 
-
-
-
   def setStringList(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
-//    val splType = l.stripPrefix("list<").stripSuffix(">").trim
-//    val numEntries = Random.nextInt % 20
-//    val list = ListBuffer[String]()
-//    for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String]
-//    val lizt: java.util.List[String] = list.toList.asJava
-//
-
 //    val cool = new util.ArrayList[Int]()
     val cool = List(1, 2, 3).asJava
 //    cool.add(1)
 //    cool.add(2)
 //    cool.add(3)
-    println(s"I'M ABOUT TO INSERT THIS LIST INTO A TUPLE: $cool")
     t.setList(fieldName, cool)
     (t, (fieldName, cool))
   }
 
   def setStringSet(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
-//    val splType = l.stripPrefix("set<").stripSuffix(">").trim
-//    val numEntries = Random.nextInt % 20
-//    val list = ListBuffer[String]()
-//    for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String]
-//    val set: java.util.Set[String] = list.toSet.asJava
-////
     val whatever: java.util.Set[Int] = new java.util.HashSet()
     whatever.add(4)
     whatever.add(5)
-    println(s"I'M ABOUT TO INSERT THIS SET INTO A TUPLE: $whatever")
-
     t.setSet(fieldName, whatever)
     (t, (fieldName, whatever))
   }
 
   def setStringToStringMap(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
-//    val (splKeyType: String, splValType: String) = {
-//      val sp = l.stripPrefix("map<").stripSuffix(">").trim
-//      val arr = sp.split(", ")
-//      (arr(0), arr(1))
-//    }
-//    val numEntries = Random.nextInt % 20
-//    val list = ListBuffer[(String, String)]()
-//    for(i <- 0 until numEntries) list += genValue("rstring").asInstanceOf[String] -> genValue("rstring").asInstanceOf[String]
-//    val map: java.util.Map[String, String] = list.toMap.asJava
-//
     val m = new util.HashMap[Int, Int]()
     m.put(6, 7)
     m.put(8, 9)
-    println(s"I'M ABOUT TO INSERT THIS MAP INTO A TUPLE: $m")
     t.setMap(fieldName, m)
     (t, (fieldName, m))
   }
 }
+
+
+
 
 class MockStreams(splStyleTupleStructureDeclaration: String, zkConnectString: String) {
 
@@ -147,7 +114,6 @@ class MockStreams(splStyleTupleStructureDeclaration: String, zkConnectString: St
   // Execute the initialization of operators within graph.
   testableGraph.initialize().get().allPortsReady().get()
 
-  // omg can I actually get a tuple out of this???
   def newEmptyTuple(): OutputTuple = injector.newTuple()
 
   def shutdown(): Unit = {

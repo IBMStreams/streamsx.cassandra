@@ -18,23 +18,16 @@ class GreetingTest extends PipelineTest(
 ){
 
   override def beforeAll(): Unit = {
-//    println("I'M CALLING BEFOREALL FOR GREETING TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     super.beforeAll()
   }
 
   override def afterAll(): Unit = {
-//    println("I'M CALLING AFTERALL FOR GREETING TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-
     super.afterAll()
   }
 
     val structureMap = Map( "greeting" -> "rstring",
                             "count" -> "uint64",
                             "cool" -> "rstring"
-//                            "testList" -> "list<int32>",
-//                            "testSet" -> "set<int32>",
-//                            "testMap" -> "map<int32, boolean>",
-//                            "nullInt" -> "int32"
                           )
     def row2greeting(r: Row): Map[String, Any] = {
       Map(

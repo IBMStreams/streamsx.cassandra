@@ -1,7 +1,7 @@
 package com.weather.streamsx.cassandra
 
 import com.datastax.driver.core.Row
-import com.ibm.streams.operator.{OutputTuple, Tuple}
+import com.ibm.streams.operator.Tuple
 import com.weather.streamsx.cassandra.mock.MockStreams
 
 import scala.collection.JavaConverters._
@@ -35,13 +35,10 @@ class NullWriteTest extends PipelineTest(
 ){
 
   override def beforeAll(): Unit = {
-//    println("I'M CALLING BEFOREALL FOR GREETING TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     super.beforeAll()
   }
 
   override def afterAll(): Unit = {
-//    println("I'M CALLING AFTERALL FOR GREETING TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-
     super.afterAll()
   }
 
@@ -64,7 +61,6 @@ class NullWriteTest extends PipelineTest(
       val tupleClose = ">"
       s"$tupleOpen$meat$tupleClose"
     }
-//    println(s"THIS IS MY TUPLE STRUCTURE: $tupleStructure")
     val generator = new MockStreams(tupleStructure, mockZK.connectString)
     val t = generator.newEmptyTuple()
 
@@ -79,17 +75,11 @@ class NullWriteTest extends PipelineTest(
       "notnull" -> Int.MaxValue,
       "nullz" -> Int.MaxValue
     ))
-
   }
 
   "The operator" should "not write the value that matches the null value specified" in {
     val (tuple, valuesMap) = genTuple(structureMap)
-
-
-
-
     val rows: Seq[Row] = session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
-//    println(s"I GOT BACK FROM THE NULL WRITE TEST: $rows")
     val received = row2greeting(rows.head)
 
     rows should have size 1
