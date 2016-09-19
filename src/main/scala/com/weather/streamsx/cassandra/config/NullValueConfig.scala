@@ -22,8 +22,7 @@ object NullValueConfig {
     }
 
     znodeName match {
-      case "" => None
-      case null => None
+      case null | "" => None
       case _ => parseZnode()
     }
 

@@ -11,13 +11,10 @@ class DualHash(list: List[Attribute]) extends DualHashy{
     case _ => None
   }
   def apply(i: Int): Option[String] = intToName(i) match {
-    case s: String => Some(s)
+    case s: String if s.nonEmpty => Some(s)
     case _ => None
   }
 }
-
-
-
 
 /*
   * This trait is pointless except I wanted to remove the dependency on ibm.operator.Attribute

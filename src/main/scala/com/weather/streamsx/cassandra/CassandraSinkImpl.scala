@@ -11,12 +11,12 @@ import com.weather.streamsx.util.{StringifyStackTrace => SST}
 object CassandraSinkImpl {
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)
 
+  // refactor to split up the zk stuff and cassandra stuff for 6-lining
   def mkWriter(connectionConfigZNode: String, nullMapZnode: String, zkConnectionString: String = ""): CassandraSinkImpl = {
     log.trace("Making the Cassandra writer operator")
     try {
       val connectStr: Option[String] = zkConnectionString match {
-        case "" => None
-        case s: String => Some(s)
+        case s: String if s.nonEmpty => Some(s)
         case _ => None
       }
       val zkCli: ZooKlient = ZKClient(connectStr = connectStr)
@@ -26,7 +26,7 @@ object CassandraSinkImpl {
       }
       val nullMapValues = NullValueConfig(zkCli, nullMapZnode) match {
         case Some(map) => map
-        case _ => Map[String, Any]()
+        case _ => Map.empty[String, Any]
       }
       val cassConnector = new CassandraConnector(clientConfig)
       new CassandraSinkImpl(clientConfig, cassConnector, nullMapValues)
@@ -47,9 +47,10 @@ class CassandraSinkImpl(cfg: CassSinkClientConfig, connector: CassandraConnector
 
     tbs match {
       case None => tbs = Some(new TupleBasedStructures(tuple, connector.session, cfg))
-      case _ => ()
+      case _ => () // do nothing
     }
-    
+
+    //todo catch auth exceptions in logFailure
     try{
       val bs: BoundStatement = TupleToStatement(tuple, tbs.get, cfg, nullMapValues)
       logFailure(awaitOne()(connector.session.executeAsync(bs)))

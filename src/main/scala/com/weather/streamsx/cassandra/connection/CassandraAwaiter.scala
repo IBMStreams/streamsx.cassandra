@@ -30,6 +30,8 @@ trait CassandraAwaiter {
     future: ResultSetFuture): AwaitResultSetV =
     try Success(  future.getUninterruptibly(timeout, TimeUnit.MILLISECONDS) ) catch exceptionHandler
 
+
+  // TODO: add for authentication errors
   def getTypicalExceptionHandler: PartialFunction[Any, AwaitResultSetV] = {
     case ex: NoHostAvailableException if ex.getErrors.size() == 0 =>
       log.error(s"Handled NoHostAvailableException with 0 errors. Pausing....$ex\n${SST(ex)}")
