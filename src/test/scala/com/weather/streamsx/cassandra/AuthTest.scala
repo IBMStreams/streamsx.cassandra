@@ -17,8 +17,8 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   val keyspace = "authKeyspace"
   val table = "authTable"
-  val tableCreateStr =   """
-                           |create table IF NOT EXISTS testk.testt (
+  val tableCreateStr =   s"""
+                           |create table IF NOT EXISTS $keyspace.$table (
                            |  greeting varchar,
                            |  count bigint,
                            |  cool varchar,
@@ -160,4 +160,12 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     rows should have size 1
     received shouldBe valuesMap
   }
+
+  cassConnectAdmin.session.execute(s"drop keyspace if exists $keyspace")
+  cassConnectAdmin.session.execute(s"DROP USER $user")
+  cassConnectAdmin.session.close()
+  cassConnectAdmin.shutdown()
+  mockZK.deleteZnode("/cassConn")
+  mockZK.deleteZnode("/nullV")
+  mockZK.shutdown()
 }
