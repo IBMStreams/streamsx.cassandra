@@ -1,6 +1,6 @@
 package com.weather.streamsx.cassandra
 
-import com.datastax.driver.core.{ConsistencyLevel, AuthProvider, Row}
+import com.datastax.driver.core.{PlainTextAuthProvider, ConsistencyLevel, AuthProvider, Row}
 import com.ibm.streams.operator.{OutputTuple, Tuple}
 import com.weather.streamsx.cassandra.config.CassSinkClientConfig
 import com.weather.streamsx.cassandra.connection.CassandraConnector
@@ -35,14 +35,14 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     port = MockCassandra.port,
     remapClusterMinutes = 15,
     writeOperationTimeout = 10000L,
-    authEnabled = false,
-    authUsername = "",
-    authPassword = "",
+    authEnabled = true,
+    authUsername = "cassandra",
+    authPassword = "cassandra",
     sslEnabled = false,
     sslKeystore = "",
     sslPassword = "",
     dateFormat = DateTimeFormat.forPattern("yyMMdd"),
-    authProvider = AuthProvider.NONE,
+    authProvider = new PlainTextAuthProvider("cassandra", "cassandra"),
     sslOptions = None,
     consistencylevel = ConsistencyLevel.ALL,
     seeds = ipArr,
@@ -64,7 +64,7 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     sslKeystore = "",
     sslPassword = "",
     dateFormat = DateTimeFormat.forPattern("yyMMdd"),
-    authProvider = AuthProvider.NONE,
+    authProvider = new PlainTextAuthProvider(user, pass),
     sslOptions = None,
     consistencylevel = ConsistencyLevel.ALL,
     seeds = ipArr,
