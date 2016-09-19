@@ -157,7 +157,7 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     cassConnectAdmin.session.execute(s"REVOKE ALL ON $keyspace.$table FROM $user")
     val cassConnectRestricted = new CassandraConnector(ccfgRestricted)
 
-    an [UnauthorizedException] should be thrownBy genAndSubmitTuple(structureMap)
+    an [Exception] should be thrownBy genAndSubmitTuple(structureMap)
 
     cassConnectRestricted.shutdown()
   }
