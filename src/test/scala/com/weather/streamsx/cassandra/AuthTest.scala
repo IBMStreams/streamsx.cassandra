@@ -11,8 +11,6 @@ import org.junit.runner.RunWith
 import org.scalatest.{Matchers, BeforeAndAfterAll, FlatSpec}
 import org.scalatest.junit.JUnitRunner
 
-import scala.collection.JavaConverters._
-
 @RunWith(classOf[JUnitRunner])
 class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
@@ -152,28 +150,16 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   }
 
   "The operator" should "throw an error if there are auth issues" in {
-//    val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
-    cassConnectAdmin.session.execute(s"drop keyspace if exists $keyspace") //necessary for when runtime errors prevent afterAll from being called
+    cassConnectAdmin.session.execute(s"drop keyspace if exists $keyspace")
     cassConnectAdmin.session.execute(s"create keyspace $keyspace with replication = {'class': 'SimpleStrategy', 'replication_factor': 1}")
     cassConnectAdmin.session.execute(tableCreateStr)
     cassConnectAdmin.session.execute(s"CREATE USER IF NOT EXISTS $user WITH PASSWORD '$pass'")
-
-//    cassConnectAdmin.session.execute(s"GRANT ALL ON $keyspace.$table TO $user")
     cassConnectAdmin.session.execute(s"REVOKE ALL ON $keyspace.$table FROM $user")
-
     val cassConnectRestricted = new CassandraConnector(ccfgRestricted)
-//    cassConnectRestricted.session.execute(insertStr)
 
-    an [Exception] should be thrownBy genAndSubmitTuple(structureMap)
+    an [UnauthorizedException] should be thrownBy genAndSubmitTuple(structureMap)
 
-//        an [UnauthorizedException] should be thrownBy cassConnectRestricted.session.execute(insertStr)
-
-
-    //    val rows: Seq[Row] = cassConnectAdmin.session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
-//    val received = row2greeting(rows.head)
-//
-//    rows should have size 1
-////    received shouldBe valuesMap
+    cassConnectRestricted.shutdown()
   }
   override def afterAll(): Unit = {
 
@@ -181,6 +167,7 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     cassConnectAdmin.session.execute(s"DROP USER $user")
     cassConnectAdmin.session.close()
     cassConnectAdmin.shutdown()
+
     mockZK.deleteZnode("/cassConn")
     mockZK.deleteZnode("/nullV")
     mockZK.shutdown()
