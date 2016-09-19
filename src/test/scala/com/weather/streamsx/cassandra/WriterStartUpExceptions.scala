@@ -64,9 +64,7 @@ class WriterStartUpExceptions extends FlatSpec with Matchers with BeforeAndAfter
   ignore should "not start if it can't talk to ZK" in {
     // MockZK not started.
     // This test will just hang and retrying the znode connection. That's fine, that's good behavior, but let's ignore it for the test run.
-    val s = intercept[Exception] {
-      CassandraSinkImpl.mkWriter("/notAZnode", "/alsoNotAZone", "")
-    }
+    an [Exception] should be thrownBy CassandraSinkImpl.mkWriter("/notAZnode", "/alsoNotAZone", "")
   }
 
   "The operator" should "not start if it can't get the Znode" in {
@@ -88,9 +86,8 @@ class WriterStartUpExceptions extends FlatSpec with Matchers with BeforeAndAfter
     mockZK.start()
     mockZK.createZNode("/cassConn", cassStr0)
 
-    val s = intercept[Exception] {
-      CassandraSinkImpl.mkWriter("/cassConn", "/alsoNotAZone", mockZK.connectString)
-    }
+    an [Exception] should be thrownBy CassandraSinkImpl.mkWriter("/cassConn", "/alsoNotAZone", mockZK.connectString)
+
     mockZK.shutdown()
   }
 
@@ -99,9 +96,8 @@ class WriterStartUpExceptions extends FlatSpec with Matchers with BeforeAndAfter
     mockZK.start()
     mockZK.createZNode("/cassConn", cassStr0)
 
-    val s = intercept[Exception] {
-      CassandraSinkImpl.mkWriter("/cassConn", "/alsoNotAZone", mockZK.connectString)
-    }
+    an [Exception] should be thrownBy CassandraSinkImpl.mkWriter("/cassConn", "/alsoNotAZone", mockZK.connectString)
+
     mockZK.shutdown()
   }
 
@@ -125,9 +121,8 @@ class WriterStartUpExceptions extends FlatSpec with Matchers with BeforeAndAfter
       """.stripMargin
     mockZK.createZNode("/nullz", ss)
 
-    val s = intercept[CassandraWriterException] {
-      CassandraSinkImpl.mkWriter("/cassConn", "/nullz", mockZK.connectString)
-    }
+    a [CassandraWriterException] should be thrownBy CassandraSinkImpl.mkWriter("/cassConn", "/nullz", mockZK.connectString)
+
     mockZK.shutdown()
   }
 }
