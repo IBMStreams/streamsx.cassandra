@@ -2,7 +2,7 @@ package com.weather.streamsx.cassandra.connection
 
 import java.util.concurrent.{TimeUnit, TimeoutException}
 
-import com.datastax.driver.core.exceptions.{NoHostAvailableException, UnavailableException}
+import com.datastax.driver.core.exceptions.{UnauthorizedException, NoHostAvailableException, UnavailableException}
 import com.datastax.driver.core.{ResultSet, ResultSetFuture}
 import com.weather.streamsx.cassandra.exception.CassandraWriterException
 import com.weather.streamsx.util.{StringifyStackTrace => SST}
@@ -42,6 +42,9 @@ trait CassandraAwaiter {
     case ex: TimeoutException =>
       log.error(s"Handled TimeoutException. Pausing..$ex\n${SST(ex)}")
       Failure( CassandraWriterException(s"Handled TimeoutException. Pausing...", ex) )
+    case ex: UnauthorizedException =>
+      log.error(s"Encountered UnauthorizedException. $ex\n${SST(ex)}")
+      throw new CassandraWriterException("Streams application not authorized to modify table. Please check your authentication settings", ex)
     case e: Throwable =>
       log.error(s"Error awaiting futures$e\n${SST(e)}")
       Failure( CassandraWriterException(s"Error awaiting futures", e) )
