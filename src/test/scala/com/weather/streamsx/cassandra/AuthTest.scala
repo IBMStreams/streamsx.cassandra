@@ -32,8 +32,8 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   val user = "foo"
   val pass = "bar"
 
-//  val ipArr: Array[String] = MockCassandra.ip.split(",")
-  val ipArr: Array[String] = Array("127.0.0.1")
+  val ipArr: Array[String] = MockCassandra.ip.split(",")
+//  val ipArr: Array[String] = Array("127.0.0.1")
 
   val ccfgAdmin = new CassSinkClientConfig(
     localdc = "",
@@ -161,9 +161,9 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     cassConnectAdmin.session.execute(s"REVOKE ALL ON $keyspace.$table FROM $user")
 
     val cassConnectRestricted = new CassandraConnector(ccfgRestricted)
-//    cassConnectRestricted.session.execute(insertStr)
+    cassConnectRestricted.session.execute(insertStr)
 
-        val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
+//        val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
 
 
     val rows: Seq[Row] = cassConnectAdmin.session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
