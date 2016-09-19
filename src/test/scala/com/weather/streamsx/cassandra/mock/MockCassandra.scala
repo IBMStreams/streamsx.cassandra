@@ -7,3 +7,8 @@ object MockCassandra {
   val ip = "127.0.0.1,10.0.2.2"
   val port = 9042
 }
+
+
+//todo: this is a lame place to note todos
+
+//todo: talk to senthil about shutting down the operator due to authentication issues on the keysapce and table that don't come up until runtime

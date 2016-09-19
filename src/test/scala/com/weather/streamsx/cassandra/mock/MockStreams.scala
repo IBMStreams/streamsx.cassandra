@@ -17,6 +17,8 @@ import scalaz.Failure
 import scala.collection.JavaConverters._
 
 object MockStreams {
+
+
   def genValue(splType: String): Any = splType match {
     case "boolean" => Random.nextBoolean()
     case "int8" => ((Math.abs(Random.nextInt) % 256) - 128).toByte
@@ -29,7 +31,6 @@ object MockStreams {
     case "float32" => Random.nextFloat()
     case "float64" => Random.nextDouble()
     case "decimal32" | "decimal64" | "decimal128"  => new java.math.BigDecimal(Random.nextFloat())
-    //      case "timestamp" => new Timestamp()
     case "rstring" | "ustring" => {
       val num = randomPosNum(20)
       randomString(num)
@@ -84,12 +85,13 @@ object MockStreams {
 //    val lizt: java.util.List[String] = list.toList.asJava
 //
 
-    val cool = new util.ArrayList[Int]()
-    cool.add(1)
-    cool.add(2)
-    cool.add(3)
+//    val cool = new util.ArrayList[Int]()
+    val cool = List(1, 2, 3)
+//    cool.add(1)
+//    cool.add(2)
+//    cool.add(3)
     println(s"I'M ABOUT TO INSERT THIS LIST INTO A TUPLE: $cool")
-    t.setList(fieldName, cool)
+    t.setList(fieldName, cool.asJava)
     (t, (fieldName, cool))
   }
 
