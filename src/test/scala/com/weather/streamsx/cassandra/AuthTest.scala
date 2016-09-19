@@ -25,10 +25,15 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
                            |  PRIMARY KEY (count)
                            |) with caching = 'none';
                          """.stripMargin
+  val insertStr =
+    s"""
+       |INSERT INTO $keyspace.$table (greeting, count, cool) VALUES ('a', 1, 'b');
+     """.stripMargin
   val user = "foo"
   val pass = "bar"
 
-  val ipArr: Array[String] = MockCassandra.ip.split(",")
+//  val ipArr: Array[String] = MockCassandra.ip.split(",")
+  val ipArr: Array[String] = Array("127.0.0.1")
 
   val ccfgAdmin = new CassSinkClientConfig(
     localdc = "",
@@ -106,14 +111,7 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   mockZK.createZNode("/cassConn", cassStr)
   mockZK.createZNode("/nullV", "{}")
 
-  cassConnectAdmin.session.execute(s"drop keyspace if exists $keyspace") //necessary for when runtime errors prevent afterAll from being called
-  cassConnectAdmin.session.execute(s"create keyspace $keyspace with replication = {'class': 'SimpleStrategy', 'replication_factor': 1}")
-  cassConnectAdmin.session.execute(tableCreateStr)
-  cassConnectAdmin.session.execute(s"CREATE USER IF NOT EXISTS $user WITH PASSWORD '$pass'")
 
-  cassConnectAdmin.session.execute(s"GRANT ALL ON $keyspace.$table TO $user")
-//  cassConnectAdmin.session.execute(s"REVOKE ALL ON $keyspace.$table FROM $user")
-  val cassConnectRestricted = new CassandraConnector(ccfgRestricted)
 
 
 
@@ -153,19 +151,35 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   }
 
   "The operator" should "throw an error if there are auth issues" in {
-    val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
-    val rows: Seq[Row] = cassConnectRestricted.session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
+//    val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
+    cassConnectAdmin.session.execute(s"drop keyspace if exists $keyspace") //necessary for when runtime errors prevent afterAll from being called
+    cassConnectAdmin.session.execute(s"create keyspace $keyspace with replication = {'class': 'SimpleStrategy', 'replication_factor': 1}")
+    cassConnectAdmin.session.execute(tableCreateStr)
+    cassConnectAdmin.session.execute(s"CREATE USER IF NOT EXISTS $user WITH PASSWORD '$pass'")
+
+//    cassConnectAdmin.session.execute(s"GRANT ALL ON $keyspace.$table TO $user")
+    cassConnectAdmin.session.execute(s"REVOKE ALL ON $keyspace.$table FROM $user")
+
+    val cassConnectRestricted = new CassandraConnector(ccfgRestricted)
+//    cassConnectRestricted.session.execute(insertStr)
+
+        val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
+
+
+    val rows: Seq[Row] = cassConnectAdmin.session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
     val received = row2greeting(rows.head)
 
     rows should have size 1
-    received shouldBe valuesMap
+//    received shouldBe valuesMap
   }
+  override def afterAll(): Unit = {
 
-  cassConnectAdmin.session.execute(s"drop keyspace if exists $keyspace")
-  cassConnectAdmin.session.execute(s"DROP USER $user")
-  cassConnectAdmin.session.close()
-  cassConnectAdmin.shutdown()
-  mockZK.deleteZnode("/cassConn")
-  mockZK.deleteZnode("/nullV")
-  mockZK.shutdown()
+    cassConnectAdmin.session.execute(s"drop keyspace if exists $keyspace")
+    cassConnectAdmin.session.execute(s"DROP USER $user")
+    cassConnectAdmin.session.close()
+    cassConnectAdmin.shutdown()
+    mockZK.deleteZnode("/cassConn")
+    mockZK.deleteZnode("/nullV")
+    mockZK.shutdown()
+  }
 }
