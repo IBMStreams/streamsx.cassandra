@@ -44,7 +44,7 @@ trait CassandraAwaiter {
       Failure( CassandraWriterException(s"Handled TimeoutException. Pausing...", ex) )
     case ex: UnauthorizedException =>
       log.error(s"Encountered UnauthorizedException. $ex\n${SST(ex)}")
-      throw new CassandraWriterException("Streams application not authorized to modify table. Please check your authentication settings", ex)
+      throw ex
     case e: Throwable =>
       log.error(s"Error awaiting futures$e\n${SST(e)}")
       Failure( CassandraWriterException(s"Error awaiting futures", e) )

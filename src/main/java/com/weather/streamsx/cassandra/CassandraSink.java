@@ -1,5 +1,6 @@
 package com.weather.streamsx.cassandra;
 
+import com.datastax.driver.core.exceptions.UnauthorizedException;
 import com.ibm.streams.operator.AbstractOperator;
 import com.ibm.streams.operator.OperatorContext;
 import com.ibm.streams.operator.StreamingInput;
@@ -102,6 +103,10 @@ public class CassandraSink extends AbstractOperator {
             try{
                 impl.insertTuple(tuple);
                 if(successes != null) successes.increment();
+            }
+            catch(UnauthorizedException ue) {
+                if(failures != null) failures.increment();
+                throw ue;
             }
             catch(Exception e) {
                 if(failures != null) failures.increment();

@@ -1,6 +1,7 @@
 package com.weather.streamsx.cassandra
 
 import com.datastax.driver.core.BoundStatement
+import com.datastax.driver.core.exceptions.UnauthorizedException
 import com.ibm.streams.operator.Tuple
 import com.weather.analytics.zooklient.ZooKlient
 import com.weather.streamsx.cassandra.config.{NullValueConfig, CassSinkClientConfig, PrimitiveTypeConfig}
@@ -55,7 +56,9 @@ class CassandraSinkImpl(cfg: CassSinkClientConfig, connector: CassandraConnector
       val bs: BoundStatement = TupleToStatement(tuple, tbs.get, cfg, nullMapValues)
       logFailure(awaitOne()(connector.session.executeAsync(bs)))
       log.trace("Tuple inserted sucessfully!")
-    } catch { case e: Throwable => throw new CassandraWriterException(s"Failed to write tuple to Cassandra. \n ${SST(e)}", e) }
+    } catch {
+      case u: UnauthorizedException => throw u
+      case e: Throwable => throw new CassandraWriterException(s"Failed to write tuple to Cassandra. \n ${SST(e)}", e) }
   }
 
   def shutdown(): Unit = {
