@@ -6,10 +6,11 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 #Table of Contents
 
-- [Version 1.2](#version-12)
-  - [Coming in Future Versions](#coming-in-future-versions)
-    - [Future Functionality](#future-functionality)
-    - [Documentation To-Dos](#documentation-to-dos)
+- [Cassandra Sink Version 1.3.0](#cassandra-sink-version-130)
+  - [Changes](#changes)
+  - [Supported Versions](#supported-versions)
+  - [Data Types](#data-types)
+    - [Additional documentation](#additional-documentation)
 - [Installation](#installation)
   - [Using the Distribution](#using-the-distribution)
   - [Building From Source](#building-from-source)
@@ -24,28 +25,69 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Version 1.2
+# Cassandra Sink Version 1.3.0
 
-This version fixes a bug in the caching logic.
+## Changes
+- Bug fixes  
+- Better exception throwing
+  - Operator will now throw an error and fail to create if it can't connect to Cassandra  
+  - Operator will allow you not to have null values in a znode, but will throw errors if a znode is specified and it can't find your znode or decode your json  
+- Unit tests
 
-## Coming in Future Versions
+## Supported Versions
+**Streams Version:** 4.0.0+
+**Cassandra Version:** 2.0, 2.1 (these releases use CQL 3.1)
 
-### Future Functionality
-- Proper unit tests
+## Data Types
 
-### Documentation To-Dos
-- create a table showing SPL types and their corresponding Cassandra types
-- include a section about Artifactory
+SPL Type            | Support Status | CQL 3.1 Type | 
+--------            | -------------- | -----------  |
+boolean             | Supported      | boolean |
+enum	            | Not supported  | |
+int8	            | Supported      | int\* |
+int16	            | Supported      | int\* |
+int32	            | Supported      | int |
+int64	            | Supported      | bigint |
+uint8	            | Supported      | int\* |
+uint16	            | Supported      | int\* |
+uint32	            | Supported      | int |
+uint64	            | Supported      | bigint |
+float32	            | Supported      | float |
+float64	            | Supported      | double |
+decimal32	        | Supported      | decimal |
+decimal64	        | Supported      | decimal |
+decimal128	        | Supported      | decimal |
+complex32	        | Not supported  | |
+complex64	        | Not supported  | |
+timestamp	        | Not supported  | \*\*\* |
+rstring	            | Supported      | varchar |
+ustring	            | Supported      | varchar |
+blob     	        | Not supported  | |
+xml	                | Experimental   | varchar\*\*|
+list\<T\>	            | Supported      | list<CQL equivalent> |
+bounded list type	| Supported      | list\<CQL equivalent\> |
+set\<T\>          	| Supported      | set\<CQL equivalent\>  |
+bounded set type	| Supported      | set\<CQL equivalent\>  |
+map\<K,V\>        	| Supported      | map\<CQL K equivalent, CQL V equivalent\> |
+bounded map type	| Supported      | map\<CQL K equivalent, CQL V equivalent\> |
+tuple\<T name, ...\>  | Not supported  | |
 
+\* CQL 3.3 has support for bytes and shorts, however it is not supported by this operator at this time.
+
+\*\* XML support is not fully tested. There is no native XML type in C\* so XML is brought in as a String.
+
+\*\*\* Consider using a unix timestamp as a uint64.
+
+### Additional documentation
+[Java equivalents for SPL types](http://www.ibm.com/support/knowledgecenter/SSCRJU_4.1.1/com.ibm.streams.dev.doc/doc/workingwithspltypes.html)
+[CQL 3.1 data type reference](https://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html)
 
 # Installation
 
 ## Using the Distribution
 1. Download the tar to your VM
 2. Untar the tar
-3. Add the extracted tar as a toolkit location in Streams Studio
-
-For more detailed instructions on adding external toolkits, see this page: <https://github.com/TheWeatherCompany/analytics-streams-docs/blob/master/adding-a-toolkit.md> 
+3. Add the extracted tar as a toolkit location in Streams Studio. For more information, see [these instructions](https://github.com/TheWeatherCompany/analytics-streams-docs/blob/master/adding-a-toolkit.md).
 
 ## Building From Source
 
@@ -62,6 +104,8 @@ sbt ctk toolkit
 Refresh the toolkit location in Streams Studio, and you should be good to go!
 
 ### Installing Toolkit From Scratch
+
+You will need access to the Artifactory Analytics-Virtual repo to fetch dependencies on analytics-zooklient and streamsx.util
 
 1. Install SBT on your virtual machine. See instructions for RedHat here: <http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Linux.html>
 2. Clone this repo somewhere convenient on the filesystem of your virtual machine. It doesn't need to be in your Eclipse workspace
@@ -188,9 +232,7 @@ This gist shows a sample SPL file using the new ZooKeeper based configuration as
 
 ## Null Value Configuration
 
-In previous versions, you had to build a map of all your fields to booleans and pass it in with every tuple. No more!!
-
-There are now two ZooKeeper configuration files. 
+There are two ZooKeeper configuration files. 
 One of them describes the connection info for Cassandra, the other describes the values for each field that will be seen as "null",
 meaning that the value will not be present in the prepared statement for Cassandra.
 
@@ -199,3 +241,5 @@ If fields do not have a null value configured, they are assumed to always be val
 Empty collections (maps, lists, sets) will automatically be written as nulls, no need to configure that.
 
 See [the gist](https://gist.github.com/ecurtin/2f0baf2d238dddbc461d3594ec3988e1) for examples of null value configuration for the sample application.
+
+If you do not wish to configure null values, you can refrain from specifying the null value znode name in SPL or specify it as `""`.  

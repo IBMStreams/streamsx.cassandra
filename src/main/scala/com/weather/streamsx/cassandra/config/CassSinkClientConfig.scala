@@ -1,6 +1,5 @@
 package com.weather.streamsx.cassandra.config
 
-import java.net.InetAddress
 import java.security.KeyStore
 import javax.net.ssl.{KeyManagerFactory, SSLContext}
 

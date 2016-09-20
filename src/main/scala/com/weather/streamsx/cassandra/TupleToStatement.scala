@@ -55,8 +55,8 @@ object TupleToStatement {
   def getValueFromTuple(tuple: Tuple, attr: Attribute): (String, Any) = {
     val value: Any = attr.getType.getLanguageType match {
       case "boolean" => tuple.getBoolean(attr.getIndex)
-      case "int8"  | "uint8" => tuple.getByte(attr.getIndex)
-      case "int16" | "uint16" => tuple.getShort(attr.getIndex)
+      case "int8"  | "uint8" => tuple.getByte(attr.getIndex).toInt   //TODO C* 3.0+ has support for different data types for byte and short
+      case "int16" | "uint16" => tuple.getShort(attr.getIndex).toInt //TODO C* 3.0+ has support for different data types for byte and short
       case "int32" | "uint32" => tuple.getInt(attr.getIndex)
       case "int64" | "uint64" => tuple.getLong(attr.getIndex)
       case "float32" => tuple.getFloat(attr.getIndex)
