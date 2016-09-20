@@ -172,7 +172,22 @@ $
 
 ZooKeeper is already running as part of streams on your virtual machine, so you shouldn't need to start it up.
 
-First, see if the correct variable is set for for your ZK connect string
+You'll need to install zookeepercli to interact with zookeeper. Download the rpm file using wget, and install using yum.
+
+```
+cd ~/Downloads
+wget https://github.com/outbrain/zookeepercli/releases/download/v1.0.10/zookeepercli-1.0.10-1.x86_64.rpm
+sudo yum install zookeepercli-1.0.10-1.x86_64.rpm
+```
+
+You'll know it has worked successfully if you run `zookeepercli` and get the following output:
+
+```
+$ zookeepercli
+2016-08-16 13:14:48 FATAL Expected comma delimited list of servers via --servers
+```
+
+Next, see if the correct variable is set for for your ZK connect string
 
 ```
 $ echo $STREAMS_ZKCONNECT
