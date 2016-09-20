@@ -7,7 +7,7 @@ composite CassandraTest {
 		// The names of the fields in Greeting need to match the fieldnames in the Cassandra table _exactly_
 		stream<rstring greeting, uint64 count, list<int32> testList, set<int32> testSet, map<int32, boolean> testMap, int32 nInt> Greeting = Beacon() {
 			param
-				iterations: 1000000u; //generate 100 tuples
+				iterations: 1000000u; //generate 1000000 tuples
 				period : 0.5; //generate a tuple every 0.5 seconds
 			output
 				Greeting:

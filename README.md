@@ -139,14 +139,38 @@ The cql there matches what I did for my test project.
         16 | Hello Streams! | null | [1, 2, 3] | {7: True, 8: False, 9: True} | {4, 5, 6}
         ... etc etc
     ```
+
+### Running Unit Tests
+
+Unit tests do not run automatically in the build. They must be run on the VM because of dependencies on Streams libraries.
+
+If you want to run the tests, first get Cassandra running on your host machine. 
+See the next section, Setting Up Cassandra on OSX for more info.
+You will need to set up very basic authentication and authorization.
+
+Before starting Cassandra, in your `cassandra.yaml` change your authentication and authorization settings to the following:
+
+```
+authenticator: PasswordAuthenticator
+authorizer: org.apache.cassandra.auth.CassandraAuthorizer
+```
+
+The default superuser login with these settings, unless deliberately changed, is username `cassandra`, password `cassandra`. 
+
+The Cassandra seeds used in the tests are `127.0.0.1` and `10.0.2.2`
+
+Now in your VM, run `sbt test`.
     
-# Configuration and Setup
+# Configuration and Setup for Sample Project
 
 ## Setting Up Cassandra on OSX
 
 Assuming that your host machine is OSX!
 
-I store my cassandra files in `/opt` but yours may be elsewhere.
+**NOTE** Some modifications to `cassandra-cfg.json` and `setupCassandra.sh` will be necessary if you changed your `cassandra.yaml` to use password authentication. 
+This tutorial will assume that you are using the standard AllowAll authentication, and that if you changed your settings you probably know enough about what you're doing to figure out the rest :)
+
+On OSX, I store my cassandra files in `/opt` but yours may be elsewhere.
 
 First, start Cassandra if it's not already started.
 ```
@@ -230,11 +254,19 @@ $ zookeepercli --servers localhost:21810 -c get /streamsx.cassandra/null_values
 
 This gist shows a sample SPL file using the new ZooKeeper based configuration as well as samples of the configuration: <https://gist.github.com/ecurtin/2f0baf2d238dddbc461d3594ec3988e1> 
 
-## Null Value Configuration
+## Configuring Znodes
 
 There are two ZooKeeper configuration files. 
 One of them describes the connection info for Cassandra, the other describes the values for each field that will be seen as "null",
 meaning that the value will not be present in the prepared statement for Cassandra.
+
+See the `scripts` folder in this repo or the gist above for examples.
+
+Both znodes must be uploaded to Zookeeper as `/streamsx.cassandra/whatever-you-node-name-is`. When specifying the node names in SPL,
+you do not specify the `/streamsx.cassandra` prefix, only `/whatever-you-node-name-is`
+
+
+## Null Value Configuration
 
 If fields do not have a null value configured, they are assumed to always be valid.
 
