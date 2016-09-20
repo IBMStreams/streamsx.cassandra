@@ -29,6 +29,8 @@
 
 # Cassandra Sink Version 1.3.0
 
+Due to a wealth of bug fixes and stability changes, it is **strongly** recommended that all users upgrade to this version from previous versions.
+
 ## Changes
 - Bug fixes  
 - Better exception throwing
