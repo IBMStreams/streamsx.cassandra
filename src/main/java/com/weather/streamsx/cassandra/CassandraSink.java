@@ -13,7 +13,6 @@ import com.ibm.streams.operator.model.Parameter;
 import com.ibm.streams.operator.model.PrimitiveOperator;
 import com.ibm.streams.operator.metrics.*;
 
-import org.apache.commons.logging.Log;
 import org.apache.log4j.Logger;
 
 import java.io.PrintWriter;

@@ -1,10 +1,6 @@
 package com.weather.streamsx.cassandra
 
-import com.weather.streamsx.cassandra.connection.ZKClient
 import com.weather.streamsx.cassandra.mock.MockZK
-import org.apache.curator.framework.{CuratorFrameworkFactory, CuratorFramework}
-import org.apache.curator.retry.RetryOneTime
-import org.apache.curator.test.TestingServer
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfterAll, Matchers, FlatSpec}

@@ -1,6 +1,6 @@
 package com.weather.streamsx.cassandra
 
-import com.datastax.driver.core.{PlainTextAuthProvider, ConsistencyLevel, AuthProvider}
+import com.datastax.driver.core.{PlainTextAuthProvider, ConsistencyLevel}
 import com.ibm.streams.operator.{OutputTuple, Tuple}
 import com.weather.streamsx.cassandra.config.CassSinkClientConfig
 import com.weather.streamsx.cassandra.connection.CassandraConnector
