@@ -23,15 +23,11 @@ object CassandraSinkImpl {
       val zkCli: ZooKlient = ZKClient(connectStr = connectStr)
       val clientConfig = PrimitiveTypeConfig.read(zkCli, connectionConfigZNode) match {
         case Some(cc) => CassSinkClientConfig(cc)
-        case _ => throw new CassandraWriterException(s"Failed to getData from $connectionConfigZNode", new Exception); null
-      }
-      val nullMapValues = NullValueConfig(zkCli, nullMapZnode) match {
-        case Some(map) => map
-        case _ => Map.empty[String, Any]
+        case _ => throw CassandraWriterException(s"Failed to getData from $connectionConfigZNode"); null
       }
       val cassConnector = new CassandraConnector(clientConfig)
-      new CassandraSinkImpl(clientConfig, cassConnector, nullMapValues)
-    } catch { case e: Exception => throw new CassandraWriterException(s"Failed to create Cassandra client\n${SST(e)})", e); null }
+      new CassandraSinkImpl(clientConfig, cassConnector, NullValueConfig(zkCli, nullMapZnode))
+    } catch { case e: Exception => throw CassandraWriterException(s"Failed to create Cassandra client\n${SST(e)})", e); null }
   }
 }
 
@@ -41,27 +37,22 @@ class CassandraSinkImpl(cfg: CassSinkClientConfig, connector: CassandraConnector
   override protected val log = org.slf4j.LoggerFactory.getLogger(getClass)
   override protected val writeOperationTimeout = connector.writeOperationTimeout
 
-  private var tbs: Option[TupleBasedStructures] = None
+  private var tbs: TupleBasedStructures = _
+  private def init(tuple: Tuple): Unit = if (tbs == null) tbs = new TupleBasedStructures(tuple, connector.session, cfg)
 
   def insertTuple(tuple: Tuple): Unit = {
     log.trace("Inserting tuple...")
-
-    tbs match {
-      case None => tbs = Some(new TupleBasedStructures(tuple, connector.session, cfg))
-      case _ => () // do nothing
-    }
+    init(tuple)
 
     //todo catch auth exceptions in logFailure
     try{
-      val bs: BoundStatement = TupleToStatement(tuple, tbs.get, cfg, nullMapValues)
+      val bs: BoundStatement = TupleToStatement(tuple, tbs, cfg, nullMapValues)
       logFailure(awaitOne()(connector.session.executeAsync(bs)))
       log.trace("Tuple inserted sucessfully!")
     } catch {
       case u: UnauthorizedException => throw u
-      case e: Throwable => throw new CassandraWriterException(s"Failed to write tuple to Cassandra. \n ${SST(e)}", e) }
+      case e: Throwable => throw CassandraWriterException(s"Failed to write tuple to Cassandra. \n ${SST(e)}", e) }
   }
 
-  def shutdown(): Unit = {
-    connector.shutdown()
-  }
+  def shutdown(): Unit = connector.shutdown()
 }
