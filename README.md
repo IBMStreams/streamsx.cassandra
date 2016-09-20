@@ -16,11 +16,13 @@
   - [Building From Source](#building-from-source)
     - [Updating To New Version](#updating-to-new-version)
     - [Installing Toolkit From Scratch](#installing-toolkit-from-scratch)
-- [Configuration and Setup](#configuration-and-setup)
+    - [Running Unit Tests](#running-unit-tests)
+- [Configuration and Setup for Sample Project](#configuration-and-setup-for-sample-project)
   - [Setting Up Cassandra on OSX](#setting-up-cassandra-on-osx)
   - [Setting Up ZooKeeper on Your Virtual Machine](#setting-up-zookeeper-on-your-virtual-machine)
 - [Usage](#usage)
   - [Sample SPL Gists](#sample-spl-gists)
+  - [Configuring Znodes](#configuring-znodes)
   - [Null Value Configuration](#null-value-configuration)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
