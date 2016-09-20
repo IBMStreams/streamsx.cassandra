@@ -3,6 +3,7 @@ package com.weather.streamsx.cassandra
 import com.weather.analytics.zooklient.ZooKlient
 import com.weather.streamsx.cassandra.config.NullValueConfig
 import com.weather.streamsx.cassandra.connection.ZKClient
+import com.weather.streamsx.cassandra.exception.CassandraWriterException
 import com.weather.streamsx.cassandra.mock.MockZK
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -32,6 +33,17 @@ class NullValueConfigTest extends FlatSpec with Matchers with BeforeAndAfterAll{
       |}
     """.stripMargin
 
+  val invalidCfg =
+    """
+      |{
+      |  a : 1,
+      |  "b" : ""
+      |  "c" : -2.2
+      |}
+    """.stripMargin
+
+  val emptyCfg = "{}"
+
   val json:Option[Any] = JSON.parseFull(cfg)
   val map:Map[String,Any] = json.get.asInstanceOf[Map[String, Any]]
 
@@ -52,4 +64,16 @@ class NullValueConfigTest extends FlatSpec with Matchers with BeforeAndAfterAll{
     NullValueConfig(zkCli, "/test") shouldBe compareMap
   }
 
+  it should "throw an exception if it can't parse the json" in {
+    mockZK.createZNode("/testtwo", invalidCfg)
+    val zkCli: ZooKlient = ZKClient(connectStr = Some(mockZK.connectString))
+    a [CassandraWriterException] should be thrownBy NullValueConfig(zkCli, "/testtwo")
+  }
+
+  it should "do something reasonable with empty JSON" in {
+    mockZK.createZNode("/testthree", emptyCfg)
+    val zkCli: ZooKlient = ZKClient(connectStr = Some(mockZK.connectString))
+    val x = NullValueConfig(zkCli, "/testthree")
+    x shouldBe Map.empty[String, Any]
+  }
 }
