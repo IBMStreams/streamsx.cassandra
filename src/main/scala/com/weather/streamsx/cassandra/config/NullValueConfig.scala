@@ -8,7 +8,10 @@ import scala.util.parsing.json.JSON
 
 object NullValueConfig {
   private def mkMap(zkCli: ZooKlient, znodeName: String): Map[String, Any] = zkCli.readRawString(znodeName) match {
-    case Some(str) => JSON.parseFull(str).asInstanceOf[Map[String, Any]]
+    case Some(str) => {
+      val x: Any = JSON.parseFull(str).getOrElse(throw new Exception("Unable to parse null value JSON"))
+      x.asInstanceOf[Map[String, Any]]
+    }
     case _ => throw CassandraWriterException(s"Failed to get data from ZNode $znodeName")
   }
 

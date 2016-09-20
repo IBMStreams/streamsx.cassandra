@@ -1,5 +1,8 @@
 package com.weather.streamsx.cassandra
 
+import com.weather.analytics.zooklient.ZooKlient
+import com.weather.streamsx.cassandra.config.NullValueConfig
+import com.weather.streamsx.cassandra.connection.ZKClient
 import com.weather.streamsx.cassandra.mock.MockZK
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -43,4 +46,10 @@ class NullValueConfigTest extends FlatSpec with Matchers with BeforeAndAfterAll{
     val mizzap = JSON.parseFull(mockZK.getZNode("/test")).get.asInstanceOf[Map[String, Any]]
     mizzap should equal(compareMap)
   }
+
+  "NullValueConfig" should "work" in {
+    val zkCli: ZooKlient = ZKClient(connectStr = Some(mockZK.connectString))
+    NullValueConfig(zkCli, "/test") shouldBe compareMap
+  }
+
 }
