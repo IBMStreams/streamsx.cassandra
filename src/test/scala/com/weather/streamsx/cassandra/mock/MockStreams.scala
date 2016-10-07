@@ -47,7 +47,7 @@ object MockStreams {
     else i
   }
 
-  // kv = key value pair = (fieldname, spltype)
+  // kv = a tuple representing a key value pair = (fieldname, spltype)
   def assignAValue(kv: (String, String), t: OutputTuple): (OutputTuple, (String, Any)) = kv._2 match {
     case l: String if l.startsWith("list") => setStringList(l, t, kv._1)
     case s: String if s.startsWith("set") => setStringSet(s, t, kv._1)
@@ -69,11 +69,7 @@ object MockStreams {
   }
 
   def setStringList(l: String, t: OutputTuple, fieldName: String): (OutputTuple, (String, Any)) = {
-//    val cool = new util.ArrayList[Int]()
     val cool = List(1, 2, 3).asJava
-//    cool.add(1)
-//    cool.add(2)
-//    cool.add(3)
     t.setList(fieldName, cool)
     (t, (fieldName, cool))
   }
@@ -94,8 +90,6 @@ object MockStreams {
     (t, (fieldName, m))
   }
 }
-
-
 
 
 class MockStreams(splStyleTupleStructureDeclaration: String, zkConnectString: String) {

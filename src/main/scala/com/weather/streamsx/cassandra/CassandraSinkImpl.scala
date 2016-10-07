@@ -7,7 +7,7 @@ import com.weather.analytics.zooklient.ZooKlient
 import com.weather.streamsx.cassandra.config.{NullValueConfig, CassSinkClientConfig, PrimitiveTypeConfig}
 import com.weather.streamsx.cassandra.connection.{ZKClient, CassandraConnector, CassandraAwaiter}
 import com.weather.streamsx.cassandra.exception.CassandraWriterException
-import com.weather.streamsx.util.{StringifyStackTrace => SST}
+import com.weather.streamsx.cassandra.util.{StringifyStackTrace => SST}
 
 object CassandraSinkImpl {
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)

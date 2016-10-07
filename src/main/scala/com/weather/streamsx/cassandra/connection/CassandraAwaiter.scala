@@ -5,7 +5,7 @@ import java.util.concurrent.{TimeUnit, TimeoutException}
 import com.datastax.driver.core.exceptions.{UnauthorizedException, NoHostAvailableException, UnavailableException}
 import com.datastax.driver.core.{ResultSet, ResultSetFuture}
 import com.weather.streamsx.cassandra.exception.CassandraWriterException
-import com.weather.streamsx.util.{StringifyStackTrace => SST}
+import com.weather.streamsx.cassandra.util.{StringifyStackTrace => SST}
 
 import scalaz._
 
