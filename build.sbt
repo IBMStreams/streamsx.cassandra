@@ -7,6 +7,7 @@ scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 compileOrder in Compile := CompileOrder.ScalaThenJava
 
+val circeVersion           = "0.3.0"
 val ibmStreamsVersion      = "4.1.0.0"
 val jodaTimeVersion        = "2.9.4"
 val cassandraDriverVersion = "2.1.10.2"
@@ -17,6 +18,7 @@ val scalatestVersion       = "2.2.4"
 val scalazVersion          = "7.1.2"
 val slf4jVersion           = "1.7.12"
 val streamsOperatorVersion = "4.1.0.0"
+val curatorVersion         = "2.4.1"
 val zooKlientVersion       = "0.3.1-RELEASE"
 val streamsxUtilVersion    = "0.2.5-RELEASE"
 
@@ -34,7 +36,10 @@ libraryDependencies ++= Seq(
     ExclusionRule(organization = "com.google.guava")
     ),
   "com.ibm"                      % "streams.operator"      % streamsOperatorVersion  % "provided",
-  "com.weather"                 %% "analytics-zooklient"   % zooKlientVersion,
+  "io.circe"                    %% "circe-core"            % circeVersion,
+  "io.circe"                    %% "circe-generic"         % circeVersion,
+  "io.circe"                    %% "circe-jawn"            % circeVersion,
+  "org.apache.curator"           % "curator-framework"     % curatorVersion,
   "org.scalaz"                  %% "scalaz-core"           % scalazVersion,
   "org.apache.logging.log4j"    % "log4j-api"              % log4jVersion,
   "org.slf4j"                   % "slf4j-api"              % slf4jVersion,

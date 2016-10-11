@@ -1,6 +1,5 @@
 package com.weather.streamsx.cassandra
 
-import com.weather.analytics.zooklient.ZooKlient
 import com.weather.streamsx.cassandra.config.NullValueConfig
 import com.weather.streamsx.cassandra.connection.ZKClient
 import com.weather.streamsx.cassandra.exception.CassandraWriterException
@@ -60,19 +59,19 @@ class NullValueConfigTest extends FlatSpec with Matchers with BeforeAndAfterAll{
   }
 
   "NullValueConfig" should "work" in {
-    val zkCli: ZooKlient = ZKClient(connectStr = Some(mockZK.connectString))
+    val zkCli: zooklient.ZooKlient = ZKClient(connectStr = Some(mockZK.connectString))
     NullValueConfig(zkCli, "/test") shouldBe compareMap
   }
 
   it should "throw an exception if it can't parse the json" in {
     mockZK.createZNode("/testtwo", invalidCfg)
-    val zkCli: ZooKlient = ZKClient(connectStr = Some(mockZK.connectString))
+    val zkCli: zooklient.ZooKlient = ZKClient(connectStr = Some(mockZK.connectString))
     a [CassandraWriterException] should be thrownBy NullValueConfig(zkCli, "/testtwo")
   }
 
   it should "do something reasonable with empty JSON" in {
     mockZK.createZNode("/testthree", emptyCfg)
-    val zkCli: ZooKlient = ZKClient(connectStr = Some(mockZK.connectString))
+    val zkCli: zooklient.ZooKlient = ZKClient(connectStr = Some(mockZK.connectString))
     val x = NullValueConfig(zkCli, "/testthree")
     x shouldBe Map.empty[String, Any]
   }

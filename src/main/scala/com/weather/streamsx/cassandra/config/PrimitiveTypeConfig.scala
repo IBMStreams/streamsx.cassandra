@@ -1,6 +1,6 @@
 package com.weather.streamsx.cassandra.config
 
-import com.weather.analytics.zooklient.ZooKlient
+import com.weather.streamsx.cassandra.zooklient.ZooKlient
 import io.circe._
 import io.circe.generic.semiauto._
 

@@ -1,6 +1,6 @@
 package com.weather.streamsx.cassandra.config
 
-import com.weather.analytics.zooklient.ZooKlient
+import com.weather.streamsx.cassandra.zooklient.ZooKlient
 import com.weather.streamsx.cassandra.exception.CassandraWriterException
 import scala.util.parsing.json.JSON
 
