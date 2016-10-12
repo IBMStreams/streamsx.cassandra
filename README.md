@@ -1,4 +1,4 @@
-# CassandraSink
+# streamsx.cassandra
 
 **NOTE: tuple field names need to match the field names in your Cassandra table EXACTLY.** 
 
@@ -269,7 +269,7 @@ See the `scripts` folder in this repo or the gist above for examples.
 Both znodes must be uploaded to Zookeeper as `/streamsx.cassandra/whatever-you-node-name-is`. When specifying the node names in SPL,
 you do not specify the `/streamsx.cassandra` prefix, only `/whatever-you-node-name-is`
 
-
+ 
 ## Null Value Configuration
 
 If fields do not have a null value configured, they are assumed to always be valid.
@@ -279,3 +279,12 @@ Empty collections (maps, lists, sets) will automatically be written as nulls, no
 See [the gist](https://gist.github.com/ecurtin/2f0baf2d238dddbc461d3594ec3988e1) for examples of null value configuration for the sample application.
 
 If you do not wish to configure null values, you can refrain from specifying the null value znode name in SPL or specify it as `""`.  
+
+
+## Future Work
+
+Here's what's next for streamsx.cassandra:
+
+- Support for Streams 4.2 and Cassandra 3.x  
+- Consistent Region support  
+- Cassandra read operator  
