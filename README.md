@@ -1,7 +1,5 @@
 # streamsx.cassandra
 
-**NOTE: tuple field names need to match the field names in your Cassandra table EXACTLY.** 
-
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 #Table of Contents
@@ -26,7 +24,6 @@
   - [Configuring Znodes](#configuring-znodes)
   - [Null Value Configuration](#null-value-configuration)
   - [Future Work](#future-work)
-
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Description
@@ -42,6 +39,8 @@ Future operators may include
 
 # Cassandra Sink
 
+**IMPORTANT NOTE: tuple field names in Streams need to match the field names in your Cassandra table _EXACTLY_, including case** 
+
 Due to a wealth of bug fixes and stability changes, it is **strongly** recommended that all users upgrade to version 1.3.0 from previous versions.
 
 ## Changes
@@ -52,8 +51,8 @@ Due to a wealth of bug fixes and stability changes, it is **strongly** recommend
 - Unit tests
 
 ## Supported Versions
-**Streams Version:** 4.0.0+
-**Cassandra Version:** 2.0, 2.1 (these releases use CQL 3.1)
+**Streams Version:** 4.0.0+  
+**Cassandra Version:** 2.0, 2.1 (these releases use CQL 3.1)  
 
 ## Data Types
 
@@ -108,6 +107,12 @@ tuple\<T name, ...\>  | Not supported  | |
 
 ## Building From Source
 
+All build instructions here are tailored towards the following setup:
+
+- Host machine running OSX  
+- Cassandra running locally on host machine  
+- Streams QSE VM running on VirtualBox or similar  
+
 ### Updating To New Version
 
 If you have already gone through the install from scratch instructions below and just need the new version,
@@ -122,7 +127,7 @@ Refresh the toolkit location in Streams Studio, and you should be good to go!
 
 ### Installing Toolkit From Scratch
 
-You will need access to the Artifactory Analytics-Virtual repo to fetch dependencies on analytics-zooklient and streamsx.util
+Your "virtual machine" in this context is the Streams QSE VM. These instructions were written for Streams 4.1.0 and 4.1.1, they have not been tested on 4.2.2.
 
 1. Install SBT on your virtual machine. See instructions for RedHat here: <http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Linux.html>
 2. Clone this repo somewhere convenient on the filesystem of your virtual machine. It doesn't need to be in your Eclipse workspace
@@ -299,6 +304,6 @@ If you do not wish to configure null values, you can refrain from specifying the
 Here's what's next for streamsx.cassandra:
 
 - Support for Streams 4.2 and Cassandra 3.x  
-- Utilization of Streams 4.2 support for direct ZK integration vs our homebrewed ZK connection system.
+- Utilization of Streams 4.2 support for direct ZK integration vs our homebrewed ZK connection system.  
 - Consistent Region support  
 - Cassandra read operator  
