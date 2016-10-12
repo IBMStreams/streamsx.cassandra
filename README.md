@@ -6,7 +6,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 #Table of Contents
 
-- [Cassandra Sink Version 1.3.0](#cassandra-sink-version-130)
+- [Description](#description)
+- [Cassandra Sink](#cassandra-sink)
   - [Changes](#changes)
   - [Supported Versions](#supported-versions)
   - [Data Types](#data-types)
@@ -24,12 +25,24 @@
   - [Sample SPL Gists](#sample-spl-gists)
   - [Configuring Znodes](#configuring-znodes)
   - [Null Value Configuration](#null-value-configuration)
+  - [Future Work](#future-work)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Cassandra Sink Version 1.3.0
+# Description
 
-Due to a wealth of bug fixes and stability changes, it is **strongly** recommended that all users upgrade to this version from previous versions.
+This is a toolkit containing operators that connect IBM Infosphere Streams to Apache Cassandra.
+
+Currently this toolkit contains only one operator, a sink for writing Streams tuples to a Cassandra table.
+
+Future operators may include
+
+- A source operator for reading from Cassandra  
+- An analytic operator for writing to Cassandra and returning a status, such as a message ID for a message that can now be deleted  
+
+# Cassandra Sink
+
+Due to a wealth of bug fixes and stability changes, it is **strongly** recommended that all users upgrade to version 1.3.0 from previous versions.
 
 ## Changes
 - Bug fixes  
@@ -76,7 +89,7 @@ map\<K,V\>        	| Supported      | map\<CQL K equivalent, CQL V equivalent\> 
 bounded map type	| Supported      | map\<CQL K equivalent, CQL V equivalent\> |
 tuple\<T name, ...\>  | Not supported  | |
 
-\* CQL 3.3 has support for bytes and shorts, however it is not supported by this operator at this time.
+\* CQL 3.3 has support for bytes and shorts, this functionality will be utilized in the future.
 
 \*\* XML support is not fully tested. There is no native XML type in C\* so XML is brought in as a String.
 
@@ -286,5 +299,6 @@ If you do not wish to configure null values, you can refrain from specifying the
 Here's what's next for streamsx.cassandra:
 
 - Support for Streams 4.2 and Cassandra 3.x  
+- Utilization of Streams 4.2 support for direct ZK integration vs our homebrewed ZK connection system.
 - Consistent Region support  
 - Cassandra read operator  
