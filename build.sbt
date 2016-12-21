@@ -2,13 +2,13 @@ import scala.language.postfixOps // <- making IntelliJ hush about the ! bash com
 
 name := "streamsx.cassandra"
 organization := "com.weather"
-version := "1.3.0-RELEASE"
+version := "2.0.0-SNAPSHOT"
 scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 compileOrder in Compile := CompileOrder.ScalaThenJava
 
 val circeVersion           = "0.3.0"
-val ibmStreamsVersion      = "4.1.0.0"
+val ibmStreamsVersion      = "4.2.0.0"
 val jodaTimeVersion        = "2.9.4"
 val cassandraDriverVersion = "2.1.10.2"
 val junitVersion           = "4.10"
@@ -23,10 +23,6 @@ val zooKlientVersion       = "0.3.1-RELEASE"
 val streamsxUtilVersion    = "0.2.5-RELEASE"
 
 parallelExecution in Test := false
-
-resolvers ++= Seq(
-  "Artifactory" at "https://repo.artifacts.weather.com/analytics-virtual"
-)
 
 libraryDependencies ++= Seq(
   "com.datastax.cassandra"       % "cassandra-driver-core" % cassandraDriverVersion
