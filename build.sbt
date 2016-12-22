@@ -17,7 +17,6 @@ val scalacheckVersion      = "1.11.4"
 val scalatestVersion       = "2.2.4"
 val scalazVersion          = "7.1.2"
 val slf4jVersion           = "1.7.12"
-val streamsOperatorVersion = "4.1.0.0"
 val curatorVersion         = "2.4.1"
 val zooKlientVersion       = "0.3.1-RELEASE"
 val streamsxUtilVersion    = "0.2.5-RELEASE"
@@ -31,7 +30,7 @@ libraryDependencies ++= Seq(
     ExclusionRule(organization = "io.netty"),
     ExclusionRule(organization = "com.google.guava")
     ),
-  "com.ibm"                      % "streams.operator"      % streamsOperatorVersion  % "provided",
+  "com.ibm"                      % "streams.operator"      % ibmStreamsVersion  ,
   "io.circe"                    %% "circe-core"            % circeVersion,
   "io.circe"                    %% "circe-generic"         % circeVersion,
   "io.circe"                    %% "circe-jawn"            % circeVersion,
