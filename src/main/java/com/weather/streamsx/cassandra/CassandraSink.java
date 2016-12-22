@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Map;
 
 /**
  * Class for an operator that consumes tuples and does not produce an output stream.
@@ -45,19 +46,22 @@ import java.io.StringWriter;
 })
 public class CassandraSink extends AbstractOperator {
 
-    Logger log = Logger.getLogger(this.getClass());
+    protected Logger log = Logger.getLogger(this.getClass());
 
 
-    CassandraSinkImpl impl = null;
-    String connectionConfigZNode = null;
-    String nullMapZnode = null;
+    private CassandraSinkImpl impl = null;
+    private String connectionCfgObject = null;
+    private String nullMapCfgObject = null;
 
-    OperatorMetrics opMetrics = null;
+    private OperatorMetrics opMetrics = null;
 
-    Metric failures = null;
-    Metric successes = null;
+    private Metric failures = null;
+    private Metric successes = null;
 
-    String zkConnectionString = null;
+    private String zkConnectionString = null;
+
+    private Map<String, String> stringConnectionCfg = null;
+    private Map<String, String> stringNullCfg = null;
 
 
     /**
@@ -79,14 +83,16 @@ public class CassandraSink extends AbstractOperator {
         successes = opMetrics.createCustomMetric("nWriteSuccesses",
                 "Number of tuples that were written to Cassandra successfully", Metric.Kind.COUNTER);
 
-        if (impl == null) {
-            if(zkConnectionString == null) {
-                impl = CassandraSinkImpl.mkWriter(connectionConfigZNode, nullMapZnode, "");
-            }
-            else{
-                impl = CassandraSinkImpl.mkWriter(connectionConfigZNode, nullMapZnode, zkConnectionString);
-            }
-        }
+        stringConnectionCfg = context.getPE().getApplicationConfiguration(connectionCfgObject);
+
+//        if (impl == null) {
+//            if(zkConnectionString == null) {
+//                impl = CassandraSinkImpl.mkWriter(connectionCfgObject, nullMapCfgObject, "");
+//            }
+//            else{
+//                impl = CassandraSinkImpl.mkWriter(connectionCfgObject, nullMapCfgObject, zkConnectionString);
+//            }
+//        }
     }
 
     /**
@@ -131,14 +137,14 @@ public class CassandraSink extends AbstractOperator {
         super.shutdown();
     }
 
-    @Parameter(name="connectionConfigZNode", description = "Name of the Znode where Cassandra connection configuration is stored")
-    public void setCfgZnode(String s) {connectionConfigZNode = s;}
+    @Parameter(name="connectionCfgObject", description = "Name of the Znode where Cassandra connection configuration is stored")
+    public void setConnectCfgObject(String s) { connectionCfgObject = s; }
 
-    @Parameter(name="nullMapZnode", description = "Name of the Znode where the map of fieldnames to the value representing null is stored", optional = true)
-    public void setNullValueZnode(String str) {nullMapZnode = str;}
+    @Parameter(name="nullMapCfgObject", description = "Name of the Znode where the map of fieldnames to the value representing null is stored", optional = true)
+    public void setNullMapCfgObject(String str) { nullMapCfgObject = str; }
 
     @Parameter(name="zkConnectionString", description = "connection string for ZooKeeper, useful for testing", optional = true)
-    public void setZKConnectionString(String s) {zkConnectionString = s;}
+    public void setZKConnectionString(String s) { zkConnectionString = s; }
 
     private String stringifyStackTrace(Exception e) {
         StringWriter sw = new StringWriter();
