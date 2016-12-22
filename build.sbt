@@ -8,7 +8,7 @@ scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 compileOrder in Compile := CompileOrder.ScalaThenJava
 
 val circeVersion           = "0.3.0"
-val ibmStreamsVersion      = "4.2.0.0"
+val ibmStreamsVersion      = "4.2.0.201608261509"
 val jodaTimeVersion        = "2.9.4"
 val cassandraDriverVersion = "2.1.10.2"
 val junitVersion           = "4.10"
@@ -30,7 +30,7 @@ libraryDependencies ++= Seq(
     ExclusionRule(organization = "io.netty"),
     ExclusionRule(organization = "com.google.guava")
     ),
-  "com.ibm"                      % "streams.operator"      % ibmStreamsVersion  ,
+//  "com.ibm"                      % "streams.operator"      % ibmStreamsVersion  % "provided",
   "io.circe"                    %% "circe-core"            % circeVersion,
   "io.circe"                    %% "circe-generic"         % circeVersion,
   "io.circe"                    %% "circe-jawn"            % circeVersion,
