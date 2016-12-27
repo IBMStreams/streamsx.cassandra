@@ -88,9 +88,9 @@ object PrimitiveTypeConfig {
     )
   }
 
-  private[cassandra] implicit val rdrDecoder: Decoder[PrimitiveTypeConfig] = deriveDecoder[PrimitiveTypeConfig]
-  private[cassandra] implicit val rdrEncoder: Encoder[PrimitiveTypeConfig] = deriveEncoder[PrimitiveTypeConfig]
-
-  def read(zkCli: ZooKlient, znode: String): Option[PrimitiveTypeConfig] = zkCli.read[PrimitiveTypeConfig](znode)
+//  private[cassandra] implicit val rdrDecoder: Decoder[PrimitiveTypeConfig] = deriveDecoder[PrimitiveTypeConfig]
+//  private[cassandra] implicit val rdrEncoder: Encoder[PrimitiveTypeConfig] = deriveEncoder[PrimitiveTypeConfig]
+//
+//  def read(zkCli: ZooKlient, znode: String): Option[PrimitiveTypeConfig] = zkCli.read[PrimitiveTypeConfig](znode)
 
 }

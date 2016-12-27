@@ -44,16 +44,17 @@ Future operators may include
 
 Due to a wealth of bug fixes and stability changes, it is **strongly** recommended that all users upgrade to version 1.3.0 from previous versions.
 
-## Changes
-- Bug fixes  
-- Better exception throwing
-  - Operator will now throw an error and fail to create if it can't connect to Cassandra  
-  - Operator will allow you not to have null values in a znode, but will throw errors if a znode is specified and it can't find your znode or decode your json  
-- Unit tests
+## Recent Changes
+* Experimental support for Streams 4.2.0
+* Using Streams Configuration Objects instead of ZK
 
 ## Supported Versions
-**Streams Version:** 4.0.0+  
-**Cassandra Version:** 2.0, 2.1 (these releases use CQL 3.1)  
+**Streams Versions:** 
+* Stable: 4.0.0, 4.1.0 (streamsx.cassandra 1.3.x)
+* *experimental* 4.2.0 (streamsx.cassandra 2.0+) 
+
+**Cassandra Versions:** 
+* Stable: 2.0, 2.1 (these versions of C\* use CQL 3.1)  
 
 ## Data Types
 

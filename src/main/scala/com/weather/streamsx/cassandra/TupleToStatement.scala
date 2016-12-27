@@ -1,28 +1,30 @@
 package com.weather.streamsx.cassandra
 
-import com.datastax.driver.core.{Session, BoundStatement}
+import com.datastax.driver.core.{BoundStatement, Session}
 import com.ibm.streams.operator.Tuple
 import com.ibm.streams.operator.Attribute
-import com.weather.streamsx.cassandra.config.CassSinkClientConfig
+import com.weather.streamsx.cassandra.config.{CassSinkClientConfig, NullValueConfig}
 import com.weather.streamsx.cassandra.exception.CassandraWriterException
-import com.ibm.streams.operator.meta.{MapType, CollectionType}
+import com.ibm.streams.operator.meta.{CollectionType, MapType}
+
 import scala.collection.immutable.BitSet
 import scalaz.Failure
 
-class TupleBasedStructures(t: Tuple, session: Session, cfg: CassSinkClientConfig) {
+class TupleBasedStructures(t: Tuple, session: Session, cfg: CassSinkClientConfig, nullValStrMap: Map[String, String]) {
   val attributeList = TupleToStatement.mkAttrList(t)
-  val indexMap = new DualHash(attributeList)
+  val indexMap = new DualHash(attributeList) // field name => int for bitset and int from bitset => field name
   val cache = new StatementCache(cfg, session, indexMap)
+  val nullValueMap: Map[String, Any] = NullValueConfig(nullValStrMap, attributeList)
 }
 
 object TupleToStatement {
 
   //TODO: Reach out to Senthil about unit testing for Streams Java operators
 
-  def apply(tuple: Tuple, tbs: TupleBasedStructures, cassCfg: CassSinkClientConfig, nullValueMap: Map[String, Any]): BoundStatement = {
+  def apply(tuple: Tuple, tbs: TupleBasedStructures, cassCfg: CassSinkClientConfig): BoundStatement = {
     val attributeList = mkAttrList(tuple)
     val valuesMap: Map[String, Any] = attributeList.map(getValueFromTuple(tuple, _)).toMap
-    mkBoundStatement(valuesMap, nullValueMap, tbs)
+    mkBoundStatement(valuesMap, tbs.nullValueMap, tbs)
   }
 
   private[cassandra] def mkBoundStatement(

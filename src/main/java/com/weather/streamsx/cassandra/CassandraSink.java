@@ -60,7 +60,7 @@ public class CassandraSink extends AbstractOperator {
 
     private String zkConnectionString = null;
 
-    private Map<String, String> stringConnectionCfg = null;
+    private Map<String, String> stringMapConnectionConfig = null;
     private Map<String, String> stringNullCfg = null;
 
 
@@ -83,7 +83,7 @@ public class CassandraSink extends AbstractOperator {
         successes = opMetrics.createCustomMetric("nWriteSuccesses",
                 "Number of tuples that were written to Cassandra successfully", Metric.Kind.COUNTER);
 
-        stringConnectionCfg = context.getPE().getApplicationConfiguration(connectionCfgObject);
+        stringMapConnectionConfig = context.getPE().getApplicationConfiguration(connectionCfgObject);
 
 //        if (impl == null) {
 //            if(zkConnectionString == null) {
