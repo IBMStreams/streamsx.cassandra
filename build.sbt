@@ -6,9 +6,10 @@ version := "2.0.0-SNAPSHOT"
 scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 compileOrder in Compile := CompileOrder.ScalaThenJava
+//unmanagedBase := baseDirectory.value / "lib"
 
 val circeVersion           = "0.3.0"
-val ibmStreamsVersion      = "4.2.0.201608261509"
+val ibmStreamsVersion      = "4.2.0.0"
 val jodaTimeVersion        = "2.9.4"
 val cassandraDriverVersion = "2.1.10.2"
 val junitVersion           = "4.10"
@@ -21,6 +22,10 @@ val curatorVersion         = "2.4.1"
 val zooKlientVersion       = "0.3.1-RELEASE"
 val streamsxUtilVersion    = "0.2.5-RELEASE"
 
+resolvers ++= Seq(
+  "Artifactory" at "https://repo.artifacts.weather.com/analytics-virtual"
+)
+
 parallelExecution in Test := false
 
 libraryDependencies ++= Seq(
@@ -30,7 +35,7 @@ libraryDependencies ++= Seq(
     ExclusionRule(organization = "io.netty"),
     ExclusionRule(organization = "com.google.guava")
     ),
-//  "com.ibm"                      % "streams.operator"      % ibmStreamsVersion  % "provided",
+  "com.ibm"                      % "streams.operator"      % ibmStreamsVersion,
   "io.circe"                    %% "circe-core"            % circeVersion,
   "io.circe"                    %% "circe-generic"         % circeVersion,
   "io.circe"                    %% "circe-jawn"            % circeVersion,
@@ -89,6 +94,8 @@ test in assembly := {}
 val toolkit = TaskKey[Unit]("toolkit", "Makes the SPL toolkit")
 toolkit <<= assembly map mkToolkit
 dist <<= dist.dependsOn(toolkit)
+
+(fullClasspath in Compile) := (fullClasspath in Compile).value ++ Seq(Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/*.jar")))
 
 (fullClasspath in Test) := (fullClasspath in Test).value ++ Seq(
   Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.install.dependency.jar")),
