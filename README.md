@@ -1,5 +1,14 @@
 # streamsx.cassandra
 
+
+---
+## Streams 4.2 Experimental Support
+
+12/29/2016: There is a pre-release available on the [releases page](https://github.com/IBMStreams/streamsx.cassandra/releases)that 
+uses Streams 4.2 Configuration objects rather than hand-curated ZooKeeper nodes. 
+
+Watch the `develop` branch for the most recent updates for Streams 4.2 support.
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 #Table of Contents

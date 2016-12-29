@@ -41,3 +41,10 @@ impl/
 toolkit.xml
 src/main/resources/etc/streams.conf
 /src/main/scala/com/weather/streamsx/cassandra/worksheets
+/com.ibm.streams.javafunctionsamples.math/
+/com.ibm.streams.javaprimitivesamples.windows/
+/com.ibm.streams.javafunctionsamples.jvm/
+/com.weather.streamsx.cassandra/
+/com.ibm.streams.javaprimitivesamples.sinks/
+/com.ibm.streams.javaprimitivesamples.operators/
+/com.ibm.streams.javaprimitivesamples.sources/
