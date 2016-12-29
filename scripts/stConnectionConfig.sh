@@ -1,6 +1,7 @@
 #! /bin/bash
 
-#localdc, authUsername, authPassword, sslKeystore, sslPassword omitted
+# localdc, authUsername, authPassword, sslKeystore, sslPassword omitted here
+# for test with local open-to-all cassandra instance
 streamtool mkappconfig \
 --property consistencyLevel=local_quorum \
 --property dateFormat=yy-MM-dd\ HH:mm:ss \
