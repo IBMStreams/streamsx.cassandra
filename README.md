@@ -6,7 +6,7 @@
 
 - [Description](#description)
 - [Cassandra Sink](#cassandra-sink)
-  - [Changes](#changes)
+  - [Recent Changes](#recent-changes)
   - [Supported Versions](#supported-versions)
   - [Data Types](#data-types)
     - [Additional documentation](#additional-documentation)
@@ -18,11 +18,10 @@
     - [Running Unit Tests](#running-unit-tests)
 - [Configuration and Setup for Sample Project](#configuration-and-setup-for-sample-project)
   - [Setting Up Cassandra on OSX](#setting-up-cassandra-on-osx)
-  - [Setting Up ZooKeeper on Your Virtual Machine](#setting-up-zookeeper-on-your-virtual-machine)
+  - [Setting Up Configuration Objects](#setting-up-configuration-objects)
 - [Usage](#usage)
-  - [Sample SPL Gists](#sample-spl-gists)
-  - [Configuring Znodes](#configuring-znodes)
-  - [Null Value Configuration](#null-value-configuration)
+  - [Sample SPL](#sample-spl)
+  - [Connection and Null Value Configuration](#connection-and-null-value-configuration)
   - [Future Work](#future-work)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
