@@ -13,6 +13,7 @@ import com.ibm.streams.operator.model.Parameter;
 import com.ibm.streams.operator.model.PrimitiveOperator;
 import com.ibm.streams.operator.metrics.*;
 
+import com.weather.streamsx.cassandra.exception.CassandraWriterException;
 import org.apache.log4j.Logger;
 
 import java.io.PrintWriter;
@@ -84,15 +85,11 @@ public class CassandraSink extends AbstractOperator {
                 "Number of tuples that were written to Cassandra successfully", Metric.Kind.COUNTER);
 
         stringMapConnectionConfig = context.getPE().getApplicationConfiguration(connectionCfgObject);
+        stringNullCfg = context.getPE().getApplicationConfiguration(nullMapCfgObject);
 
-//        if (impl == null) {
-//            if(zkConnectionString == null) {
-//                impl = CassandraSinkImpl.mkWriter(connectionCfgObject, nullMapCfgObject, "");
-//            }
-//            else{
-//                impl = CassandraSinkImpl.mkWriter(connectionCfgObject, nullMapCfgObject, zkConnectionString);
-//            }
-//        }
+        if (impl == null) {
+                impl = CassandraSinkImpl.mkWriter(stringMapConnectionConfig, stringNullCfg);
+        }
     }
 
     /**
@@ -118,6 +115,7 @@ public class CassandraSink extends AbstractOperator {
                 log.error("Failed to write tuple to Cassandra.\n"+ stringifyStackTrace(e) );
             }
         }
+        else throw CassandraWriterException.apply("The operator was not properly initialized", new Throwable());
     }
 
     /**

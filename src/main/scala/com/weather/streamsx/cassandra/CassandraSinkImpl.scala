@@ -8,18 +8,19 @@ import com.weather.streamsx.cassandra.config.{NullValueConfig, CassSinkClientCon
 import com.weather.streamsx.cassandra.connection.{ZKClient, CassandraConnector, CassandraAwaiter}
 import com.weather.streamsx.cassandra.exception.CassandraWriterException
 import com.weather.streamsx.cassandra.util.{StringifyStackTrace => SST}
+import scala.collection.JavaConverters._
 
 object CassandraSinkImpl {
   private val log = org.slf4j.LoggerFactory.getLogger(getClass)
 
   // refactor to split up the zk stuff and cassandra stuff for 6-lining
-  def mkWriter(connectionConfigMap: Map[String, String], nullMap: Map[String, String]): CassandraSinkImpl = {
+  def mkWriter(connectionConfigMap: java.util.Map[String, String], nullMap: java.util.Map[String, String]): CassandraSinkImpl = {
     log.trace("Making the Cassandra writer operator")
     try {
-      val ptc = PrimitiveTypeConfig(connectionConfigMap)
+      val ptc = PrimitiveTypeConfig(connectionConfigMap.asScala.toMap)
       val clientConfig = CassSinkClientConfig(ptc)
       val cassConnector = new CassandraConnector(clientConfig)
-      new CassandraSinkImpl(clientConfig, cassConnector, nullMap)
+      new CassandraSinkImpl(clientConfig, cassConnector, nullMap.asScala.toMap)
     } catch { case e: Exception => throw CassandraWriterException(s"Failed to create Cassandra client\n${SST(e)})", e); null }
   }
 }
