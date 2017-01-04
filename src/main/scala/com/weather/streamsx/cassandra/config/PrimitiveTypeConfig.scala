@@ -1,9 +1,5 @@
 package com.weather.streamsx.cassandra.config
 
-import com.weather.streamsx.cassandra.zooklient.ZooKlient
-import io.circe._
-import io.circe.generic.semiauto._
-
 case class PrimitiveTypeConfig(
                                 consistencyLevel: String,
                                 dateFormat: String,

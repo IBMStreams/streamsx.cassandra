@@ -30,19 +30,17 @@ libraryDependencies ++= Seq(
     ExclusionRule(organization = "io.netty"),
     ExclusionRule(organization = "com.google.guava")
     ),
-  "io.circe"                    %% "circe-core"            % circeVersion,
-  "io.circe"                    %% "circe-generic"         % circeVersion,
-  "io.circe"                    %% "circe-jawn"            % circeVersion,
   "org.apache.curator"           % "curator-framework"     % curatorVersion,
   "org.scalaz"                  %% "scalaz-core"           % scalazVersion,
   "org.apache.logging.log4j"    % "log4j-api"              % log4jVersion,
-  "org.slf4j"                   % "slf4j-api"              % slf4jVersion,
+//  "org.slf4j"                   % "slf4j-api"              % slf4jVersion,
   "joda-time"                   % "joda-time"              % jodaTimeVersion,
   "junit"                       % "junit"                  % junitVersion            % "test",
   "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
   "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test",
-  "org.slf4j"                   % "slf4j-simple"           % slf4jVersion            % "test",
-  "org.apache.curator"          % "curator-test"           % "2.11.0"                % "test"
+  "org.slf4j"                   % "slf4j-simple"           % slf4jVersion            % "test"
+//  ,
+//  "org.apache.curator"          % "curator-test"           % "2.11.0"                % "test"
 )
 
 val jarFn = "streamsx.cassandra.jar"
@@ -80,13 +78,6 @@ dist := {
     ".project",
     ".settings",
     ".toolkitList"
-//    ,
-//    "com.ibm.streams.javafunctionsamples.jvm",
-//    "com.ibm.streams.javafunctionsamples.math",
-//    "com.ibm.streams.javaprimitivesamples.operators",
-//    "com.ibm.streams.javaprimitivesamples.sinks",
-//    "com.ibm.streams.javaprimitivesamples.sources",
-//    "com.ibm.streams.javaprimitivesamples.windows"
   ).map(d => s"--exclude=$d").mkString(" ")
   s"tar -zcf $parent/${name.value}_${version.value}.tgz -C $parent $dir $excludes" !
 }
@@ -97,27 +88,4 @@ val toolkit = TaskKey[Unit]("toolkit", "Makes the SPL toolkit")
 toolkit <<= assembly map mkToolkit
 dist <<= dist.dependsOn(toolkit)
 
-
-(fullClasspath in Test) := (fullClasspath in Test).value ++ Seq(
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.install.dependency.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.management.jmxmp.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.operator.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.operator.samples.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.management.mx.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.resourcemgr.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.resourcemgr.symphony.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.resourcemgr.utils.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.resourcemgr.yarn.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.security.authc.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.spl.expressions.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.domainmgr.base.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.domainmgr.server.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.annotation.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.base.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.bi.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.client.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.dsmutils.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.internal.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.tools.jar")),
-  Attributed.blank(file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/streams.sws.com.weather.streamsx.cassandra.util.jar"))
-)
+unmanagedJars in Compile += file(s"/opt/ibm/InfoSphere_Streams/$ibmStreamsVersion/lib/com.ibm.streams.operator.jar")

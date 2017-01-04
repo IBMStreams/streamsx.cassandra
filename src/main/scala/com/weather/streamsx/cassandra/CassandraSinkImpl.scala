@@ -3,9 +3,8 @@ package com.weather.streamsx.cassandra
 import com.datastax.driver.core.BoundStatement
 import com.datastax.driver.core.exceptions.UnauthorizedException
 import com.ibm.streams.operator.Tuple
-import com.weather.streamsx.cassandra.zooklient.ZooKlient
 import com.weather.streamsx.cassandra.config.{NullValueConfig, CassSinkClientConfig, PrimitiveTypeConfig}
-import com.weather.streamsx.cassandra.connection.{ZKClient, CassandraConnector, CassandraAwaiter}
+import com.weather.streamsx.cassandra.connection.{CassandraConnector, CassandraAwaiter}
 import com.weather.streamsx.cassandra.exception.CassandraWriterException
 import com.weather.streamsx.cassandra.util.{StringifyStackTrace => SST}
 import scala.collection.JavaConverters._
