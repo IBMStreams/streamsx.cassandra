@@ -2,7 +2,7 @@ import scala.language.postfixOps // <- making IntelliJ hush about the ! bash com
 
 name := "streamsx.cassandra"
 organization := "com.weather"
-version := "2.0.0-SNAPSHOT"
+version := "2.0.1-SNAPSHOT"
 scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 compileOrder in Compile := CompileOrder.ScalaThenJava
@@ -67,7 +67,8 @@ dist := {
   val excludes = Seq(
     "build.sbt",
     "data",
-    "lib/com.ibm.streams.operator.jar",
+    "lib/com.ibm.*",
+    "lib/streams.*",
     "output",
     "project",
     "src",
@@ -79,6 +80,13 @@ dist := {
     ".project",
     ".settings",
     ".toolkitList"
+//    ,
+//    "com.ibm.streams.javafunctionsamples.jvm",
+//    "com.ibm.streams.javafunctionsamples.math",
+//    "com.ibm.streams.javaprimitivesamples.operators",
+//    "com.ibm.streams.javaprimitivesamples.sinks",
+//    "com.ibm.streams.javaprimitivesamples.sources",
+//    "com.ibm.streams.javaprimitivesamples.windows"
   ).map(d => s"--exclude=$d").mkString(" ")
   s"tar -zcf $parent/${name.value}_${version.value}.tgz -C $parent $dir $excludes" !
 }
