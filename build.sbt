@@ -35,6 +35,7 @@ libraryDependencies ++= Seq(
   "org.apache.logging.log4j"    % "log4j-api"              % log4jVersion,
 //  "org.slf4j"                   % "slf4j-api"              % slf4jVersion,
   "joda-time"                   % "joda-time"              % jodaTimeVersion,
+  "com.google.code.gson"        % "gson"                   % "2.6.2",
   "junit"                       % "junit"                  % junitVersion            % "test",
   "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
   "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test",
