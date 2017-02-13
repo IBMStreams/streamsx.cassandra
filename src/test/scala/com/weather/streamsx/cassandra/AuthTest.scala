@@ -4,7 +4,7 @@
 //import com.ibm.streams.operator.{OutputTuple, Tuple}
 //import com.weather.streamsx.cassandra.config.CassSinkClientConfig
 //import com.weather.streamsx.cassandra.connection.CassandraConnector
-//import com.weather.streamsx.cassandra.mock.{MockStreams, MockZK}
+//import com.weather.streamsx.cassandra.mock.{MockStreams}
 //import org.joda.time.format.DateTimeFormat
 //import org.junit.runner.RunWith
 //import org.scalatest.{Matchers, BeforeAndAfterAll, FlatSpec}
