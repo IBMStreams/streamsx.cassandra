@@ -2,7 +2,7 @@ import scala.language.postfixOps // <- making IntelliJ hush about the ! bash com
 
 name := "streamsx.cassandra"
 organization := "com.weather"
-version := "2.0.1-SNAPSHOT"
+version := "2.0.2-RC"
 scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 compileOrder in Compile := CompileOrder.ScalaThenJava
