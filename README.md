@@ -44,13 +44,13 @@ Future operators may include
 Due to a wealth of bug fixes and stability changes, it is **strongly** recommended that all users upgrade to version 1.3.0 from previous versions.
 
 ## Recent Changes
-* Experimental support for Streams 4.2.0
+* Support for Streams 4.2.0
 * Using Streams Configuration Objects instead of ZK
 
 ## Supported Versions
 **Streams Versions:** 
 * Stable: 4.0.0, 4.1.0 (streamsx.cassandra 1.3.x)
-* *experimental* 4.2.0 (streamsx.cassandra 2.0+) 
+* Stable: 4.2.0 (streamsx.cassandra 2.0+) 
 
 **Cassandra Versions:** 
 * Stable: 2.0, 2.1 (these versions of C\* use CQL 3.1)  
