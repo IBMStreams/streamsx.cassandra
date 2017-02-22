@@ -19,9 +19,10 @@ composite CassandraTest {
 					nInt = -2147483647;
 		}
 
+
 		() as CoolStuff = com.weather.streamsx.cassandra::CassandraSink(Greeting) {
 			param
-				connectionConfigZNode: "/cassandra_config";
-				nullMapZnode: "/null_values";
+				connectionCfgObject : "testCassandraConfiguration";
+				nullMapCfgObject : "testCassandraNullValues";
 		}
 }

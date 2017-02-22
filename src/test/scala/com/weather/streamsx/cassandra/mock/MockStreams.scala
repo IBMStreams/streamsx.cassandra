@@ -92,13 +92,12 @@ object MockStreams {
 }
 
 
-class MockStreams(splStyleTupleStructureDeclaration: String, zkConnectString: String) {
+class MockStreams(splStyleTupleStructureDeclaration: String, connectJSON: String, nullMapJSON: String) {
 
   private val graph: OperatorGraph = OperatorGraphFactory.newGraph()
   private val op: OperatorInvocation[CassandraSink] = graph.addOperator(classOf[CassandraSink])
-  op.setStringParameter("connectionConfigZNode", "/cassConn")
-  op.setStringParameter("nullMapZnode", "/nullV")
-  op.setStringParameter("zkConnectionString", zkConnectString)
+  op.setStringParameter("jsonAppConfig", connectJSON)
+  op.setStringParameter("jsonNullMap", nullMapJSON)
   // Create the object representing the type of tuple that is coming into the operator
   private val tuplez: InputPortDeclaration = op.addInput(splStyleTupleStructureDeclaration)
   // Create the testable version of the graph

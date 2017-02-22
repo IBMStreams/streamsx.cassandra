@@ -37,9 +37,9 @@ class GreetingTest extends PipelineTest(
       )
     }
 
-  "The operator" should "write only one tuple to C*" in {
+  "The operator" should "write only one tuple to C* and the values should match the tuple" in {
     val (tuple, valuesMap) = genAndSubmitTuple(structureMap)
-    val rows: Seq[Row] = session.execute(s"select * from $keyspace.$table").all.asScala.toSeq
+    val rows: Seq[Row] = session.execute(s"select * from $keyspace.$table").all.asScala
     val received = row2greeting(rows.head)
 
     rows should have size 1

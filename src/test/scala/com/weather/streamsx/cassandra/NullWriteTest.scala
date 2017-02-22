@@ -61,7 +61,7 @@ class NullWriteTest extends PipelineTest(
       val tupleClose = ">"
       s"$tupleOpen$meat$tupleClose"
     }
-    val generator = new MockStreams(tupleStructure, mockZK.connectString)
+    val generator = new MockStreams(tupleStructure, cassStr, NullWriteTest.nullVals)
     val t = generator.newEmptyTuple()
 
     t.setLong("count", 12345678L)

@@ -1,6 +1,8 @@
 package com.weather.streamsx.cassandra;
 
 import com.datastax.driver.core.exceptions.UnauthorizedException;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ibm.streams.operator.AbstractOperator;
 import com.ibm.streams.operator.OperatorContext;
 import com.ibm.streams.operator.StreamingInput;
@@ -13,10 +15,13 @@ import com.ibm.streams.operator.model.Parameter;
 import com.ibm.streams.operator.model.PrimitiveOperator;
 import com.ibm.streams.operator.metrics.*;
 
+import com.weather.streamsx.cassandra.exception.CassandraWriterException;
 import org.apache.log4j.Logger;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class for an operator that consumes tuples and does not produce an output stream.
@@ -45,19 +50,26 @@ import java.io.StringWriter;
 })
 public class CassandraSink extends AbstractOperator {
 
-    Logger log = Logger.getLogger(this.getClass());
+    protected Logger log = Logger.getLogger(this.getClass());
 
 
-    CassandraSinkImpl impl = null;
-    String connectionConfigZNode = null;
-    String nullMapZnode = null;
+    private CassandraSinkImpl impl = null;
+    private String connectionCfgObject = null;
+    private String nullMapCfgObject = null;
+    private String jsonAppConfig = null;
+    private String jsonNullMap = null;
 
-    OperatorMetrics opMetrics = null;
+    private OperatorMetrics opMetrics = null;
 
-    Metric failures = null;
-    Metric successes = null;
+    private Metric failures = null;
+    private Metric successes = null;
 
-    String zkConnectionString = null;
+    private String zkConnectionString = null;
+
+    private Map<String, String> stringMapConnectionConfig = null;
+    private Map<String, String> stringNullCfg = null;
+
+
 
 
     /**
@@ -79,13 +91,37 @@ public class CassandraSink extends AbstractOperator {
         successes = opMetrics.createCustomMetric("nWriteSuccesses",
                 "Number of tuples that were written to Cassandra successfully", Metric.Kind.COUNTER);
 
+        // Connection config
+        if(jsonAppConfig == null && connectionCfgObject == null){
+            throw new Exception("Either jsonAppConfig or cryptoAppConfigName must be defined.");
+        }
+        else if(jsonAppConfig != null && connectionCfgObject != null) {
+            throw new Exception("Both jsonAppConfig and cryptoAppConfigName are defined. Please use only one of these arguments.");
+        }
+        else if(jsonAppConfig == null) {
+            stringMapConnectionConfig = context.getPE().getApplicationConfiguration(connectionCfgObject);
+        }
+        else {
+            stringMapConnectionConfig = new Gson().fromJson( jsonAppConfig, new TypeToken<HashMap<String, String>>(){}.getType());
+        }
+
+        // Null map config
+        if(jsonAppConfig == null && connectionCfgObject == null){
+            stringNullCfg = null;
+        }
+        else if(jsonNullMap != null && nullMapCfgObject != null) {
+            throw new Exception("Both jsonNullMap and nullMapCfgObject are defined. Please use only one of these arguments.");
+        }
+        else if(jsonNullMap == null) {
+            stringNullCfg = context.getPE().getApplicationConfiguration(nullMapCfgObject);
+        }
+        else {
+            stringNullCfg = new Gson().fromJson( jsonNullMap, new TypeToken<HashMap<String, String>>(){}.getType());
+        }
+
+        // Make the implementation
         if (impl == null) {
-            if(zkConnectionString == null) {
-                impl = CassandraSinkImpl.mkWriter(connectionConfigZNode, nullMapZnode, "");
-            }
-            else{
-                impl = CassandraSinkImpl.mkWriter(connectionConfigZNode, nullMapZnode, zkConnectionString);
-            }
+                impl = CassandraSinkImpl.mkWriter(stringMapConnectionConfig, stringNullCfg);
         }
     }
 
@@ -112,6 +148,7 @@ public class CassandraSink extends AbstractOperator {
                 log.error("Failed to write tuple to Cassandra.\n"+ stringifyStackTrace(e) );
             }
         }
+        else throw CassandraWriterException.apply("The operator was not properly initialized", new Throwable());
     }
 
     /**
@@ -131,14 +168,29 @@ public class CassandraSink extends AbstractOperator {
         super.shutdown();
     }
 
-    @Parameter(name="connectionConfigZNode", description = "Name of the Znode where Cassandra connection configuration is stored")
-    public void setCfgZnode(String s) {connectionConfigZNode = s;}
+    @Parameter(name="connectionCfgObject", description = "Name of the APPLICATION CONFIGURATION OBJECT where Cassandra connection configuration is stored. " +
+            "Either jsonAppConfig or connectionCfgObject must be defined, defining both is an error. " +
+            "Using connectionCfgObject is recommended.", optional = true)
+    public void setConnectCfgObject(String s) { connectionCfgObject = s; }
 
-    @Parameter(name="nullMapZnode", description = "Name of the Znode where the map of fieldnames to the value representing null is stored", optional = true)
-    public void setNullValueZnode(String str) {nullMapZnode = str;}
+    @Parameter(name="nullMapCfgObject", description = "Name of the APPLICATION CONFIGURATION OBJECT where the map of fieldnames to the value representing null is stored" +
+            "Null maps do not necessarily need to be defined if your application does not require them. " +
+            "If null maps are required, either nullMapCfgObject or jsonNullMap must be defined. Defining both is an error. " +
+            "Using nullMapCfgObject is recommended.", optional = true)
+    public void setNullMapCfgObject(String str) { nullMapCfgObject = str; }
 
-    @Parameter(name="zkConnectionString", description = "connection string for ZooKeeper, useful for testing", optional = true)
-    public void setZKConnectionString(String s) {zkConnectionString = s;}
+    @Parameter(name="jsonAppConfig", description = "Connection configuration as a valid JSON String. " +
+            "See the toolkit documentation for examples." +
+            "Either jsonAppConfig or connectionCfgObject must be defined. Defining both is an error. " +
+            "Using connectionCfgObject is recommended.", optional=true)
+    public void setJsonAppConfig(String m) {jsonAppConfig = m;}
+
+    @Parameter(name="jsonNullMap", description = "Null map configuration as a valid JSON String. " +
+            "See the toolkit documentation for examples." +
+            "Null maps do not necessarily need to be defined if your application does not require them. " +
+            "If null maps are required, either nullMapCfgObject or jsonNullMap must be defined. Defining both is an error. " +
+            "Using nullMapCfgObject is recommended.", optional = true)
+    public void setNullMapJSON(String str) { jsonNullMap = str; }
 
     private String stringifyStackTrace(Exception e) {
         StringWriter sw = new StringWriter();

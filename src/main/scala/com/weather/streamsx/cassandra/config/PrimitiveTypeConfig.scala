@@ -1,9 +1,5 @@
 package com.weather.streamsx.cassandra.config
 
-import com.weather.streamsx.cassandra.zooklient.ZooKlient
-import io.circe._
-import io.circe.generic.semiauto._
-
 case class PrimitiveTypeConfig(
                                 consistencyLevel: String,
                                 dateFormat: String,
@@ -88,9 +84,9 @@ object PrimitiveTypeConfig {
     )
   }
 
-  private[cassandra] implicit val rdrDecoder: Decoder[PrimitiveTypeConfig] = deriveDecoder[PrimitiveTypeConfig]
-  private[cassandra] implicit val rdrEncoder: Encoder[PrimitiveTypeConfig] = deriveEncoder[PrimitiveTypeConfig]
-
-  def read(zkCli: ZooKlient, znode: String): Option[PrimitiveTypeConfig] = zkCli.read[PrimitiveTypeConfig](znode)
+//  private[cassandra] implicit val rdrDecoder: Decoder[PrimitiveTypeConfig] = deriveDecoder[PrimitiveTypeConfig]
+//  private[cassandra] implicit val rdrEncoder: Encoder[PrimitiveTypeConfig] = deriveEncoder[PrimitiveTypeConfig]
+//
+//  def read(zkCli: ZooKlient, znode: String): Option[PrimitiveTypeConfig] = zkCli.read[PrimitiveTypeConfig](znode)
 
 }

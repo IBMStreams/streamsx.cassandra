@@ -15,7 +15,7 @@ Watch the `develop` branch for the most recent updates for Streams 4.2 support.
 
 - [Description](#description)
 - [Cassandra Sink](#cassandra-sink)
-  - [Changes](#changes)
+  - [Recent Changes](#recent-changes)
   - [Supported Versions](#supported-versions)
   - [Data Types](#data-types)
     - [Additional documentation](#additional-documentation)
@@ -27,11 +27,10 @@ Watch the `develop` branch for the most recent updates for Streams 4.2 support.
     - [Running Unit Tests](#running-unit-tests)
 - [Configuration and Setup for Sample Project](#configuration-and-setup-for-sample-project)
   - [Setting Up Cassandra on OSX](#setting-up-cassandra-on-osx)
-  - [Setting Up ZooKeeper on Your Virtual Machine](#setting-up-zookeeper-on-your-virtual-machine)
+  - [Setting Up Configuration Objects](#setting-up-configuration-objects)
 - [Usage](#usage)
-  - [Sample SPL Gists](#sample-spl-gists)
-  - [Configuring Znodes](#configuring-znodes)
-  - [Null Value Configuration](#null-value-configuration)
+  - [Sample SPL](#sample-spl)
+  - [Connection and Null Value Configuration](#connection-and-null-value-configuration)
   - [Future Work](#future-work)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -53,16 +52,17 @@ Future operators may include
 
 Due to a wealth of bug fixes and stability changes, it is **strongly** recommended that all users upgrade to version 1.3.0 from previous versions.
 
-## Changes
-- Bug fixes  
-- Better exception throwing
-  - Operator will now throw an error and fail to create if it can't connect to Cassandra  
-  - Operator will allow you not to have null values in a znode, but will throw errors if a znode is specified and it can't find your znode or decode your json  
-- Unit tests
+## Recent Changes
+* Experimental support for Streams 4.2.0
+* Using Streams Configuration Objects instead of ZK
 
 ## Supported Versions
-**Streams Version:** 4.0.0+  
-**Cassandra Version:** 2.0, 2.1 (these releases use CQL 3.1)  
+**Streams Versions:** 
+* Stable: 4.0.0, 4.1.0 (streamsx.cassandra 1.3.x)
+* *experimental* 4.2.0 (streamsx.cassandra 2.0+) 
+
+**Cassandra Versions:** 
+* Stable: 2.0, 2.1 (these versions of C\* use CQL 3.1)  
 
 ## Data Types
 
@@ -121,7 +121,10 @@ All build instructions here are tailored towards the following setup:
 
 - Host machine running OSX  
 - Cassandra running locally on host machine  
-- Streams QSE VM running on VirtualBox or similar  
+- Streams QSE VM running on VirtualBox or similar
+
+If you're using Windows or Linux as your host and find that these instructions don't apply, you can try running Cassandra locally on your VM and changing
+the seed address to `localhost`.
 
 ### Updating To New Version
 
@@ -224,96 +227,35 @@ Done setting up Cassandra
 $
 ```
 
-## Setting Up ZooKeeper on Your Virtual Machine
+## Setting Up Configuration Objects
 
-ZooKeeper is already running as part of streams on your virtual machine, so you shouldn't need to start it up.
-
-You'll need to install zookeepercli to interact with zookeeper. Download the rpm file using wget, and install using yum.
-
+Simply run 
+```bash
+./scripts/stConnectionConfig.sh
 ```
-cd ~/Downloads
-wget https://github.com/outbrain/zookeepercli/releases/download/v1.0.10/zookeepercli-1.0.10-1.x86_64.rpm
-sudo yum install zookeepercli-1.0.10-1.x86_64.rpm
-```
+This script is also a good template for creating your own configuration objects.
 
-You'll know it has worked successfully if you run `zookeepercli` and get the following output:
-
-```
-$ zookeepercli
-2016-08-16 13:14:48 FATAL Expected comma delimited list of servers via --servers
-```
-
-Next, see if the correct variable is set for for your ZK connect string
-
-```
-$ echo $STREAMS_ZKCONNECT
-localhost:21810
-```
-
-If nothing prints, or if anything other than `localhost:21810` prints, add the following line to the file `~/.bashrc`
-
-```
-export STREAMS_ZKCONNECT=localhost:21810
-```
-
-and then in the terminal run the following to see the change made
-
-```
-$ source ~/.bashrc
-$ echo $STREAMS_ZKCONNECT
-```
-
-now navigate to the folder for this repo and into the scripts file. There is another bash script which uses zookeepercli to store the cfg.json file, also in that folder, in your local ZK install.
-
-```
-$ cd /wherever/this/folder/is/on/your/VIRTUAL/machine/streamsx.cassandra/scripts
-$ ./setupLocalZK.sh
-```
-
-The `setupLocalZK.sh` script will first delete the znode in zookeeper if it exists and will then store the contents of cfg.json. The znode name is set to hello_world_info, change as you like.
-
-You can see the contents of the znode by running
-
-```
-$ zookeepercli --servers localhost:21810 -c get /streamsx.cassandra/cassandra_config
-$ zookeepercli --servers localhost:21810 -c get /streamsx.cassandra/null_values 
-
-```
+*NOTE* Configuration objects are only accessible when running in distributed mode because they are tied to the domain.
 
 # Usage
 
-## Sample SPL Gists
+## Sample SPL
 
-This gist shows a sample SPL file using the new ZooKeeper based configuration as well as samples of the configuration: <https://gist.github.com/ecurtin/2f0baf2d238dddbc461d3594ec3988e1> 
+See `scripts/CassandraTestSPL.txt` for the hello world example. (`streamtool` tries to compile any `.spl` file it finds, so to prevent
+the example file from getting mixed up in the toolkit I had to make the extension `.txt`)
 
-## Configuring Znodes
-
-There are two ZooKeeper configuration files. 
-One of them describes the connection info for Cassandra, the other describes the values for each field that will be seen as "null",
-meaning that the value will not be present in the prepared statement for Cassandra.
-
-See the `scripts` folder in this repo or the gist above for examples.
-
-Both znodes must be uploaded to Zookeeper as `/streamsx.cassandra/whatever-you-node-name-is`. When specifying the node names in SPL,
-you do not specify the `/streamsx.cassandra` prefix, only `/whatever-you-node-name-is`
-
- 
-## Null Value Configuration
+## Connection and Null Value Configuration
 
 If fields do not have a null value configured, they are assumed to always be valid.
 
 Empty collections (maps, lists, sets) will automatically be written as nulls, no need to configure that.
 
-See [the gist](https://gist.github.com/ecurtin/2f0baf2d238dddbc461d3594ec3988e1) for examples of null value configuration for the sample application.
-
-If you do not wish to configure null values, you can refrain from specifying the null value znode name in SPL or specify it as `""`.  
-
+Null values are now configured using configuration objects. See the `scripts/stConnectionConfig.sh` for an example of connection and null value configuration.
 
 ## Future Work
 
 Here's what's next for streamsx.cassandra:
 
-- Support for Streams 4.2 and Cassandra 3.x  
-- Utilization of Streams 4.2 support for direct ZK integration vs our homebrewed ZK connection system.  
+- Support for Cassandra 3.x  
 - Consistent Region support  
 - Cassandra read operator  

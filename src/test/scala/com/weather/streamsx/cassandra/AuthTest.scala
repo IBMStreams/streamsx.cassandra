@@ -1,17 +1,17 @@
 package com.weather.streamsx.cassandra
 
-import com.datastax.driver.core.{PlainTextAuthProvider, ConsistencyLevel, Row}
+import com.datastax.driver.core.{ConsistencyLevel, PlainTextAuthProvider, Row}
 import com.ibm.streams.operator.{OutputTuple, Tuple}
 import com.weather.streamsx.cassandra.config.CassSinkClientConfig
 import com.weather.streamsx.cassandra.connection.CassandraConnector
-import com.weather.streamsx.cassandra.mock.{MockStreams, MockZK}
+import com.weather.streamsx.cassandra.mock.{MockCassandra, MockStreams}
 import org.joda.time.format.DateTimeFormat
 import org.junit.runner.RunWith
-import org.scalatest.{Matchers, BeforeAndAfterAll, FlatSpec}
+import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
+class AuthTest extends FlatSpec with Matchers{
 
   val keyspace = "authKeyspace"
   val table = "authTable"
@@ -31,7 +31,6 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
   val pass = "bar"
 
   val ipArr: Array[String] = MockCassandra.ip.split(",")
-//  val ipArr: Array[String] = Array("127.0.0.1")
 
   val ccfgAdmin = new CassSinkClientConfig(
     localdc = "",
@@ -79,8 +78,6 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   val cassConnectAdmin = new CassandraConnector(ccfgAdmin)
 
-  val mockZK = new MockZK()
-
   val cassStr =
     s"""
        |{
@@ -104,14 +101,6 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
        |}
     """.stripMargin
 
-  // then create
-  mockZK.start()
-  mockZK.createZNode("/cassConn", cassStr)
-  mockZK.createZNode("/nullV", "{}")
-
-
-
-
 
   val structureMap = Map( "greeting" -> "rstring",
                             "count" -> "uint64",
@@ -132,7 +121,7 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
       val tupleClose = ">"
       s"$tupleOpen$meat$tupleClose"
     }
-    val generator = new MockStreams(tupleStructure, mockZK.connectString)
+    val generator = new MockStreams(tupleStructure, cassStr, null)
     val t = generator.newEmptyTuple()
 
     def addValToTuple(kv: (String, String), t: OutputTuple): (OutputTuple, (String, Any)) = {
@@ -156,19 +145,14 @@ class AuthTest extends FlatSpec with Matchers with BeforeAndAfterAll {
     cassConnectAdmin.session.execute(s"REVOKE ALL ON $keyspace.$table FROM $user")
     val cassConnectRestricted = new CassandraConnector(ccfgRestricted)
 
-    an [Exception] should be thrownBy genAndSubmitTuple(structureMap)
+    an [java.lang.UnsupportedOperationException] should be thrownBy genAndSubmitTuple(structureMap)
 
     cassConnectRestricted.shutdown()
-  }
-  override def afterAll(): Unit = {
 
     cassConnectAdmin.session.execute(s"drop keyspace if exists $keyspace")
-    cassConnectAdmin.session.execute(s"DROP USER $user")
+    cassConnectAdmin.session.execute(s"DROP USER if exists $user")
     cassConnectAdmin.session.close()
     cassConnectAdmin.shutdown()
-
-    mockZK.deleteZnode("/cassConn")
-    mockZK.deleteZnode("/nullV")
-    mockZK.shutdown()
   }
+
 }
