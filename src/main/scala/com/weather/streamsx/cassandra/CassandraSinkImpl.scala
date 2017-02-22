@@ -20,7 +20,7 @@ object CassandraSinkImpl {
       val clientConfig = CassSinkClientConfig(ptc)
       val cassConnector = new CassandraConnector(clientConfig)
 
-      if(nullMap == null) new CassandraSinkImpl(clientConfig, cassConnector, Map())
+      if(nullMap == null) new CassandraSinkImpl(clientConfig, cassConnector, Map.empty)
       else new CassandraSinkImpl(clientConfig, cassConnector, nullMap.asScala.toMap)
 
     } catch { case e: Exception => throw CassandraWriterException(s"Failed to create Cassandra client\n${SST(e)})", e); null }

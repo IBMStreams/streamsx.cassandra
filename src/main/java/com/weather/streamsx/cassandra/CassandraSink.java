@@ -90,10 +90,6 @@ public class CassandraSink extends AbstractOperator {
                 "Number of tuples that failed to get written to Cassandra", Metric.Kind.COUNTER);
         successes = opMetrics.createCustomMetric("nWriteSuccesses",
                 "Number of tuples that were written to Cassandra successfully", Metric.Kind.COUNTER);
-//
-//        stringMapConnectionConfig = context.getPE().getApplicationConfiguration(connectionCfgObject);
-//        stringNullCfg = context.getPE().getApplicationConfiguration(nullMapCfgObject);
-
 
         // Connection config
         if(jsonAppConfig == null && connectionCfgObject == null){

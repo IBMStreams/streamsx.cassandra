@@ -19,8 +19,6 @@ class TupleBasedStructures(t: Tuple, session: Session, cfg: CassSinkClientConfig
 
 object TupleToStatement {
 
-  //TODO: Reach out to Senthil about unit testing for Streams Java operators
-
   def apply(tuple: Tuple, tbs: TupleBasedStructures, cassCfg: CassSinkClientConfig): BoundStatement = {
     val attributeList = mkAttrList(tuple)
     val valuesMap: Map[String, Any] = attributeList.map(getValueFromTuple(tuple, _)).toMap
@@ -48,7 +46,6 @@ object TupleToStatement {
     (BitSet(bitList:_*), nonNulls)
   }
 
-  // TODO: see if this can be converted to use the iterator
   def mkAttrList(t: Tuple): List[Attribute] = {
     val schema = t.getStreamSchema
     (0 until schema.getAttributeCount).map(schema.getAttribute).sortBy(_.getName).toList

@@ -33,15 +33,12 @@ libraryDependencies ++= Seq(
   "org.apache.curator"           % "curator-framework"     % curatorVersion,
   "org.scalaz"                  %% "scalaz-core"           % scalazVersion,
   "org.apache.logging.log4j"    % "log4j-api"              % log4jVersion,
-//  "org.slf4j"                   % "slf4j-api"              % slf4jVersion,
   "joda-time"                   % "joda-time"              % jodaTimeVersion,
   "com.google.code.gson"        % "gson"                   % "2.6.2",
   "junit"                       % "junit"                  % junitVersion            % "test",
   "org.scalacheck"              %% "scalacheck"            % scalacheckVersion       % "test",
   "org.scalatest"               %% "scalatest"             % scalatestVersion        % "test",
   "org.slf4j"                   % "slf4j-simple"           % slf4jVersion            % "test"
-//  ,
-//  "org.apache.curator"          % "curator-test"           % "2.11.0"                % "test"
 )
 
 val jarFn = "streamsx.cassandra.jar"

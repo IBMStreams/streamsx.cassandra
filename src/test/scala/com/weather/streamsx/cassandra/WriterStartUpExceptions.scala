@@ -6,8 +6,7 @@ TODO: THESE NEED TO BE RE-WRITTEN FOR CONFIGURATION OBJECTS
 
 package com.weather.streamsx.cassandra
 
-import com.weather.streamsx.cassandra.exception.CassandraWriterException
-import com.weather.streamsx.cassandra.mock.MockStreams
+import com.weather.streamsx.cassandra.mock.{MockCassandra, MockStreams}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}

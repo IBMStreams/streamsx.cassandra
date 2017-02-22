@@ -1,11 +1,10 @@
 package com.weather.streamsx.cassandra
 
-import com.datastax.driver.core.exceptions.UnauthorizedException
 import com.datastax.driver.core.{ConsistencyLevel, PlainTextAuthProvider, Row}
 import com.ibm.streams.operator.{OutputTuple, Tuple}
 import com.weather.streamsx.cassandra.config.CassSinkClientConfig
 import com.weather.streamsx.cassandra.connection.CassandraConnector
-import com.weather.streamsx.cassandra.mock.MockStreams
+import com.weather.streamsx.cassandra.mock.{MockCassandra, MockStreams}
 import org.joda.time.format.DateTimeFormat
 import org.junit.runner.RunWith
 import org.scalatest.{FlatSpec, Matchers}
@@ -32,7 +31,6 @@ class AuthTest extends FlatSpec with Matchers{
   val pass = "bar"
 
   val ipArr: Array[String] = MockCassandra.ip.split(",")
-//  val ipArr: Array[String] = Array("127.0.0.1")
 
   val ccfgAdmin = new CassSinkClientConfig(
     localdc = "",

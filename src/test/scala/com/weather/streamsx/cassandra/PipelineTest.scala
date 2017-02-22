@@ -1,13 +1,13 @@
 package com.weather.streamsx.cassandra
 
-import com.datastax.driver.core.{PlainTextAuthProvider, ConsistencyLevel}
+import com.datastax.driver.core.{ConsistencyLevel, PlainTextAuthProvider}
 import com.ibm.streams.operator.{OutputTuple, Tuple}
 import com.weather.streamsx.cassandra.config.CassSinkClientConfig
 import com.weather.streamsx.cassandra.connection.CassandraConnector
-import com.weather.streamsx.cassandra.mock.MockStreams
+import com.weather.streamsx.cassandra.mock.{MockCassandra, MockStreams}
 import org.joda.time.format.DateTimeFormat
 import org.junit.runner.RunWith
-import org.scalatest.{BeforeAndAfterAll, Matchers, FlatSpec}
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
