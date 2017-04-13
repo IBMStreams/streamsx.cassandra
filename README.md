@@ -220,7 +220,7 @@ This script is also a good template for creating your own configuration objects.
 
 More about configuration objects here: https://www.ibm.com/support/knowledgecenter/en/SSCRJU_4.2.0/com.ibm.streams.admin.doc/doc/creating-secure-app-configs.html
 
-## **Not Recommended** Using JSON instead of Configuration Objects
+## NOT RECOMMENDED: Using JSON instead of Configuration Objects
 You can also pass your connection info and null values to the operator as JSON strings using `jsonAppConfig` and `jsonNullMap`. This is not 
 recommended as it is easy to, for instance, 
 accidentally check your Cassandra password into version control, however it is an option if configuration objects are not a viable solution for your setup.
