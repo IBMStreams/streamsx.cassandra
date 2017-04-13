@@ -15,17 +15,15 @@
     - [Additional documentation](#additional-documentation)
 - [Installation](#installation)
   - [Using the Distribution](#using-the-distribution)
-  - [Building From Source](#building-from-source)
-    - [Updating To New Version](#updating-to-new-version)
-    - [Installing Toolkit From Scratch](#installing-toolkit-from-scratch)
-    - [Running Unit Tests](#running-unit-tests)
-- [Configuration and Setup for Sample Project](#configuration-and-setup-for-sample-project)
+- [Sample Project](#sample-project)
+  - [Running the Sample Project](#running-the-sample-project)
+  - [Connection and Null Value Configuration](#connection-and-null-value-configuration)
   - [Setting Up Cassandra on OSX](#setting-up-cassandra-on-osx)
   - [Setting Up Configuration Objects](#setting-up-configuration-objects)
-- [Usage](#usage)
-  - [Sample SPL](#sample-spl)
-  - [Connection and Null Value Configuration](#connection-and-null-value-configuration)
-  - [Future Work](#future-work)
+  - [**Not Recommended** Using JSON instead of Configuration Objects](#not-recommended-using-json-instead-of-configuration-objects)
+- [Compiling and Installing Toolkit From Scratch](#compiling-and-installing-toolkit-from-scratch)
+  - [Running Unit Tests](#running-unit-tests)
+- [Future Work](#future-work)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -105,55 +103,58 @@ tuple\<T name, ...\>  | Not supported  | |
 # Installation
 
 ## Using the Distribution
-1. Download the tar to your VM
-2. Untar the tar
-3. Add the extracted tar as a toolkit location in Streams Studio. For more information, see [these instructions](https://github.com/TheWeatherCompany/analytics-streams-docs/blob/master/adding-a-toolkit.md).
+1. Download the tarball of the latest release to your VM <https://github.com/IBMStreams/streamsx.cassandra/releases/tag/2.0.2-RELEASE>
+2. Untar the tarball
+3. Add the extracted tar as a toolkit location in Streams Studio
+And that's it!
 
-## Building From Source
+# Sample Project
 
-All build instructions here are tailored towards the following setup:
-
-- Host machine running OSX  
-- Cassandra running locally on host machine  
-- Streams QSE VM running on VirtualBox or similar
-
-If you're using Windows or Linux as your host and find that these instructions don't apply, you can try running Cassandra locally on your VM and changing
-the seed address to `localhost`.
-
-### Updating To New Version
-
-If you have already gone through the install from scratch instructions below and just need the new version,
-`cd` to the toolkit folder on your vm and run the following commands:
-
+Here's the sample application, also available in the `scripts` folder in this repo. Notice that `nInt`, short for "nullInt" is going to be
+written as null because its value matches the configured "null value" in the null value configuration object created by `scripts/stConnectionConfig.sh`
 ```
-git pull
-sbt ctk toolkit
+namespace com.weather.test;
+
+composite CassandraTest {
+
+	graph
+
+		// The names of the fields in Greeting need to match the fieldnames in the Cassandra table _exactly_
+		stream<rstring greeting, uint64 count, list<int32> testList, set<int32> testSet, map<int32, boolean> testMap, int32 nInt> Greeting = Beacon() {
+			param
+				iterations: 1000000u; //generate 1000000 tuples
+				period : 0.5; //generate a tuple every 0.5 seconds
+			output
+				Greeting:
+					greeting =  "Hello Streams!",
+					count = IterationCount() + 1ul,
+					testList = [1,2,3],
+					testSet = {4, 5, 6},
+					testMap = {7: true, 8 : false, 9: true},
+					nInt = -2147483647;
+		}
+
+
+		() as CoolStuff = com.weather.streamsx.cassandra::CassandraSink(Greeting) {
+			param
+				connectionCfgObject : "testCassandraConfiguration";
+				nullMapCfgObject : "testCassandraNullValues";
+		}
+}
 ```
 
-Refresh the toolkit location in Streams Studio, and you should be good to go!
+## Running the Sample Project
 
-### Installing Toolkit From Scratch
-
-Your "virtual machine" in this context is the Streams QSE VM. These instructions were written for Streams 4.1.0 and 4.1.1, they have not been tested on 4.2.2.
-
-1. Install SBT on your virtual machine. See instructions for RedHat here: <http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Linux.html>
-2. Clone this repo somewhere convenient on the filesystem of your virtual machine. It doesn't need to be in your Eclipse workspace
-3. Setup Cassandra on your host machine and your ZooKeeper configuration on your virtual machine. See the Usage section below for detailed instructions.
-3. Ensure that the cfg.json file uploaded to ZK has the right IP for your local Cassandra. See the Usage section below for more on configuring ZK
-    ```
-    {
-        ...
-        seeds: "10.0.2.2"
-        ...
-    }
-    ```
-    This is your gateway IP. It's possible you may have a different one, you can check `netstat -rn` to see yours if `10.0.2.2` doesn't work.
-4. In the top level of the repo, run `sbt toolkit`. You may need to create `impl/lib/` in the repo for it to run properly.
-5. Create a new Streams project. Add the location of the repo as a toolkit location.
-4. Start Cassandra on OSX running on localhost and listening on port 9042. I think those options are both defaults so you shouldn't need to change them.
-6. Setup a keyspace and a table in Cassandra. I wrote a little bash script and a cql file to make it easy on myself, you can see them in the scripts folder in this repo.
-The cql there matches what I did for my test project.
-7. Write a test project. Here's a gist showing the project I made. <https://gist.github.com/ecurtin/2f0baf2d238dddbc461d3594ec3988e1> and here's some output from Cassandra.
+1. Install the toolkit either by downloading a release or by cloning the repo and compiling from scratch.
+2. Create a new Streams project in Streams Studio and copy/paste the sample SPL code above.
+3. Setup a local instance of Cassandra either on your host machine or on your Streams QSE VM. See instructions below for more.
+3. Run `scripts/setupCassandra.sh` to create the keyspace and table in your local Cassandra instance needed for the sample application.
+4. Check to see if the connection info in `scripts/stConnectionConfig.sh` matches your local Cassandra instance. 
+For instance, you may need to modify `seeds` depending on you setup Cassandra in the previous step.
+5. Run `scripts/stConnectionConfig.sh` to create your Configuration Objects.
+6. Build and launch your Streams application **_*in Distributed Mode*_**. Configuration objects are tied to the Streams Domain, and if you run your HelloWorld application in Standalone
+mode it will not have access to the configuration objects and will throw you a bunch of errors.
+7. Query your local Cassandra instance to see the results:
     ```
     cqlsh:testkeyspace> select * from testtable;
     
@@ -169,7 +170,125 @@ The cql there matches what I did for my test project.
         ... etc etc
     ```
 
-### Running Unit Tests
+## Connection and Null Value Configuration
+
+If fields do not have a null value configured, they are assumed to always be valid.
+
+Empty collections (maps, lists, sets) will automatically be written as nulls, no need to configure that.
+
+Null values are now configured using configuration objects. See the `scripts/stConnectionConfig.sh` for an example of connection and null value configuration.
+
+
+## Setting Up Cassandra on OSX
+
+Assuming that your host machine is OSX! You can also adapt these instructions to use a Cassandra installation on your Streams QSE VM.
+
+**NOTE** Some modifications to your Cassandra connection configuration object and `setupCassandra.sh` will be necessary if you changed your `cassandra.yaml` to use password authentication. 
+This tutorial will assume that you are using the standard AllowAll authentication, and that if you changed your settings you probably know enough about what you're doing to figure out the rest :)
+
+On OSX, I store my cassandra files in `/opt` but yours may be elsewhere.
+
+First, start Cassandra if it's not already started.
+```
+/opt/cassandra-cassandra-2.1.11/bin/cassandra
+```
+
+You can see if cassandra is running by
+```
+ps -ef | grep cassandra
+```
+and looking for the big long java process.
+
+Navigate to this repo folder on OSX and run the setup Cassandra script to create the keyspace and table for the sample application.
+```
+$ cd /wherever/this/folder/is/on/your/HOST/machine/streamsx.cassandra/scripts
+$ ./setupCassandra
+Setting up Cassandra
+Done setting up Cassandra
+$
+```
+
+## Setting Up Configuration Objects
+
+On your Streams VM, simply run 
+```bash
+./scripts/stConnectionConfig.sh
+```
+This script is also a good template for creating your own configuration objects.
+
+*NOTE* Configuration objects are only accessible when running in distributed mode because they are tied to the domain.
+
+More about configuration objects here: https://www.ibm.com/support/knowledgecenter/en/SSCRJU_4.2.0/com.ibm.streams.admin.doc/doc/creating-secure-app-configs.html
+
+## **Not Recommended** Using JSON instead of Configuration Objects
+You can also pass your connection info and null values to the operator as JSON strings using `jsonAppConfig` and `jsonNullMap`. This is not 
+recommended as it is easy to, for instance, 
+accidentally check your Cassandra password into version control, however it is an option if configuration objects are not a viable solution for your setup.
+
+If you go this route, I would recommend exploring ways to write out your configuration as a JSON file and read it in through SPL at compile time. This would
+prevent you from doing what I'm doing in the same below and putting your configuration for Cassandra directly in your SPL code.
+
+In this (kinda unrealistic) sample code, I'm using a configuration object for the Cassandra connection info but I'm passing in my null values as a JSON string.
+```
+namespace com.weather.test;
+
+composite CassandraTest {
+
+    // PLEASE NOTE: It is HIGHLY recommended to use Configuration Objects instead of passing in config as JSON like I'm doing here.
+    
+	param
+    expression<rstring> $nullValueJSON:
+		'{
+           "greeting" : "",
+           "count" : 0,
+           "nInt" : -2147483647
+         }';
+
+	graph
+
+		// The names of the fields in Greeting need to match the fieldnames in the Cassandra table _exactly_
+		stream<rstring greeting, uint64 count, list<int32> testList, set<int32> testSet, map<int32, boolean> testMap, int32 nInt> Greeting = Beacon() {
+			param
+				iterations: 1000000u; //generate 1000000 tuples
+				period : 0.5; //generate a tuple every 0.5 seconds
+			output
+				Greeting:
+					greeting =  "Hello Streams!",
+					count = IterationCount() + 1ul,
+					testList = [1,2,3],
+					testSet = {4, 5, 6},
+					testMap = {7: true, 8 : false, 9: true},
+					nInt = -2147483647;
+		}
+
+
+		() as CoolStuff = com.weather.streamsx.cassandra::CassandraSink(Greeting) {
+			param
+				connectionCfgObject : "testCassandraConfiguration";
+				jsonNullMap : $nullValueJSON;
+		}
+}
+```
+
+# Compiling and Installing Toolkit From Scratch
+
+All build instructions here are tailored towards the following setup:
+
+- Host machine running OSX  
+- Cassandra running locally on host machine  
+- Streams QSE VM running on VirtualBox or similar
+
+If you're using Windows or Linux as your host and find that these instructions don't apply, you can try running Cassandra locally on your VM and changing
+the seed address to `localhost`.
+
+Your "virtual machine" in this context is the Streams QSE VM. These instructions were written for Streams 4.1.0 and 4.1.1, they have not been tested on 4.2.2.
+
+1. Install SBT on your virtual machine. See instructions for RedHat here: <http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Linux.html>
+2. Clone this repo somewhere convenient on the filesystem of your virtual machine. It doesn't need to be in your Eclipse workspace
+4. In the top level of the repo, run `sbt toolkit`. You may need to create `impl/lib/` in the repo for it to run properly.
+4. To remove the toolkit files, run `sbt ctk`
+
+## Running Unit Tests
 
 Unit tests do not run automatically in the build. They must be run on the VM because of dependencies on Streams libraries.
 
@@ -189,66 +308,10 @@ The default superuser login with these settings, unless deliberately changed, is
 The Cassandra seeds used in the tests are `127.0.0.1` and `10.0.2.2`
 
 Now in your VM, run `sbt test`.
-    
-# Configuration and Setup for Sample Project
 
-## Setting Up Cassandra on OSX
+# Future Work
 
-Assuming that your host machine is OSX!
-
-**NOTE** Some modifications to `cassandra-cfg.json` and `setupCassandra.sh` will be necessary if you changed your `cassandra.yaml` to use password authentication. 
-This tutorial will assume that you are using the standard AllowAll authentication, and that if you changed your settings you probably know enough about what you're doing to figure out the rest :)
-
-On OSX, I store my cassandra files in `/opt` but yours may be elsewhere.
-
-First, start Cassandra if it's not already started.
-```
-/opt/cassandra-cassandra-2.1.11/bin/cassandra
-```
-
-You can see if cassandra is running by
-```
-ps -ef | grep cassandra
-```
-and looking for the big long java process.
-
-To run the sample SPL Gist, I've provided a CQL script and accompanying bash script to run it. Navigate to this repo folder on OSX and run the setup Cassandra script.
-```
-$ cd /wherever/this/folder/is/on/your/HOST/machine/streamsx.cassandra/scripts
-$ ./setupCassandra
-Setting up Cassandra
-Done setting up Cassandra
-$
-```
-
-## Setting Up Configuration Objects
-
-Simply run 
-```bash
-./scripts/stConnectionConfig.sh
-```
-This script is also a good template for creating your own configuration objects.
-
-*NOTE* Configuration objects are only accessible when running in distributed mode because they are tied to the domain.
-
-# Usage
-
-## Sample SPL
-
-See `scripts/CassandraTestSPL.txt` for the hello world example. (`streamtool` tries to compile any `.spl` file it finds, so to prevent
-the example file from getting mixed up in the toolkit I had to make the extension `.txt`)
-
-## Connection and Null Value Configuration
-
-If fields do not have a null value configured, they are assumed to always be valid.
-
-Empty collections (maps, lists, sets) will automatically be written as nulls, no need to configure that.
-
-Null values are now configured using configuration objects. See the `scripts/stConnectionConfig.sh` for an example of connection and null value configuration.
-
-## Future Work
-
-Here's what's next for streamsx.cassandra:
+Here's some potential future directions for streamsx.cassandra. Contributors welcome!
 
 - Support for Cassandra 3.x  
 - Consistent Region support  
