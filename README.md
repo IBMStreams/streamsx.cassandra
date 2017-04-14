@@ -1,12 +1,13 @@
 # streamsx.cassandra
 
 ---
+# Latest Release [Here](https://github.com/IBMStreams/streamsx.cassandra/releases)
+
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # Table of Contents
 
-- [Latest Release Here](#latest-release-here)
 - [Description](#description)
 - [Cassandra Sink](#cassandra-sink)
   - [Recent Changes](#recent-changes)
@@ -29,7 +30,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Latest Release [Here](https://github.com/IBMStreams/streamsx.cassandra/releases)
 
 # Description
 
