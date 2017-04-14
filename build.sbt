@@ -2,7 +2,7 @@ import scala.language.postfixOps // <- making IntelliJ hush about the ! bash com
 
 name := "streamsx.cassandra"
 organization := "com.weather"
-version := "2.0.2-RELEASE"
+version := "2.0.3-RELEASE"
 scalaVersion := "2.11.8"
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 compileOrder in Compile := CompileOrder.ScalaThenJava
@@ -63,6 +63,7 @@ dist := {
   val excludes = Seq(
     ".idea",
     "scalastyle-config.xml",
+    "welcome.md",
     "build.sbt",
     "data",
     "lib/com.ibm.*",

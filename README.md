@@ -1,8 +1,6 @@
 # streamsx.cassandra
 
----
 # Latest Release [Here](https://github.com/IBMStreams/streamsx.cassandra/releases)
-
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -106,7 +104,7 @@ tuple\<T name, ...\>  | Not supported  | |
 
 # Installation
 
-1. Download the tarball of the latest release to your VM <https://github.com/IBMStreams/streamsx.cassandra/releases/tag/2.0.2-RELEASE>
+1. Download the tarball of the latest release to your VM <https://github.com/IBMStreams/streamsx.cassandra/releases>
 2. Untar the tarball
 3. Add the extracted tar as a toolkit location in Streams Studio
 And that's it!
