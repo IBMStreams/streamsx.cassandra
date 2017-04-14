@@ -106,7 +106,6 @@ tuple\<T name, ...\>  | Not supported  | |
 
 # Installation
 
-## Using the Distribution
 1. Download the tarball of the latest release to your VM <https://github.com/IBMStreams/streamsx.cassandra/releases/tag/2.0.2-RELEASE>
 2. Untar the tarball
 3. Add the extracted tar as a toolkit location in Streams Studio
