@@ -61,6 +61,8 @@ dist := {
   val dir = baseDirectory.value.getName
   val parent = baseDirectory.value.getParent
   val excludes = Seq(
+    ".idea",
+    "scalastyle-config.xml",
     "build.sbt",
     "data",
     "lib/com.ibm.*",
