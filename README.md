@@ -1,12 +1,12 @@
 # streamsx.cassandra
 
-
 ---
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-#Table of Contents
+# Table of Contents
 
+- [Latest Release Here](#latest-release-here)
 - [Description](#description)
 - [Cassandra Sink](#cassandra-sink)
   - [Recent Changes](#recent-changes)
@@ -20,12 +20,16 @@
   - [Connection and Null Value Configuration](#connection-and-null-value-configuration)
   - [Setting Up Cassandra on OSX](#setting-up-cassandra-on-osx)
   - [Setting Up Configuration Objects](#setting-up-configuration-objects)
-  - [**Not Recommended** Using JSON instead of Configuration Objects](#not-recommended-using-json-instead-of-configuration-objects)
+  - [NOT RECOMMENDED: Using JSON instead of Configuration Objects](#not-recommended-using-json-instead-of-configuration-objects)
 - [Compiling and Installing Toolkit From Scratch](#compiling-and-installing-toolkit-from-scratch)
+  - [You Don't Have To Compile The Toolkit Just To Use It!!](#you-dont-have-to-compile-the-toolkit-just-to-use-it)
+  - [If You're Positive That You Need To Compile It](#if-youre-positive-that-you-need-to-compile-it)
   - [Running Unit Tests](#running-unit-tests)
 - [Future Work](#future-work)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# Latest Release [Here](https://github.com/IBMStreams/streamsx.cassandra/releases)
 
 # Description
 
@@ -271,6 +275,16 @@ composite CassandraTest {
 ```
 
 # Compiling and Installing Toolkit From Scratch
+
+## You Don't Have To Compile The Toolkit Just To Use It!!
+
+These compilation instructions are meant for those interested in developing and maintaining the toolkit.
+If you're just interested in _using_ streamsx.cassandra, 
+please grab the latest tarball from the releases page: https://github.com/IBMStreams/streamsx.cassandra/releases 
+and follow the installation instructions [up above](#using-the-distribution), and welcome! We're glad you're 
+here!
+
+## If You're Positive That You Need To Compile It
 
 All build instructions here are tailored towards the following setup:
 
