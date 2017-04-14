@@ -13,7 +13,6 @@
   - [Data Types](#data-types)
     - [Additional documentation](#additional-documentation)
 - [Installation](#installation)
-  - [Using the Distribution](#using-the-distribution)
 - [Sample Project](#sample-project)
   - [Running the Sample Project](#running-the-sample-project)
   - [Connection and Null Value Configuration](#connection-and-null-value-configuration)
@@ -25,6 +24,7 @@
   - [If You're Positive That You Need To Compile It](#if-youre-positive-that-you-need-to-compile-it)
   - [Running Unit Tests](#running-unit-tests)
 - [Future Work](#future-work)
+- [Workflow and Environment For Streamsx.Cassandra Development](#workflow-and-environment-for-streamsxcassandra-development)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
