@@ -327,3 +327,9 @@ Here's some potential future directions for streamsx.cassandra. Contributors wel
 - Support for Cassandra 3.x  
 - Consistent Region support  
 - Cassandra read operator  
+
+# Workflow and Environment For Streamsx.Cassandra Development
+
+See the wiki for 
+[A Crash Course on Developing Streams Operators](https://github.com/IBMStreams/streamsx.cassandra/wiki/A-Crash-Course-in-Developing-Streams-Operators-Using-Java-and-Scala) 
+for details and instructions.
